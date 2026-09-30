@@ -109,3 +109,17 @@
 .gauntlet-screen .hero.finish>.card .sixstats span b{font-size:10px!important}
 .gauntlet-screen .hero.finish>.sub{margin-top:0!important}
 @media(max-width:380px){.gauntlet-screen .hero.finish>.card{width:min(60vw,260px)!important}}
+
+
+/* v0.7.43: Daily Gauntlet card uses the same proportional overlay layout as standard cards */
+.gauntlet-screen .hero.finish>.card{padding:9px!important}
+.gauntlet-screen .hero.finish>.card .corner{top:7px!important;min-width:34px!important}
+.gauntlet-screen .hero.finish>.card .levelcorner{left:9px!important}
+.gauntlet-screen .hero.finish>.card .hpcorner{right:9px!important}
+.gauntlet-screen .hero.finish>.card .corner small,
+.gauntlet-screen .hero.finish>.card .corner b{font-size:clamp(14px,4vw,18px)!important;line-height:.84!important}
+.gauntlet-screen .hero.finish>.card .corner b{margin-top:3px!important}
+.gauntlet-screen .hero.finish>.card .name{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;margin-bottom:0!important;transform:none!important;font-size:clamp(16px,4.3vw,20px)!important;line-height:.9!important;text-align:left!important}
+.gauntlet-screen .hero.finish>.card .stats.sixstats{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;margin-bottom:-7px!important;padding:0!important;gap:0 5px!important;font-size:clamp(6px,1.8vw,8px)!important;line-height:1!important}
+.gauntlet-screen .hero.finish>.card .sixstats span{height:11px!important;min-height:11px!important;line-height:11px!important;padding:0 3px!important}
+.gauntlet-screen .hero.finish>.card .sixstats span b{font-size:clamp(7px,2.1vw,9px)!important}
