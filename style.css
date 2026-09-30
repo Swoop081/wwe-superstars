@@ -27,3 +27,10 @@
 .road-card span{font-weight:1000;font-size:15px}
 .road-card .btn{margin-top:9px;width:100%;min-width:0;padding:10px 7px;font-size:14px}
 @media(max-width:380px){.road-track{width:106px}.road-stop:nth-of-type(even){padding-right:42%}.road-stop:nth-of-type(odd){padding-left:42%}.road-card{width:44%;padding:11px}.road-card b{font-size:16px}}
+
+.road-city{font:1000 10px/1.15 system-ui;letter-spacing:.4px;color:#fff;margin-bottom:6px;text-transform:uppercase}
+.road-opponent{display:flex;justify-content:center;margin:5px 0 8px}
+.road-mini-card.card{width:92px;max-width:100%;aspect-ratio:.72;border-radius:10px}
+.road-mini-card .corner small,.road-mini-card .corner b{font-size:8px!important;line-height:.8}.road-mini-card .corner{min-width:24px!important;top:5px}.road-mini-card .levelcorner{left:5px}.road-mini-card .hpcorner{right:5px}.road-mini-card .name{font-size:9px!important;bottom:30px;padding:0 3px}.road-mini-card .stats{font-size:5px!important;bottom:4px;gap:1px}.road-mini-card .sixstats span b{font-size:5px!important}.road-mini-card .sixstats{padding:2px}
+.road-card{width:44%}.road-stop{min-height:230px}.road-map{min-height:980px}.road-track{bottom:20px}
+@media(max-width:380px){.road-mini-card.card{width:78px}.road-stop{min-height:215px}.road-map{min-height:920px}}
