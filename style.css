@@ -50,3 +50,13 @@
 .road-stop.stop-0 .road-card,.road-stop.stop-2 .road-card{left:2%}
 .road-stop.stop-1 .road-card,.road-stop.stop-3 .road-card{right:2%}
 @media(max-width:380px){.road-map{min-height:1010px}.road-stop{min-height:242px}.road-stop .road-card{width:40%}}
+
+/* v0.7.5: compact Road stop typography */
+.road-card{box-sizing:border-box;overflow:hidden;padding:11px 10px}
+.road-card .road-city{font-size:9px;line-height:1.15;letter-spacing:.7px;white-space:normal;overflow-wrap:anywhere;margin-bottom:5px}
+.road-card .road-level{font-size:9px;line-height:1;letter-spacing:1.1px;margin-bottom:5px}
+.road-card>b{font-size:14px;line-height:1.02;overflow-wrap:anywhere}
+.road-card>small{font-size:9px;line-height:1.2;margin:5px 0;overflow-wrap:anywhere}
+.road-card>span{font-size:12px;line-height:1.08;overflow-wrap:anywhere}
+.road-card .btn{font-size:11px;line-height:1.05;padding:9px 5px;white-space:normal}
+@media(max-width:380px){.road-card{padding:9px 8px}.road-card .road-city{font-size:8px}.road-card>b{font-size:13px}.road-card>small{font-size:8px}.road-card>span{font-size:11px}.road-card .btn{font-size:10px}}
