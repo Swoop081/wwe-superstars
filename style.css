@@ -60,3 +60,15 @@
 .road-card>span{font-size:12px;line-height:1.08;overflow-wrap:anywhere}
 .road-card .btn{font-size:11px;line-height:1.05;padding:9px 5px;white-space:normal}
 @media(max-width:380px){.road-card{padding:9px 8px}.road-card .road-city{font-size:8px}.road-card>b{font-size:13px}.road-card>small{font-size:8px}.road-card>span{font-size:11px}.road-card .btn{font-size:10px}}
+
+/* v0.7.6: Road opponent cards use true miniature card typography */
+.road-mini-card.card{position:relative;width:92px!important;aspect-ratio:.72;overflow:hidden}
+.road-mini-card .corner{top:4px!important;min-width:20px!important;width:auto!important;padding:0!important}
+.road-mini-card .levelcorner{left:4px!important}.road-mini-card .hpcorner{right:4px!important}
+.road-mini-card .corner small{display:block!important;font:900 5px/1 system-ui!important;letter-spacing:0!important}
+.road-mini-card .corner b{display:block!important;font:1000 8px/.9 system-ui!important;letter-spacing:0!important}
+.road-mini-card .name{left:3px!important;right:3px!important;bottom:25px!important;width:auto!important;padding:0!important;font:1000 7px/.95 system-ui!important;letter-spacing:0!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;text-align:center!important}
+.road-mini-card .stats.sixstats{left:3px!important;right:3px!important;bottom:3px!important;width:auto!important;padding:2px!important;gap:0 2px!important;grid-template-columns:1fr 1fr!important;font:800 4px/1 system-ui!important}
+.road-mini-card .sixstats span{min-width:0!important;padding:0!important;display:flex!important;justify-content:space-between!important;align-items:center!important;gap:1px!important;white-space:nowrap!important}
+.road-mini-card .sixstats span b{font:1000 5px/1 system-ui!important}
+@media(max-width:380px){.road-mini-card.card{width:78px!important}.road-mini-card .name{font-size:6px!important;bottom:22px!important}.road-mini-card .stats.sixstats{font-size:3.5px!important}.road-mini-card .sixstats span b{font-size:4.5px!important}}
