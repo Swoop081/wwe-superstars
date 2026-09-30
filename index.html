@@ -1,15 +1,16 @@
-<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'><meta name='theme-color' content='#063b86'><title>WWE Superstars</title><meta name='apple-mobile-web-app-capable' content='yes'><meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'><meta name='apple-mobile-web-app-title' content='WWE Superstars'><link rel='apple-touch-icon' href='assets/wwe-superstars-logo.webp?v=1'><link rel='icon' type='image/webp' href='assets/wwe-superstars-logo.webp?v=1'><link rel='stylesheet' href='style.css?v=0.4.1'><script>
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'><meta name='theme-color' content='#063b86'><title>WWE Superstars</title><meta name='apple-mobile-web-app-capable' content='yes'><meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'><meta name='apple-mobile-web-app-title' content='WWE Superstars'><link rel='apple-touch-icon' href='assets/wwe-superstars-logo.webp?v=1'><link rel='icon' type='image/webp' href='assets/wwe-superstars-logo.webp?v=1'><link rel='stylesheet' href='style.css?v=0.4.2'><script>
 (function(){
-  const BOOT_VERSION='0.4.1';
+  const BOOT_VERSION='0.4.2';
   const key='wweSuperstarsBootVersion';
-  const seen=localStorage.getItem(key);
-  if(seen!==BOOT_VERSION){
+  const u=new URL(location.href);
+  const loaded=u.searchParams.get('v');
+  if(loaded!==BOOT_VERSION){
     localStorage.setItem(key,BOOT_VERSION);
-    const u=new URL(location.href);
-    if(u.searchParams.get('v')!==BOOT_VERSION){
-      u.searchParams.set('v',BOOT_VERSION);
-      location.replace(u.toString());
-    }
+    u.searchParams.set('v',BOOT_VERSION);
+    u.searchParams.set('_',Date.now().toString());
+    location.replace(u.toString());
+  } else {
+    localStorage.setItem(key,BOOT_VERSION);
   }
 })();
-</script></head><body><main id='app'></main><script src='app.js?v=0.4.1'></script></body></html>
+</script></head><body><main id='app'></main><script src='app.js?v=0.4.2'></script></body></html>
