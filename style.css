@@ -34,3 +34,19 @@
 .road-mini-card .corner small,.road-mini-card .corner b{font-size:8px!important;line-height:.8}.road-mini-card .corner{min-width:24px!important;top:5px}.road-mini-card .levelcorner{left:5px}.road-mini-card .hpcorner{right:5px}.road-mini-card .name{font-size:9px!important;bottom:30px;padding:0 3px}.road-mini-card .stats{font-size:5px!important;bottom:4px;gap:1px}.road-mini-card .sixstats span b{font-size:5px!important}.road-mini-card .sixstats{padding:2px}
 .road-card{width:44%}.road-stop{min-height:230px}.road-map{min-height:980px}.road-track{bottom:20px}
 @media(max-width:380px){.road-mini-card.card{width:78px}.road-stop{min-height:215px}.road-map{min-height:920px}}
+
+/* v0.7.4: winding Superstar Road */
+.road-map{position:relative;min-height:1080px;margin:20px -10px 0;padding:12px 12px 28px}
+.road-track{display:none}
+.road-map:before{content:"";position:absolute;inset:20px 12% 25px;z-index:0;background:#0b1f3b;border:10px solid #17355a;box-shadow:0 0 0 3px #ffffff12,0 12px 30px #0008,inset 0 0 30px #0009;clip-path:polygon(35% 0,65% 0,84% 14%,84% 27%,57% 39%,25% 49%,18% 63%,36% 75%,75% 83%,82% 100%,53% 100%,48% 91%,17% 84%,0 70%,0 57%,19% 41%,55% 30%,66% 21%,55% 12%,35% 8%);border-radius:50px}
+.road-map:after{content:"";position:absolute;inset:45px 20% 55px;z-index:1;background:repeating-linear-gradient(155deg,transparent 0 34px,#d7e7ff 34px 42px,transparent 42px 76px);opacity:.45;clip-path:polygon(43% 0,58% 0,78% 15%,78% 25%,54% 38%,22% 49%,17% 62%,36% 74%,72% 83%,76% 100%,61% 100%,54% 91%,23% 83%,8% 69%,8% 59%,25% 43%,57% 31%,68% 22%,56% 12%,43% 8%)}
+.road-stop{position:relative;min-height:260px;display:block;padding:0!important;z-index:3}
+.road-stop .road-pin{top:50%;left:auto}
+.road-stop.stop-0 .road-pin{left:55%;transform:translate(-50%,-50%)}
+.road-stop.stop-1 .road-pin{left:27%;transform:translate(-50%,-50%)}
+.road-stop.stop-2 .road-pin{left:69%;transform:translate(-50%,-50%)}
+.road-stop.stop-3 .road-pin{left:38%;transform:translate(-50%,-50%)}
+.road-stop .road-card{position:absolute;top:50%;transform:translateY(-50%);width:39%;z-index:5}
+.road-stop.stop-0 .road-card,.road-stop.stop-2 .road-card{left:2%}
+.road-stop.stop-1 .road-card,.road-stop.stop-3 .road-card{right:2%}
+@media(max-width:380px){.road-map{min-height:1010px}.road-stop{min-height:242px}.road-stop .road-card{width:40%}}
