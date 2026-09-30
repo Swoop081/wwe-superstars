@@ -1,4 +1,4 @@
-const APP_VERSION='0.7.0';
+const APP_VERSION='0.7.1';
 const BASE=[
 {name:'Roman Reigns',cha:96,str:96,stk:94,tec:88,agi:84,iq:94,finisher:'SPEAR'},{name:'Cody Rhodes',cha:94,str:88,stk:92,tec:94,agi:90,iq:94,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:93,str:96,stk:93,tec:89,agi:86,iq:95,finisher:'RIPTIDE'},{name:'CM Punk',cha:98,str:81,stk:90,tec:97,agi:85,iq:98,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:77,stk:86,tec:95,agi:99,iq:101,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:95,str:85,stk:93,tec:95,agi:95,iq:86,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:96,str:82,stk:93,tec:96,agi:89,iq:93,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:94,str:93,stk:96,tec:94,agi:82,iq:93,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:99,stk:89,tec:86,agi:97,iq:84,finisher:'K.O.D.'},{name:'Gunther',cha:87,str:100,stk:100,tec:95,agi:75,iq:95,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:94,str:82,stk:91,tec:93,agi:90,iq:93,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:95,str:89,stk:89,tec:98,agi:92,iq:89,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:92,str:85,stk:86,tec:89,agi:98,iq:90,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -39,6 +39,65 @@ const BASE=[
 {name:'Brock Lesnar',cha:95,str:100,stk:99,tec:96,agi:82,iq:83,finisher:'F-5',tags:['Male','Legend']},
 {name:'John Cena',cha:100,str:98,stk:94,tec:88,agi:78,iq:97,finisher:'ATTITUDE ADJUSTMENT',tags:['Male','Legend']},
 {name:'Sable',cha:96,str:84,stk:88,tec:82,agi:86,iq:84,finisher:'SABLE BOMB',tags:['Female','Legend']}];
+
+// Canonical Superstar metadata used by Superstar Road eligibility rules.
+// Keep this map additive: new roster members should receive era, division, brand,
+// faction/stable and tag-team metadata here as appropriate.
+const SUPERSTAR_TAGS={
+'Roman Reigns':['Male','Current Era','SmackDown','The Bloodline','The Shield'],
+'Cody Rhodes':['Male','Current Era','SmackDown','Legacy'],
+'Rhea Ripley':['Female','Current Era','RAW','Judgment Day'],
+'CM Punk':['Male','Current Era','RAW','Straight Edge Society'],
+'IYO SKY':['Female','Current Era','RAW','Damage CTRL'],
+'Seth Rollins':['Male','Current Era','RAW','The Shield'],
+'Becky Lynch':['Female','Current Era','RAW'],
+'Randy Orton':['Male','Current Era','SmackDown','Evolution','Legacy'],
+'Bianca Belair':['Female','Current Era','SmackDown'],
+'Gunther':['Male','Current Era','RAW','Imperium'],
+'Sami Zayn':['Male','Current Era','RAW','The Bloodline'],
+'Charlotte Flair':['Female','Current Era','SmackDown','Four Horsewomen'],
+'Tiffany Stratton':['Female','Current Era','SmackDown','NXT Alumni'],
+'Liv Morgan':['Female','Current Era','RAW','Judgment Day'],
+'Lola Vice':['Female','Current Era','NXT'],
+'Stone Cold Steve Austin':['Male','Attitude Era','Legend','Hall of Fame'],
+'The Rock':['Male','Attitude Era','Legend','Hall of Fame','Nation of Domination'],
+'Triple H':['Male','Attitude Era','Legend','Hall of Fame','D-Generation X','Evolution'],
+'The Undertaker':['Male','Attitude Era','Legend','Hall of Fame','Brothers of Destruction'],
+'Shawn Michaels':['Male','Attitude Era','Legend','Hall of Fame','D-Generation X'],
+'Paige':['Female','Reality Era','Legend'],
+'Rob Van Dam':['Male','Ruthless Aggression Era','Legend','Hall of Fame','ECW'],
+'Kurt Angle':['Male','Attitude Era','Ruthless Aggression Era','Legend','Hall of Fame','Team Angle'],
+'Jeff Hardy':['Male','Attitude Era','Ruthless Aggression Era','Legend','The Hardy Boyz'],
+'Sol Ruca':['Female','Current Era','NXT'],
+'Giulia':['Female','Current Era','NXT'],
+'Stephanie Vaquer':['Female','Current Era','RAW'],
+'Bret Hart':['Male','New Generation Era','Legend','Hall of Fame','Hart Foundation'],
+'Razor Ramon':['Male','New Generation Era','Legend','Hall of Fame','The Kliq'],
+'Diesel':['Male','New Generation Era','Legend','Hall of Fame','The Kliq','Two Dudes with Attitudes'],
+'Blake Monroe':['Female','Current Era','NXT'],
+'Goldberg':['Male','Monday Night War Era','Legend','Hall of Fame','WCW'],
+'Bron Breakker':['Male','Current Era','RAW','The Vision','Steiner Family'],
+'Sting':['Male','Monday Night War Era','Legend','Hall of Fame','WCW'],
+'Hulk Hogan':['Male','Golden Era','Legend','Hall of Fame','nWo','Mega Powers'],
+'Lita':['Female','Attitude Era','Ruthless Aggression Era','Legend','Hall of Fame','Team Xtreme'],
+'Jade Cargill':['Female','Current Era','SmackDown'],
+'AJ Styles':['Male','Current Era','SmackDown','The O.C.'],
+'Finn Bálor':['Male','Current Era','RAW','Judgment Day','Bullet Club'],
+'Naomi':['Female','Current Era','SmackDown'],
+'Trish Stratus':['Female','Attitude Era','Ruthless Aggression Era','Legend','Hall of Fame'],
+'Demolition Smash':['Male','Golden Era','Legend','Demolition'],
+'Demolition Ax':['Male','Golden Era','Legend','Demolition'],
+'Ultimate Warrior':['Male','Golden Era','Legend','Hall of Fame'],
+'Macho Man Randy Savage':['Male','Golden Era','Legend','Hall of Fame','Mega Powers'],
+'Andre the Giant':['Male','Golden Era','Legend','Hall of Fame'],
+'Roxanne Perez':['Female','Current Era','RAW','NXT Alumni'],
+'Brock Lesnar':['Male','Ruthless Aggression Era','Legend'],
+'John Cena':['Male','Ruthless Aggression Era','PG Era','Legend'],
+'Sable':['Female','Attitude Era','Legend']
+};
+BASE.forEach(w=>w.tags=[...new Set([...(w.tags||[]),...(SUPERSTAR_TAGS[w.name]||[])])]);
+function hasTag(w,t){return (w.tags||[]).includes(t)}
+function roadEligibleTags(){let owned=BASE.filter(w=>level(w.name));let candidates=[...new Set(BASE.flatMap(w=>w.tags||[]))].filter(t=>owned.some(w=>hasTag(w,t)));return candidates.filter(t=>owned.filter(w=>hasTag(w,t)).length>=2)}
 const KEYS=[['str','Strength'],['stk','Strike'],['tec','Technique'],['agi','Agility'],['cha','Charisma'],['iq','Ring IQ']];let save=JSON.parse(localStorage.getItem('wweSuperstarsSave')||'null'),state={};const app=document.querySelector('#app');
 function persist(){localStorage.setItem('wweSuperstarsSave',JSON.stringify(save))}
 function ensureRecord(n){if(!save.records)save.records={};if(!save.records[n])save.records[n]={wins:0,losses:0,streak:0,bestStreak:0};return save.records[n]}
@@ -67,9 +126,9 @@ const ROAD_MODS=[
 {id:'comeback',name:'COMEBACK',desc:'Attacks deal 25% more damage below 30% HP.'},
 {id:'random',name:'CHAOS',desc:'Attack categories fully reshuffle every turn.'}
 ];
-function roadNode(n){let boss=n%10===0,seed=(n*9301+49297)%233280,r=seed/233280,mod=boss?ROAD_MODS[0]:ROAD_MODS[1+Math.floor(r*(ROAD_MODS.length-1))],pool=[...KEYS.map(x=>x[0])],blocked=null;if(mod.id==='noStat'){blocked=pool[Math.floor(r*pool.length)];pool=pool.filter(x=>x!==blocked)}if(mod.id==='specialist')pool=pool.sort((a,b)=>((a.charCodeAt(0)*n)%7)-((b.charCodeAt(0)*n)%7)).slice(0,3);let cpu=BASE[(seed+n)%BASE.length];return {n,boss,mod,cpu,blocked,pool}}
-function road(){if(!save.roadLevel)save.roadLevel=1;persist();let n=save.roadLevel,nodes=[0,1,2,3].map(i=>roadNode(n+i));shell(`<div class="topbar"><button onclick="home()" style="background:none;border:0">‹ HOME</button><span>SUPERSTAR ROAD</span></div><div class="title">LEVEL ${n}</div><div class="sub">The road never ends. Three matches are generated ahead.</div><div class="road-path">${nodes.map((x,i)=>`<div class="road-node ${i?'future':'current'} ${x.boss?'boss':''}"><div class="road-num">${x.boss?'★ ':''}${x.n}</div><div><b>${x.boss?'BOSS MATCH':x.mod.name}</b><small>${x.boss?'Milestone fight with a stronger opponent.':x.mod.desc}</small><span>${x.cpu.name}</span></div>${i===0?'<button class="btn" onclick="selectRoadFighter()">PLAY</button>':''}</div>`).join('')}</div>`,'road-screen')}
-function selectRoadFighter(){let o=BASE.filter(x=>level(x.name)).sort((a,b)=>level(b.name)-level(a.name)||hpOf(b,level(b.name))-hpOf(a,level(a.name))||a.name.localeCompare(b.name));shell(`<div class="topbar"><button onclick="road()" style="background:none;border:0">‹ ROAD</button><span>LEVEL ${save.roadLevel||1}</span></div><div class="title">Choose Superstar</div><div class="cards select">${o.map(x=>`<div onclick="beginRoad('${x.name.replaceAll("'","\\'")}')">${card(x,level(x.name))}</div>`).join('')}</div>`)}
+function roadNode(n){let boss=n%10===0,seed=(n*9301+49297)%233280,r=seed/233280,mod=boss?ROAD_MODS[0]:ROAD_MODS[1+Math.floor(r*(ROAD_MODS.length-1))],pool=[...KEYS.map(x=>x[0])],blocked=null;if(mod.id==='noStat'){blocked=pool[Math.floor(r*pool.length)];pool=pool.filter(x=>x!==blocked)}if(mod.id==='specialist')pool=pool.sort((a,b)=>((a.charCodeAt(0)*n)%7)-((b.charCodeAt(0)*n)%7)).slice(0,3);let eligibleTag=null;if(n>=6&&!boss&&n%4===0){let tags=roadEligibleTags();if(tags.length)eligibleTag=tags[seed%tags.length]}let cpuPool=eligibleTag?BASE.filter(w=>hasTag(w,eligibleTag)):BASE;let cpu=cpuPool[(seed+n)%cpuPool.length];return {n,boss,mod,cpu,blocked,pool,eligibleTag}}
+function road(){if(!save.roadLevel)save.roadLevel=1;persist();let n=save.roadLevel,nodes=[0,1,2,3].map(i=>roadNode(n+i));shell(`<div class="topbar"><button onclick="home()" style="background:none;border:0">‹ HOME</button><span>SUPERSTAR ROAD</span></div><div class="title">LEVEL ${n}</div><div class="sub">The road never ends. Three matches are generated ahead.</div><div class="road-path">${nodes.map((x,i)=>`<div class="road-node ${i?'future':'current'} ${x.boss?'boss':''}"><div class="road-num">${x.boss?'★ ':''}${x.n}</div><div><b>${x.boss?'BOSS MATCH':x.mod.name}</b><small>${x.boss?'Milestone fight with a stronger opponent.':(x.eligibleTag?x.eligibleTag+' ONLY · ':'')+x.mod.desc}</small><span>${x.cpu.name}</span></div>${i===0?'<button class="btn" onclick="selectRoadFighter()">PLAY</button>':''}</div>`).join('')}</div>`,'road-screen')}
+function selectRoadFighter(){let node=roadNode(save.roadLevel||1),o=BASE.filter(x=>level(x.name)&&(!node.eligibleTag||hasTag(x,node.eligibleTag))).sort((a,b)=>level(b.name)-level(a.name)||hpOf(b,level(b.name))-hpOf(a,level(a.name))||a.name.localeCompare(b.name));shell(`<div class="topbar"><button onclick="road()" style="background:none;border:0">‹ ROAD</button><span>LEVEL ${save.roadLevel||1}</span></div><div class="title">Choose Superstar</div><div class="cards select">${o.map(x=>`<div onclick="beginRoad('${x.name.replaceAll("'","\\'")}')">${card(x,level(x.name))}</div>`).join('')}</div>`)}
 function beginRoad(n){let node=roadNode(save.roadLevel||1),p=BASE.find(x=>x.name===n),pl=level(n),cl=Math.max(1,Math.round(pl*(.88+Math.min(node.n,100)*.003)));if(node.boss)cl=Math.max(cl,pl+1);let pmax=hpOf(p,pl),cmax=hpOf(node.cpu,cl);if(node.mod.id==='iron'){pmax=Math.round(pmax*1.25);cmax=Math.round(cmax*1.25)}if(node.mod.id==='glass'){pmax=Math.round(pmax*.7);cmax=Math.round(cmax*.7)}let php=pmax,chp=cmax;if(node.mod.id==='opening'){php=Math.round(pmax*.75);chp=Math.round(cmax*.75)}state.b={p,cpu:node.cpu,pl,cl,php,chp,pmax,cmax,avail:[...node.pool],road:true,node,log:node.boss?'Boss match! Choose your attack.':node.mod.name+' · Choose your attack.'};battle()}
 
 function selectFighter(){let o=BASE.filter(x=>level(x.name)).sort((a,b)=>level(b.name)-level(a.name)||hpOf(b,level(b.name))-hpOf(a,level(a.name))||a.name.localeCompare(b.name));shell(`<div class="topbar"><button onclick="home()" style="background:none;border:0">‹ HOME</button><span>EXHIBITION</span></div><div class="title">Choose Superstar</div><div class="sub">Pick anyone in your collection.</div><div class="cards select">${o.map(x=>`<div onclick="begin('${x.name.replaceAll("'","\\'")}')">${card(x,level(x.name))}</div>`).join('')}</div>`)}
