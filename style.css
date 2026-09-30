@@ -217,3 +217,28 @@
   border-radius:3px;
   background:rgba(255,255,255,.35);
 }
+
+
+/* v0.7.49 — premium duplicate upgrade reveal */
+.duplicate-upgrade{overflow:hidden}
+.duplicate-upgrade .upgrade-card{width:min(58vw,275px);margin:4px auto 8px;filter:drop-shadow(0 12px 24px #0009)}
+.duplicate-upgrade .upgrade-card .card{width:100%;box-sizing:border-box}
+.upgrade-level{margin:2px 0 10px;font:900 22px/1 system-ui;letter-spacing:.5px;color:#fff;text-shadow:0 2px 8px #000}
+.upgrade-level span{margin:0 7px;color:#65ef88;text-shadow:0 0 10px #25d85c}
+.upgrade-level b{color:#65ef88}
+.upgrade-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;max-width:390px;margin:0 auto 10px}
+.upgrade-stat{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:5px;padding:8px 9px;border:1px solid #ffffff18;border-radius:9px;background:linear-gradient(180deg,#172033e8,#080d18ed);box-shadow:inset 0 1px #ffffff0e;transform:translateY(3px);transition:.28s ease}
+.upgrade-stat span{font:800 10px/1 system-ui;color:#cbd5e5;letter-spacing:.35px}
+.upgrade-stat b{font:900 17px/1 system-ui;color:#fff}
+.upgrade-stat i{font:900 13px/1 system-ui;color:#48ef77;font-style:normal;opacity:.25;transform:translateY(2px)}
+.upgrade-stat em{font:900 11px/1 system-ui;color:#48ef77;font-style:normal;opacity:.35}
+.upgrade-stat.rising{border-color:#42e87155;box-shadow:inset 0 1px #ffffff14,0 0 13px #2de9671c;transform:none}
+.upgrade-stat.rising b{color:#82f69f;text-shadow:0 0 8px #2ce55b66}
+.upgrade-stat.rising i{opacity:1;animation:statArrow .65s ease both}
+.upgrade-stat.rising em{opacity:1}
+.hp-up{grid-column:1/-1}
+.upgrade-message{font:900 13px/1 system-ui;letter-spacing:2px;color:#72f394;opacity:0;transform:scale(.92);transition:.35s ease;margin:5px 0 10px;text-shadow:0 0 12px #25d95b88}
+.upgrade-message.show{opacity:1;transform:scale(1)}
+.upgrade-continue{opacity:0;transform:translateY(8px);pointer-events:none;transition:.35s ease}
+.upgrade-continue.show{opacity:1;transform:none;pointer-events:auto}
+@keyframes statArrow{0%{transform:translateY(6px);opacity:0}55%{transform:translateY(-3px);opacity:1}100%{transform:none;opacity:1}}
