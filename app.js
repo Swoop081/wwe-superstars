@@ -1,4 +1,4 @@
-const APP_VERSION='0.6.8';
+const APP_VERSION='0.6.9';
 const BASE=[
 {name:'Roman Reigns',cha:96,str:96,stk:94,tec:88,agi:84,iq:94,finisher:'SPEAR'},{name:'Cody Rhodes',cha:94,str:88,stk:92,tec:94,agi:90,iq:94,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:93,str:96,stk:93,tec:89,agi:86,iq:95,finisher:'RIPTIDE'},{name:'CM Punk',cha:98,str:81,stk:90,tec:97,agi:85,iq:98,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:77,stk:86,tec:95,agi:99,iq:101,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:95,str:85,stk:93,tec:95,agi:95,iq:86,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:96,str:82,stk:93,tec:96,agi:89,iq:93,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:94,str:93,stk:96,tec:94,agi:82,iq:93,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:99,stk:89,tec:86,agi:97,iq:84,finisher:'K.O.D.'},{name:'Gunther',cha:87,str:100,stk:100,tec:95,agi:75,iq:95,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:94,str:82,stk:91,tec:93,agi:90,iq:93,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:95,str:89,stk:89,tec:98,agi:92,iq:89,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:92,str:85,stk:86,tec:89,agi:98,iq:90,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -24,7 +24,11 @@ const BASE=[
 {name:'Bron Breakker',cha:91,str:99,stk:96,tec:86,agi:94,iq:80,finisher:'SPEAR',tags:['Male','RAW','Current Era']},
 {name:'Sting',cha:98,str:92,stk:91,tec:92,agi:83,iq:96,finisher:'SCORPION DEATH DROP',tags:['Male','Legend','Hall of Fame']},
 {name:'Hulk Hogan',cha:100,str:98,stk:94,tec:78,agi:72,iq:103,finisher:'LEG DROP',tags:['Male','Legend','Hall of Fame']},
-{name:'Lita',cha:96,str:79,stk:88,tec:91,agi:99,iq:87,finisher:'LITASAULT',tags:['Female','Legend','Hall of Fame']}];
+{name:'Lita',cha:96,str:79,stk:88,tec:91,agi:99,iq:87,finisher:'LITASAULT',tags:['Female','Legend','Hall of Fame']},
+{name:'Jade Cargill',cha:92,str:100,stk:94,tec:83,agi:88,iq:83,finisher:'JADED',tags:['Female','SmackDown','Current Era']},
+{name:'AJ Styles',cha:94,str:84,stk:93,tec:98,agi:96,iq:94,finisher:'STYLES CLASH',tags:['Male','SmackDown','Current Era']},
+{name:'Finn Bálor',cha:93,str:82,stk:94,tec:96,agi:97,iq:89,finisher:'COUP DE GRÂCE',tags:['Male','RAW','Current Era']},
+{name:'Naomi',cha:94,str:82,stk:88,tec:89,agi:98,iq:89,finisher:'SPLIT-LEGGED MOONSAULT',tags:['Female','SmackDown','Current Era']}];
 const KEYS=[['str','Strength'],['stk','Strike'],['tec','Technique'],['agi','Agility'],['cha','Charisma'],['iq','Ring IQ']];let save=JSON.parse(localStorage.getItem('wweSuperstarsSave')||'null'),state={};const app=document.querySelector('#app');
 function persist(){localStorage.setItem('wweSuperstarsSave',JSON.stringify(save))}
 function ensureRecord(n){if(!save.records)save.records={};if(!save.records[n])save.records[n]={wins:0,losses:0,streak:0,bestStreak:0};return save.records[n]}
