@@ -72,3 +72,6 @@
 .road-mini-card .sixstats span{min-width:0!important;padding:0!important;display:flex!important;justify-content:space-between!important;align-items:center!important;gap:1px!important;white-space:nowrap!important}
 .road-mini-card .sixstats span b{font:1000 5px/1 system-ui!important}
 @media(max-width:380px){.road-mini-card.card{width:78px!important}.road-mini-card .name{font-size:6px!important;bottom:22px!important}.road-mini-card .stats.sixstats{font-size:3.5px!important}.road-mini-card .sixstats span b{font-size:4.5px!important}}
+
+/* v0.7.8: Road thumbnails show clean authored card art only */
+.road-mini-card .corner,.road-mini-card .name,.road-mini-card .stats{display:none!important}
