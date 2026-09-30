@@ -87,3 +87,10 @@
 .record-name b,.record-numbers b{font-size:15px}
 .record-name small,.record-numbers small{font-size:9px;letter-spacing:.4px;opacity:.8}
 .record-numbers{text-align:right}
+
+/* v0.7.18: compact Home mode panels to their content */
+.homehero .mode{min-height:0!important;height:auto!important;padding-top:24px!important;padding-bottom:24px!important;display:block!important}
+.homehero .mode .kicker{margin-top:0!important}
+.homehero .mode h2{margin-top:5px!important}
+.homehero .road-home{padding-top:24px!important}
+.homehero .road-home .mode-action{margin-top:16px!important}
