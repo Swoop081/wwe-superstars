@@ -94,3 +94,18 @@
 .homehero .mode h2{margin-top:5px!important}
 .homehero .road-home{padding-top:24px!important}
 .homehero .road-home .mode-action{margin-top:16px!important}
+
+
+/* v0.7.42: compact Daily Gauntlet featured card */
+.gauntlet-screen .hero.finish{padding-top:14px!important}
+.gauntlet-screen .hero.finish>.card{width:min(62vw,300px)!important;margin:0 auto 14px!important}
+.gauntlet-screen .hero.finish>.card .corner{top:8px!important;min-width:40px!important}
+.gauntlet-screen .hero.finish>.card .corner small{font-size:10px!important}
+.gauntlet-screen .hero.finish>.card .corner b{font-size:20px!important}
+.gauntlet-screen .hero.finish>.card .levelcorner{left:8px!important}
+.gauntlet-screen .hero.finish>.card .hpcorner{right:8px!important}
+.gauntlet-screen .hero.finish>.card .name{font-size:17px!important;bottom:62px!important}
+.gauntlet-screen .hero.finish>.card .stats.sixstats{left:9px!important;right:9px!important;bottom:9px!important;font-size:8px!important;gap:2px 8px!important;padding:4px!important}
+.gauntlet-screen .hero.finish>.card .sixstats span b{font-size:10px!important}
+.gauntlet-screen .hero.finish>.sub{margin-top:0!important}
+@media(max-width:380px){.gauntlet-screen .hero.finish>.card{width:min(60vw,260px)!important}}
