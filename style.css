@@ -75,3 +75,15 @@
 
 /* v0.7.8: Road thumbnails show clean authored card art only */
 .road-mini-card .corner,.road-mini-card .name,.road-mini-card .stats{display:none!important}
+
+/* v0.7.17: tappable mode panels + career stats */
+.homehero .mode{cursor:pointer}
+.homehero .mode:active{transform:scale(.99)}
+.mode-action{margin-top:16px;font:1000 14px/1 system-ui;letter-spacing:1.2px;color:#fff}
+.record-list{display:grid;gap:10px;margin-top:18px;padding-bottom:30px}
+.record-row{display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:center;background:#07366f;border:1px solid #ffffff2e;border-radius:16px;padding:9px 12px;box-shadow:0 8px 18px #001a3d45}
+.record-row img{width:54px;height:70px;object-fit:cover;border-radius:9px}
+.record-name,.record-numbers{display:flex;flex-direction:column;gap:4px}
+.record-name b,.record-numbers b{font-size:15px}
+.record-name small,.record-numbers small{font-size:9px;letter-spacing:.4px;opacity:.8}
+.record-numbers{text-align:right}
