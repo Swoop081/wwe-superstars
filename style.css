@@ -123,3 +123,16 @@
 .gauntlet-screen .hero.finish>.card .stats.sixstats{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;width:auto!important;margin-bottom:-7px!important;padding:0!important;gap:0 5px!important;font-size:clamp(6px,1.8vw,8px)!important;line-height:1!important}
 .gauntlet-screen .hero.finish>.card .sixstats span{height:11px!important;min-height:11px!important;line-height:11px!important;padding:0 3px!important}
 .gauntlet-screen .hero.finish>.card .sixstats span b{font-size:clamp(7px,2.1vw,9px)!important}
+
+
+/* v0.7.44: Gauntlet card overlay exactly follows collection-card proportions */
+.gauntlet-screen .hero.finish>.card .corner{top:10px!important;min-width:46px!important}
+.gauntlet-screen .hero.finish>.card .levelcorner{left:12px!important}
+.gauntlet-screen .hero.finish>.card .hpcorner{right:12px!important}
+.gauntlet-screen .hero.finish>.card .corner small,
+.gauntlet-screen .hero.finish>.card .corner b{font-size:clamp(14px,4.3vw,22px)!important;line-height:.84!important}
+.gauntlet-screen .hero.finish>.card .corner b{margin-top:4px!important}
+.gauntlet-screen .hero.finish>.card .name{font-size:clamp(20px,5.2vw,25px)!important;line-height:.9!important}
+.gauntlet-screen .hero.finish>.card .stats.sixstats{font-size:clamp(8px,2.35vw,9px)!important;gap:0 6px!important;margin-bottom:-10px!important}
+.gauntlet-screen .hero.finish>.card .sixstats span{min-height:14px!important;height:14px!important;line-height:14px!important;padding:0 5px!important}
+.gauntlet-screen .hero.finish>.card .sixstats span b{font-size:clamp(9px,2.8vw,11px)!important}
