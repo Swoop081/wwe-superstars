@@ -1,4 +1,4 @@
-const APP_VERSION='0.5.9';
+const APP_VERSION='0.6.0';
 const BASE=[
 {name:'Roman Reigns',cha:96,str:96,stk:94,tec:86,agi:82,iq:95,finisher:'SPEAR'},{name:'Cody Rhodes',cha:94,str:86,stk:91,tec:92,agi:88,iq:94,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:93,str:94,stk:91,tec:86,agi:84,iq:90,finisher:'RIPTIDE'},{name:'CM Punk',cha:98,str:80,stk:89,tec:95,agi:83,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:84,str:75,stk:84,tec:92,agi:98,iq:91,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:95,str:84,stk:92,tec:93,agi:94,iq:92,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:96,str:82,stk:91,tec:94,agi:87,iq:95,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:92,str:91,stk:93,tec:91,agi:82,iq:96,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:97,stk:88,tec:85,agi:94,iq:87,finisher:'K.O.D.'},{name:'Gunther',cha:88,str:98,stk:99,tec:91,agi:75,iq:93,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:94,str:82,stk:90,tec:91,agi:88,iq:92,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:95,str:88,stk:87,tec:96,agi:90,iq:93,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:85,stk:86,tec:88,agi:97,iq:87,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -8,7 +8,17 @@ const BASE=[
 {name:'The Rock',cha:100,str:97,stk:96,tec:87,agi:86,iq:94,finisher:'ROCK BOTTOM',tags:['Male','Attitude Era','Legend','Hall of Fame']},
 {name:'Triple H',cha:97,str:96,stk:94,tec:93,agi:76,iq:98,finisher:'PEDIGREE',tags:['Male','Attitude Era','Legend','Hall of Fame']},
 {name:'The Undertaker',cha:99,str:99,stk:96,tec:90,agi:80,iq:97,finisher:'TOMBSTONE PILEDRIVER',tags:['Male','Attitude Era','Legend','Hall of Fame']},
-{name:'Shawn Michaels',cha:99,str:84,stk:96,tec:98,agi:96,iq:97,finisher:'SWEET CHIN MUSIC',tags:['Male','Attitude Era','Legend','Hall of Fame']}];
+{name:'Shawn Michaels',cha:99,str:84,stk:96,tec:98,agi:96,iq:97,finisher:'SWEET CHIN MUSIC',tags:['Male','Attitude Era','Legend','Hall of Fame']},
+{name:'Paige',cha:94,str:79,stk:91,tec:93,agi:88,iq:92,finisher:'RAMPAIGE',tags:['Female','Legend']},
+{name:'Rob Van Dam',cha:94,str:85,stk:91,tec:90,agi:98,iq:90,finisher:'FIVE STAR FROG SPLASH',tags:['Male','Legend','Hall of Fame']},
+{name:'Kurt Angle',cha:96,str:94,stk:88,tec:100,agi:87,iq:99,finisher:'ANGLE SLAM',tags:['Male','Legend','Hall of Fame']},
+{name:'Jeff Hardy',cha:96,str:83,stk:88,tec:87,agi:98,iq:89,finisher:'SWANTON BOMB',tags:['Male','Legend']},
+{name:'Sol Ruca',cha:86,str:86,stk:84,tec:87,agi:99,iq:85,finisher:'SOL SNATCHER',tags:['Female','NXT','Current Era']},
+{name:'Giulia',cha:91,str:84,stk:96,tec:94,agi:90,iq:92,finisher:'NORTHERN LIGHTS BOMB',tags:['Female','NXT','Current Era']},
+{name:'Stephanie Vaquer',cha:92,str:84,stk:94,tec:96,agi:92,iq:94,finisher:'SVB',tags:['Female','RAW','Current Era']},
+{name:'Bret Hart',cha:96,str:86,stk:91,tec:100,agi:90,iq:100,finisher:'SHARPSHOOTER',tags:['Male','Legend','Hall of Fame']},
+{name:'Razor Ramon',cha:98,str:94,stk:95,tec:89,agi:80,iq:92,finisher:"RAZOR'S EDGE",tags:['Male','Legend','Hall of Fame']},
+{name:'Diesel',cha:94,str:99,stk:94,tec:83,agi:72,iq:91,finisher:'JACKKNIFE POWERBOMB',tags:['Male','Legend','Hall of Fame']}];
 const KEYS=[['str','Strength'],['stk','Strike'],['tec','Technique'],['agi','Agility'],['cha','Charisma'],['iq','Ring IQ']];let save=JSON.parse(localStorage.getItem('wweSuperstarsSave')||'null'),state={};const app=document.querySelector('#app');
 function persist(){localStorage.setItem('wweSuperstarsSave',JSON.stringify(save))}function statsAt(w,lvl){let m=1+(lvl-1)*.025;return Object.fromEntries(KEYS.map(([k])=>[k,Math.round(w[k]*m)]))}function hpOf(w,lvl){let s=statsAt(w,lvl);return Math.round(KEYS.reduce((a,[k])=>a+s[k],0)/6*3.4)}function level(n){return save?.roster?.[n]||0}
 function artFile(name){return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.png'}
