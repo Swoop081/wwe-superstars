@@ -242,3 +242,29 @@
 .upgrade-continue{opacity:0;transform:translateY(8px);pointer-events:none;transition:.35s ease}
 .upgrade-continue.show{opacity:1;transform:none;pointer-events:auto}
 @keyframes statArrow{0%{transform:translateY(6px);opacity:0}55%{transform:translateY(-3px);opacity:1}100%{transform:none;opacity:1}}
+
+
+/* v0.7.54 — two-choice attack presentation */
+.battle .attacks{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  width:min(100%,470px);
+  margin:0 auto;
+  gap:12px;
+}
+.battle .attack{
+  min-height:164px;
+  padding:12px 10px;
+}
+.battle .attackicon{
+  width:104px;
+  height:104px;
+}
+.battle .attack b{
+  font-size:38px;
+}
+@media(max-width:390px){
+  .battle .attacks{width:min(100%,440px);gap:10px}
+  .battle .attack{min-height:156px}
+  .battle .attackicon{width:98px;height:98px}
+  .battle .attack b{font-size:36px}
+}
