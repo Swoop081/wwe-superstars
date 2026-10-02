@@ -268,3 +268,27 @@
   .battle .attackicon{width:98px;height:98px}
   .battle .attack b{font-size:36px}
 }
+
+
+/* v0.7.65: clean card fronts + eight-stat flip viewer */
+.card>.stats{display:none!important}
+.card>.name{margin-top:auto;margin-bottom:0;transform:none!important}
+.card-viewer{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:24px;background:#000b;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.card-viewer-inner{width:min(72vw,360px)}
+.flip-card{width:100%;aspect-ratio:.68;perspective:1200px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;height:100%;transition:transform .38s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.flip-face>.card{width:100%;height:100%}
+.flip-back{transform:rotateY(180deg)}
+.card-back{display:flex!important;justify-content:center!important;padding:22px 18px!important;background:linear-gradient(155deg,#09295d,#06152f 55%,#020812)!important;border:2px solid #70aef1!important;box-shadow:0 18px 50px #000b,inset 0 1px #ffffff22!important}
+.card-back:before{content:"";position:absolute;inset:9px;border:1px solid #ffffff18;border-radius:14px;pointer-events:none}
+.back-title{position:relative;z-index:2;text-align:center;font-size:clamp(23px,7vw,32px);line-height:.9;text-transform:uppercase;margin-bottom:18px;text-shadow:0 2px 5px #000}
+.back-stats{position:relative;z-index:2;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.back-stats>div{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:62px;padding:8px 4px;border-radius:10px;background:#ffffff0d;border:1px solid #ffffff18}
+.back-stats span{font:900 10px/1 system-ui;letter-spacing:.7px;text-transform:uppercase;color:#b9d9ff;text-align:center}
+.back-stats b{font:1000 26px/1 system-ui;color:#fff;margin-top:5px}
+.back-hint{position:relative;z-index:2;text-align:center;margin-top:17px;font:900 9px/1 system-ui;letter-spacing:2px;color:#7faee9}
+.viewer-card .corner small,.viewer-card .corner b{font-size:clamp(25px,7vw,34px)!important}
+.viewer-card .name{font-size:clamp(26px,7vw,32px)!important}
+@media(max-width:390px){.card-viewer-inner{width:min(78vw,330px)}.back-stats>div{min-height:56px}.back-stats b{font-size:23px}}
