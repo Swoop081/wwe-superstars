@@ -1,4 +1,4 @@
-const APP_VERSION='0.7.62';
+const APP_VERSION='0.7.63';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -48,7 +48,27 @@ const BASE=[
 {name:'Kevin Nash',cha:94,str:97,stk:91,tec:72,agi:68,iq:94,finisher:'JACKKNIFE POWERBOMB',tags:['Male','Monday Night War Era','Legend','Hall of Fame','nWo','The Kliq']},
 {name:'Scott Hall',cha:97,str:88,stk:91,tec:94,agi:72,iq:88,finisher:"OUTSIDER'S EDGE",tags:['Male','Monday Night War Era','Legend','Hall of Fame','nWo','The Kliq']},
 {name:'Eric Bischoff',cha:99,str:68,stk:82,tec:78,agi:72,iq:97,finisher:'ROUNDHOUSE KICK',tags:['Male','Monday Night War Era','Legend','nWo']},
-{name:'Syxx',cha:88,str:68,stk:84,tec:94,agi:97,iq:91,finisher:'BUZZKILLER',tags:['Male','Monday Night War Era','Legend','nWo','The Kliq']}];
+{name:'Syxx',cha:88,str:68,stk:84,tec:94,agi:97,iq:91,finisher:'BUZZKILLER',tags:['Male','Monday Night War Era','Legend','nWo','The Kliq']},
+{name:'Chris Jericho',cha:97,str:72,stk:88,tec:94,agi:91,iq:97,finisher:'CODEBREAKER',tags:['Male','Ruthless Aggression Era','Legend']},
+{name:'Edge',cha:97,str:88,stk:94,tec:91,agi:72,iq:94,finisher:'SPEAR',tags:['Male','Ruthless Aggression Era','Legend','Hall of Fame']},
+{name:'Eddie Guerrero',cha:97,str:72,stk:88,tec:97,agi:94,iq:91,finisher:'FROG SPLASH',tags:['Male','Ruthless Aggression Era','Legend','Hall of Fame']},
+{name:'Booker T',cha:94,str:88,stk:94,tec:91,agi:88,iq:91,finisher:'BOOK END',tags:['Male','Ruthless Aggression Era','Legend','Hall of Fame']},
+{name:'Batista',cha:91,str:97,stk:94,tec:88,agi:68,iq:91,finisher:'BATISTA BOMB',tags:['Male','Ruthless Aggression Era','Legend','Hall of Fame','Evolution']},
+{name:'Sabu',cha:88,str:72,stk:91,tec:88,agi:97,iq:91,finisher:'ARABIAN FACEBUSTER',tags:['Male','ECW','Legend']},
+{name:'New Jack',cha:91,str:88,stk:97,tec:68,agi:72,iq:88,finisher:'187',tags:['Male','ECW','Legend']},
+{name:'Mankind',cha:94,str:91,stk:88,tec:91,agi:68,iq:97,finisher:'MANDIBLE CLAW',tags:['Male','Attitude Era','Legend','Hall of Fame']},
+{name:'Kane',cha:91,str:97,stk:94,tec:88,agi:68,iq:91,finisher:'CHOKESLAM',tags:['Male','Attitude Era','Legend','Hall of Fame','Brothers of Destruction']},
+{name:'Damian Priest',cha:91,str:97,stk:94,tec:88,agi:72,iq:91,finisher:'SOUTH OF HEAVEN',tags:['Male','Current Era','RAW','Judgment Day']},
+{name:'Road Warrior Hawk',cha:91,str:97,stk:97,tec:72,agi:68,iq:88,finisher:'DOOMSDAY DEVICE',tags:['Male','Legend','Hall of Fame','Road Warriors']},
+{name:'Road Warrior Animal',cha:88,str:97,stk:94,tec:72,agi:68,iq:91,finisher:'DOOMSDAY DEVICE',tags:['Male','Legend','Hall of Fame','Road Warriors']},
+{name:'Demolition Crush',cha:88,str:97,stk:94,tec:72,agi:68,iq:91,finisher:'DEMOLITION DECAPITATION',tags:['Male','Legend','Demolition']},
+{name:'British Bulldog',cha:91,str:97,stk:88,tec:94,agi:72,iq:91,finisher:'RUNNING POWERSLAM',tags:['Male','Legend','Hall of Fame']},
+{name:'Yokozuna',cha:91,str:99,stk:97,tec:88,agi:68,iq:91,finisher:'BANZAI DROP',tags:['Male','Legend','Hall of Fame']},
+{name:'Jey Uso',cha:97,str:88,stk:94,tec:88,agi:91,iq:91,finisher:'USO SPLASH',tags:['Male','Current Era','RAW','The Bloodline']},
+{name:'Jacob Fatu',cha:91,str:99,stk:97,tec:88,agi:94,iq:88,finisher:'IMPLANT DDT',tags:['Male','Current Era','SmackDown','The Bloodline']},
+{name:'Jimmy Uso',cha:94,str:88,stk:94,tec:88,agi:91,iq:88,finisher:'USO SPLASH',tags:['Male','Current Era','SmackDown','The Bloodline']},
+{name:'Solo Sikoa',cha:88,str:97,stk:97,tec:88,agi:72,iq:91,finisher:'SAMOAN SPIKE',tags:['Male','Current Era','SmackDown','The Bloodline']},
+{name:'LA Knight',cha:99,str:91,stk:94,tec:88,agi:72,iq:91,finisher:'BFT',tags:['Male','Current Era','SmackDown']}];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
 // Keep this map additive: new roster members should receive era, division, brand,
@@ -113,7 +133,27 @@ const SUPERSTAR_TAGS={
 'Kevin Nash':['Male','Monday Night War Era','Legend','Hall of Fame','nWo','The Kliq'],
 'Scott Hall':['Male','Monday Night War Era','Legend','Hall of Fame','nWo','The Kliq'],
 'Eric Bischoff':['Male','Monday Night War Era','Legend','nWo'],
-'Syxx':['Male','Monday Night War Era','Legend','nWo','The Kliq']
+'Syxx':['Male','Monday Night War Era','Legend','nWo','The Kliq'],
+'Chris Jericho':['Male','Ruthless Aggression Era','Legend'],
+'Edge':['Male','Ruthless Aggression Era','Legend','Hall of Fame'],
+'Eddie Guerrero':['Male','Ruthless Aggression Era','Legend','Hall of Fame'],
+'Booker T':['Male','Ruthless Aggression Era','Legend','Hall of Fame'],
+'Batista':['Male','Ruthless Aggression Era','Legend','Hall of Fame','Evolution'],
+'Sabu':['Male','ECW','Legend'],
+'New Jack':['Male','ECW','Legend'],
+'Mankind':['Male','Attitude Era','Legend','Hall of Fame'],
+'Kane':['Male','Attitude Era','Legend','Hall of Fame','Brothers of Destruction'],
+'Damian Priest':['Male','Current Era','RAW','Judgment Day'],
+'Road Warrior Hawk':['Male','Legend','Hall of Fame','Road Warriors'],
+'Road Warrior Animal':['Male','Legend','Hall of Fame','Road Warriors'],
+'Demolition Crush':['Male','Legend','Demolition'],
+'British Bulldog':['Male','Legend','Hall of Fame'],
+'Yokozuna':['Male','Legend','Hall of Fame'],
+'Jey Uso':['Male','Current Era','RAW','The Bloodline'],
+'Jacob Fatu':['Male','Current Era','SmackDown','The Bloodline'],
+'Jimmy Uso':['Male','Current Era','SmackDown','The Bloodline'],
+'Solo Sikoa':['Male','Current Era','SmackDown','The Bloodline'],
+'LA Knight':['Male','Current Era','SmackDown']
 };
 BASE.forEach(w=>w.tags=[...new Set([...(w.tags||[]),...(SUPERSTAR_TAGS[w.name]||[])])]);
 function hasTag(w,t){return (w.tags||[]).includes(t)}
