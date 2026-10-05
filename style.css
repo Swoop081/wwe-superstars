@@ -305,39 +305,41 @@
 
 
 
-/* v0.7.75 — integrated premium card hardware */
+
+/* v0.7.76 — refined card typography: compact corners + retained nameplate */
 .card{overflow:hidden}
 .card .corner{
-  top:10px!important;box-sizing:border-box;min-width:64px!important;padding:7px 9px 8px;
-  border:1px solid #e2b841;border-radius:11px;
-  background:linear-gradient(145deg,#55400d 0%,#d2a52e 3%,#6d5315 7%,#14130f 11%,#050608 70%,#3a2b08 92%,#c99a22 97%,#5b420c 100%);
-  box-shadow:inset 0 0 0 2px #050505,inset 0 1px 0 #fff2a6,0 2px 0 #171000,0 5px 9px #000b;
+ top:4px!important;min-width:0!important;padding:1px 2px 2px!important;
+ border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important
 }
-.card .corner:before{content:"";position:absolute;inset:4px;border:1px solid #ffe37a66;border-radius:7px;pointer-events:none}
-.card .corner:after{content:"";position:absolute;left:8px;right:8px;top:4px;height:1px;background:linear-gradient(90deg,transparent,#fff4b9,transparent);opacity:.85;pointer-events:none}
-.card .levelcorner{left:10px!important}.card .hpcorner{right:10px!important}
+.card .corner:before,.card .corner:after{display:none!important}
+.card .levelcorner{left:5px!important}.card .hpcorner{right:5px!important}
 .card .corner small,.card .corner b{
  position:relative;z-index:2;color:#ffd84a!important;background:none!important;
  -webkit-background-clip:initial!important;background-clip:initial!important;-webkit-text-fill-color:#ffd84a!important;
  -webkit-text-stroke:0!important;filter:none!important;
- text-shadow:-2px -2px #000,2px -2px #000,-2px 2px #000,2px 2px #000,0 0 7px #ffc928!important
+ font-family:Impact,"Arial Black",sans-serif!important;font-weight:900!important;line-height:.88!important;
+ font-size:clamp(17px,5.2vw,25px)!important;letter-spacing:-.6px!important;
+ text-shadow:-1.5px -1.5px 0 #000,1.5px -1.5px 0 #000,-1.5px 1.5px 0 #000,1.5px 1.5px 0 #000,0 2px 4px #000!important
 }
 .card .name{
- position:relative!important;align-self:center!important;display:block!important;
- width:calc(100% - 18px)!important;max-width:none!important;margin:0 auto 3px!important;padding:9px 10px 10px!important;
- text-align:center!important;color:#fff!important;
+ position:relative!important;align-self:center!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ width:calc(100% - 18px)!important;height:50px!important;max-width:none!important;margin:0 auto 5px!important;padding:5px 8px 6px!important;
+ box-sizing:border-box!important;text-align:center!important;color:#fff!important;
  background:linear-gradient(180deg,#727984 0%,#dbe0e5 3%,#5f6670 7%,#171a1f 11%,#050608 72%,#252a31 91%,#aeb6c0 96%,#424850 100%)!important;
  -webkit-background-clip:border-box!important;background-clip:border-box!important;-webkit-text-fill-color:#fff!important;
  -webkit-text-stroke:0!important;filter:none!important;border:1px solid #dce2e8!important;border-radius:10px!important;
  box-shadow:inset 0 0 0 2px #07090c,inset 0 1px 0 #fff,0 2px 0 #15191e,0 6px 10px #000b!important;
- text-shadow:-2px -2px #000,2px -2px #000,-2px 2px #000,2px 2px #000,0 3px 5px #000!important;
- font-size:clamp(22px,5.8vw,29px)!important;line-height:.9!important
+ font-family:Impact,"Arial Black",sans-serif!important;font-weight:900!important;font-size:clamp(19px,5.2vw,27px)!important;
+ line-height:.86!important;letter-spacing:-.35px!important;text-shadow:-1.5px -1.5px #000,1.5px -1.5px #000,-1.5px 1.5px #000,1.5px 1.5px #000,0 3px 5px #000!important
 }
 .card .name:before{content:"";position:absolute;left:12px;right:12px;top:4px;height:1px;background:linear-gradient(90deg,transparent,#fff,transparent);opacity:.8}
-.cards{align-items:start}
-.cards>div,.cards>.card{min-width:0;width:100%}
-.cards .card{width:100%;max-width:100%}
-.versus .card .corner{min-width:46px!important;padding:4px 5px 5px;border-radius:7px}.versus .card .levelcorner{left:6px!important}.versus .card .hpcorner{right:6px!important}
-.versus .card .name{width:calc(100% - 10px)!important;padding:5px 4px 6px!important;font-size:clamp(15px,3.8vw,20px)!important;border-radius:7px!important}
-.viewer-card .name{font-size:clamp(27px,7vw,34px)!important}
+.cards{align-items:start}.cards>div,.cards>.card{min-width:0;width:100%}.cards .card{width:100%;max-width:100%}
+.versus .card .corner{top:2px!important;padding:0 1px 1px!important}.versus .card .levelcorner{left:3px!important}.versus .card .hpcorner{right:3px!important}
+.versus .card .corner small,.versus .card .corner b{font-size:clamp(12px,3.5vw,18px)!important;text-shadow:-1px -1px #000,1px -1px #000,-1px 1px #000,1px 1px #000,0 2px 3px #000!important}
+.versus .card .name{width:calc(100% - 10px)!important;height:34px!important;margin-bottom:3px!important;padding:3px 4px 4px!important;font-size:clamp(13px,3.6vw,18px)!important;border-radius:7px!important}
+.viewer-card .corner{top:9px!important}.viewer-card .levelcorner{left:10px!important}.viewer-card .hpcorner{right:10px!important}
+.viewer-card .corner small,.viewer-card .corner b{font-size:clamp(25px,7vw,34px)!important}
+.viewer-card .name{height:58px!important;font-size:clamp(27px,7vw,34px)!important}
 .road-mini-card .corner,.road-mini-card .name{display:none!important}
