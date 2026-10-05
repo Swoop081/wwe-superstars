@@ -343,3 +343,17 @@
 .viewer-card .corner small,.viewer-card .corner b{font-size:clamp(25px,7vw,34px)!important}
 .viewer-card .name{height:58px!important;font-size:clamp(27px,7vw,34px)!important}
 .road-mini-card .corner,.road-mini-card .name{display:none!important}
+
+
+/* v0.7.77 — white card data + tighter nameplate */
+.card .corner small,.card .corner b{
+ color:#fff!important;-webkit-text-fill-color:#fff!important;
+ text-shadow:-1.5px -1.5px 0 #000,1.5px -1.5px 0 #000,-1.5px 1.5px 0 #000,1.5px 1.5px 0 #000,0 2px 4px #000!important
+}
+.card .name{
+ width:calc(100% - 28px)!important;height:42px!important;
+ margin:0 auto 5px!important;padding:3px 6px 4px!important;
+}
+.versus .card .name{width:calc(100% - 16px)!important;height:30px!important;padding:2px 3px 3px!important}
+.viewer-card .name{width:calc(100% - 28px)!important;height:50px!important;padding:4px 7px 5px!important}
+.back-stats span,.back-stats b{color:#fff!important}
