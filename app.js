@@ -1,4 +1,4 @@
-const APP_VERSION='0.7.80';
+const APP_VERSION='0.7.81';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -172,6 +172,29 @@ BASE.forEach(w=>{
   w.star=STAR_POWER_RATINGS[w.name]??85;
   w.fnr=FINISHER_RATINGS[w.name]??90;
 });
+
+/* v0.7.81 stat audit — equal overall strength while preserving each Superstar's profile.
+   Every base card totals 700 across the eight live categories. Ratings remain 65–100.
+   Adjustments are spread across non-extreme ratings first so signature strengths/weaknesses survive. */
+const BASE_STAT_TARGET=700,BASE_STAT_MIN=65,BASE_STAT_MAX=100;
+function normalizeBaseStats(w){
+  const keys=['str','stk','tec','agi','sub','cha','star','fnr'];
+  let total=keys.reduce((n,k)=>n+w[k],0),delta=BASE_STAT_TARGET-total;
+  const order=[...keys].sort((a,b)=>{
+    const da=Math.abs(w[a]-82.5),db=Math.abs(w[b]-82.5);
+    return da-db||keys.indexOf(a)-keys.indexOf(b);
+  });
+  while(delta){
+    let moved=false;
+    for(const k of order){
+      if(delta>0&&w[k]<BASE_STAT_MAX){w[k]++;delta--;moved=true}
+      else if(delta<0&&w[k]>BASE_STAT_MIN){w[k]--;delta++;moved=true}
+      if(!delta)break;
+    }
+    if(!moved)break;
+  }
+}
+BASE.forEach(normalizeBaseStats);
 
 BASE.forEach(w=>w.tags=[...new Set([...(w.tags||[]),...(SUPERSTAR_TAGS[w.name]||[])])]);
 function hasTag(w,t){return (w.tags||[]).includes(t)}
