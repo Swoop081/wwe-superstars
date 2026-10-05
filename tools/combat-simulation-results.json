@@ -1,0 +1,150 @@
+{
+  "version": "0.7.87",
+  "seed": 20261006,
+  "roster": 80,
+  "checks": 24659,
+  "failures": [],
+  "matches": 33280,
+  "timeouts": 0,
+  "stalled": [],
+  "wins": 16706,
+  "meanTurns": 5.414573317307692,
+  "byLevel": {
+    "1": {
+      "matches": 8320,
+      "wins": 4195,
+      "turns": 44845
+    },
+    "10": {
+      "matches": 8320,
+      "wins": 4190,
+      "turns": 45172
+    },
+    "50": {
+      "matches": 8320,
+      "wins": 4185,
+      "turns": 45088
+    },
+    "250": {
+      "matches": 8320,
+      "wins": 4136,
+      "turns": 45092
+    }
+  },
+  "byMod": {
+    "normal": {
+      "matches": 2560,
+      "wins": 1303,
+      "turns": 14023
+    },
+    "hardcore": {
+      "matches": 2560,
+      "wins": 1280,
+      "turns": 13315
+    },
+    "submission": {
+      "matches": 2560,
+      "wins": 1248,
+      "turns": 13321
+    },
+    "aerial": {
+      "matches": 2560,
+      "wins": 1294,
+      "turns": 13342
+    },
+    "technical": {
+      "matches": 2560,
+      "wins": 1273,
+      "turns": 13425
+    },
+    "mainEvent": {
+      "matches": 2560,
+      "wins": 1281,
+      "turns": 12944
+    },
+    "noStat": {
+      "matches": 2560,
+      "wins": 1283,
+      "turns": 14458
+    },
+    "specialist": {
+      "matches": 2560,
+      "wins": 1299,
+      "turns": 18272
+    },
+    "iron": {
+      "matches": 2560,
+      "wins": 1305,
+      "turns": 17803
+    },
+    "glass": {
+      "matches": 2560,
+      "wins": 1266,
+      "turns": 9341
+    },
+    "opening": {
+      "matches": 2560,
+      "wins": 1313,
+      "turns": 10795
+    },
+    "comeback": {
+      "matches": 2560,
+      "wins": 1292,
+      "turns": 13724
+    },
+    "random": {
+      "matches": 2560,
+      "wins": 1269,
+      "turns": 15434
+    }
+  },
+  "positions": {
+    "Main Event": {
+      "matches": 14560,
+      "wins": 7854,
+      "turns": 79014
+    },
+    "Upper Midcard": {
+      "matches": 12480,
+      "wins": 6038,
+      "turns": 67602
+    },
+    "Midcard": {
+      "matches": 4160,
+      "wins": 1946,
+      "turns": 22434
+    },
+    "Lower Midcard": {
+      "matches": 1664,
+      "wins": 724,
+      "turns": 8934
+    },
+    "Opener": {
+      "matches": 416,
+      "wins": 144,
+      "turns": 2213
+    }
+  },
+  "actionUses": {
+    "act:chair": 6091,
+    "act:lowblow": 6426,
+    "fnr": 20139,
+    "str": 10384,
+    "cha": 17195,
+    "act:reverse": 5510,
+    "star": 17534,
+    "act:secondwind": 4350,
+    "stk": 16200,
+    "sub": 9564,
+    "act:brawl": 6174,
+    "act:cheap": 6185,
+    "act:fighting": 5357,
+    "tec": 15554,
+    "act:defence": 5207,
+    "act:crowd": 5277,
+    "act:adrenaline": 5153,
+    "act:mindgames": 5430,
+    "agi": 11996,
+    "act:ref": 471
+  }
+}
