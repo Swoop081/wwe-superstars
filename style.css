@@ -361,3 +361,6 @@
 
 /* v0.7.79 — square card geometry */
 .card,.card img.cardart,.cardart,.flip-card,.flip-card-inner,.flip-face,.flip-front,.flip-back,.viewer-card,.reveal-card,.road-mini-card{border-radius:0!important}
+
+/* HP state colours */
+.hpfill.hp-green{background:linear-gradient(180deg,#55e06b,#169c38)!important}.hpfill.hp-amber{background:linear-gradient(180deg,#ffd34d,#e49a00)!important}.hpfill.hp-red{background:linear-gradient(180deg,#ff5a5a,#c51624)!important}
