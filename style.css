@@ -301,3 +301,35 @@
 .battle .action-card{background:linear-gradient(160deg,#39250b,#171005);border-color:#ffd35d88;box-shadow:inset 0 1px #fff4b744,0 0 15px #ffb00018;text-align:center}
 .battle .action-card>small{color:#ffd35d;letter-spacing:1.3px}.battle .action-card strong{font-size:18px;line-height:.95}.battle .action-card em{font:700 9px/1.2 system-ui;color:#f7e7b8;font-style:normal;margin-top:5px}
 @media(max-width:390px){.battle .attacks{gap:6px}.battle .attack{min-height:130px;padding:8px 5px}.battle .attackicon{width:66px;height:66px}.battle .attack b{font-size:29px}.battle .action-card strong{font-size:16px}.battle .action-card em{font-size:8px}}
+
+
+/* v0.7.73 — premium foil card typography */
+.card .corner small,.card .corner b{
+  color:#ffd84a;
+  background:linear-gradient(180deg,#fffbd0 0%,#fff19a 18%,#ffd64a 43%,#e99b09 72%,#8b4800 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-text-stroke:1.25px #171000;
+  filter:drop-shadow(0 1px 0 #fff1a055) drop-shadow(0 2px 0 #5c2b00) drop-shadow(0 4px 4px #000);
+  text-shadow:none!important;
+}
+.card .corner b{-webkit-text-stroke:1.5px #171000}
+.card .name{
+  color:#fff;
+  background:linear-gradient(180deg,#ffffff 0%,#ffffff 34%,#e8edf2 55%,#aab2bd 76%,#ffffff 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  -webkit-text-stroke:1.35px #11151b;
+  filter:drop-shadow(0 1px 0 #fff8) drop-shadow(0 2px 0 #303640) drop-shadow(0 4px 4px #000);
+  text-shadow:none!important;
+}
+.viewer-card .corner small,.viewer-card .corner b{-webkit-text-stroke-width:1.7px}
+.viewer-card .name{-webkit-text-stroke-width:1.6px}
+.road-mini-card .corner small,.road-mini-card .corner b,.versus .card .corner small,.versus .card .corner b{
+  -webkit-text-stroke-width:.8px;filter:drop-shadow(0 1px 0 #5c2b00) drop-shadow(0 2px 2px #000)
+}
+.road-mini-card .name,.versus .card .name{
+  -webkit-text-stroke-width:.75px;filter:drop-shadow(0 1px 0 #303640) drop-shadow(0 2px 2px #000)
+}
+@supports not (-webkit-background-clip:text){
+ .card .corner small,.card .corner b{-webkit-text-fill-color:#ffd84a;color:#ffd84a}
+ .card .name{-webkit-text-fill-color:#fff;color:#fff}
+}
