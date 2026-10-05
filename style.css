@@ -303,33 +303,46 @@
 @media(max-width:390px){.battle .attacks{gap:6px}.battle .attack{min-height:130px;padding:8px 5px}.battle .attackicon{width:66px;height:66px}.battle .attack b{font-size:29px}.battle .action-card strong{font-size:16px}.battle .action-card em{font-size:8px}}
 
 
-/* v0.7.73 — premium foil card typography */
+
+/* v0.7.74 — raised premium card plaques; original high-contrast typography restored */
+.card .corner{
+  padding:6px 7px 7px;
+  border:1px solid #d8a928;
+  border-radius:9px;
+  background:
+    linear-gradient(180deg,rgba(255,244,167,.22) 0,rgba(255,255,255,.04) 18%,rgba(10,12,15,.92) 21%,rgba(1,3,7,.94) 78%,rgba(83,55,5,.92) 100%);
+  box-shadow:
+    inset 0 1px 0 #fff3a8aa,
+    inset 0 -2px 0 #5b3900,
+    inset 1px 0 0 #ffffff1f,
+    0 2px 0 #050505,
+    0 5px 8px #000b;
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+}
+.card .corner:before{
+  content:"";position:absolute;inset:2px;border:1px solid #ffd95b44;border-radius:6px;pointer-events:none;
+}
 .card .corner small,.card .corner b{
-  color:#ffd84a;
-  background:linear-gradient(180deg,#fffbd0 0%,#fff19a 18%,#ffd64a 43%,#e99b09 72%,#8b4800 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  -webkit-text-stroke:1.25px #171000;
-  filter:drop-shadow(0 1px 0 #fff1a055) drop-shadow(0 2px 0 #5c2b00) drop-shadow(0 4px 4px #000);
-  text-shadow:none!important;
+  position:relative;z-index:2;color:#ffd84a!important;
+  background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;
+  -webkit-text-fill-color:#ffd84a!important;-webkit-text-stroke:0!important;filter:none!important;
+  text-shadow:-2px -2px #000,2px -2px #000,-2px 2px #000,2px 2px #000,0 0 9px #ffc928!important;
 }
-.card .corner b{-webkit-text-stroke:1.5px #171000}
 .card .name{
-  color:#fff;
-  background:linear-gradient(180deg,#ffffff 0%,#ffffff 34%,#e8edf2 55%,#aab2bd 76%,#ffffff 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  -webkit-text-stroke:1.35px #11151b;
-  filter:drop-shadow(0 1px 0 #fff8) drop-shadow(0 2px 0 #303640) drop-shadow(0 4px 4px #000);
-  text-shadow:none!important;
+  display:inline-block;width:max-content;max-width:calc(100% + 4px);
+  margin-left:-4px!important;margin-bottom:2px!important;padding:7px 11px 8px;
+  color:#fff!important;background:
+    linear-gradient(180deg,rgba(255,255,255,.18) 0,rgba(255,255,255,.035) 18%,rgba(13,16,21,.9) 22%,rgba(2,4,8,.94) 78%,rgba(57,64,74,.9) 100%)!important;
+  -webkit-background-clip:border-box!important;background-clip:border-box!important;
+  -webkit-text-fill-color:#fff!important;-webkit-text-stroke:0!important;filter:none!important;
+  border:1px solid #aeb7c3;border-radius:5px 10px 10px 5px;
+  box-shadow:inset 0 1px 0 #ffffffaa,inset 0 -2px 0 #343a43,0 2px 0 #050608,0 5px 9px #000a;
+  text-shadow:0 2px 5px #000,0 0 8px #000!important;
 }
-.viewer-card .corner small,.viewer-card .corner b{-webkit-text-stroke-width:1.7px}
-.viewer-card .name{-webkit-text-stroke-width:1.6px}
-.road-mini-card .corner small,.road-mini-card .corner b,.versus .card .corner small,.versus .card .corner b{
-  -webkit-text-stroke-width:.8px;filter:drop-shadow(0 1px 0 #5c2b00) drop-shadow(0 2px 2px #000)
+.card .name:after{
+  content:"";position:absolute;left:5px;right:5px;top:2px;height:1px;background:#ffffff80;pointer-events:none;
 }
-.road-mini-card .name,.versus .card .name{
-  -webkit-text-stroke-width:.75px;filter:drop-shadow(0 1px 0 #303640) drop-shadow(0 2px 2px #000)
-}
-@supports not (-webkit-background-clip:text){
- .card .corner small,.card .corner b{-webkit-text-fill-color:#ffd84a;color:#ffd84a}
- .card .name{-webkit-text-fill-color:#fff;color:#fff}
-}
+/* Compact cards keep the same identity without bulky plaques. */
+.versus .card .corner{padding:4px 5px 5px;border-radius:6px;box-shadow:inset 0 1px #fff3a877,inset 0 -1px #5b3900,0 2px 4px #000b}
+.versus .card .name{padding:4px 6px 5px;margin-left:-2px!important;border-radius:4px 7px 7px 4px;box-shadow:inset 0 1px #ffffff77,inset 0 -1px #343a43,0 2px 4px #000b}
+.road-mini-card .corner,.road-mini-card .name{box-shadow:none}
