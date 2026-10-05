@@ -1,4 +1,4 @@
-const APP_VERSION='0.7.82';
+const APP_VERSION='0.7.83';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -177,30 +177,30 @@ BASE.forEach(w=>{
    Existing stat shapes are retained, but each Superstar is normalized to a tier-specific
    target rather than a universal total. Individual ratings stay between 65 and 100. */
 const CARD_POSITION={
-'Roman Reigns':['Main Event',736],'Cody Rhodes':['Main Event',734],'Rhea Ripley':['Main Event',731],'CM Punk':['Main Event',733],
-'IYO SKY':['Upper Midcard',712],'Seth Rollins':['Main Event',730],'Becky Lynch':['Main Event',728],'Randy Orton':['Main Event',732],
-'Bianca Belair':['Upper Midcard',716],'Gunther':['Main Event',729],'Sami Zayn':['Upper Midcard',710],'Charlotte Flair':['Main Event',726],
-'Tiffany Stratton':['Upper Midcard',708],'Liv Morgan':['Upper Midcard',704],'Lola Vice':['Midcard',686],
-'Stone Cold Steve Austin':['Main Event',740],'The Rock':['Main Event',740],'Triple H':['Main Event',734],'The Undertaker':['Main Event',738],
-'Shawn Michaels':['Main Event',735],'Paige':['Upper Midcard',705],'Rob Van Dam':['Upper Midcard',714],'Kurt Angle':['Main Event',733],
-'Jeff Hardy':['Upper Midcard',712],'Sol Ruca':['Lower Midcard',672],'Giulia':['Midcard',694],'Stephanie Vaquer':['Upper Midcard',702],
-'Bret Hart':['Main Event',734],'Razor Ramon':['Upper Midcard',710],'Diesel':['Upper Midcard',706],'Blake Monroe':['Lower Midcard',668],
-'Goldberg':['Main Event',732],'Bron Breakker':['Upper Midcard',716],'Sting':['Main Event',733],'Hulk Hogan':['Main Event',736],
-'Lita':['Upper Midcard',708],'Jade Cargill':['Upper Midcard',704],'AJ Styles':['Main Event',724],'Finn Bálor':['Upper Midcard',712],
-'Naomi':['Midcard',690],'Trish Stratus':['Upper Midcard',714],'Demolition Smash':['Midcard',684],'Demolition Ax':['Midcard',686],
-'Ultimate Warrior':['Main Event',724],'Macho Man Randy Savage':['Main Event',734],'Andre the Giant':['Main Event',728],
-'Roxanne Perez':['Midcard',696],'Brock Lesnar':['Main Event',738],'John Cena':['Main Event',740],'Sable':['Lower Midcard',670],
-'Big E':['Upper Midcard',704],'Kofi Kingston':['Upper Midcard',706],'Xavier Woods':['Midcard',694],'Rey Mysterio':['Main Event',724],
-'Dominik Mysterio':['Upper Midcard',702],'Hollywood Hogan':['Main Event',738],'Kevin Nash':['Main Event',724],'Scott Hall':['Upper Midcard',718],
-'Eric Bischoff':['Opener',648],'Syxx':['Midcard',690],'Chris Jericho':['Main Event',728],'Edge':['Main Event',730],
-'Eddie Guerrero':['Main Event',729],'Booker T':['Upper Midcard',716],'Batista':['Main Event',728],'Sabu':['Midcard',692],
-'New Jack':['Lower Midcard',664],'Mankind':['Upper Midcard',718],'Kane':['Main Event',722],'Damian Priest':['Upper Midcard',714],
-'Road Warrior Hawk':['Upper Midcard',710],'Road Warrior Animal':['Upper Midcard',708],'Demolition Crush':['Midcard',680],
-'British Bulldog':['Upper Midcard',714],'Yokozuna':['Main Event',722],'Jey Uso':['Main Event',721],'Jacob Fatu':['Upper Midcard',718],
-'Jimmy Uso':['Upper Midcard',704],'Solo Sikoa':['Upper Midcard',710],'LA Knight':['Upper Midcard',716]
+'Roman Reigns':['Main Event',719],'Cody Rhodes':['Main Event',718],'Rhea Ripley':['Main Event',717],'CM Punk':['Main Event',718],
+'IYO SKY':['Upper Midcard',706],'Seth Rollins':['Main Event',716],'Becky Lynch':['Main Event',715],'Randy Orton':['Main Event',717],
+'Bianca Belair':['Upper Midcard',708],'Gunther':['Main Event',716],'Sami Zayn':['Upper Midcard',705],'Charlotte Flair':['Main Event',714],
+'Tiffany Stratton':['Upper Midcard',704],'Liv Morgan':['Upper Midcard',702],'Lola Vice':['Midcard',695],
+'Stone Cold Steve Austin':['Main Event',720],'The Rock':['Main Event',720],'Triple H':['Main Event',718],'The Undertaker':['Main Event',720],
+'Shawn Michaels':['Main Event',719],'Paige':['Upper Midcard',703],'Rob Van Dam':['Upper Midcard',707],'Kurt Angle':['Main Event',718],
+'Jeff Hardy':['Upper Midcard',706],'Sol Ruca':['Lower Midcard',689],'Giulia':['Midcard',697],'Stephanie Vaquer':['Upper Midcard',701],
+'Bret Hart':['Main Event',718],'Razor Ramon':['Upper Midcard',705],'Diesel':['Upper Midcard',703],'Blake Monroe':['Lower Midcard',685],
+'Goldberg':['Main Event',717],'Bron Breakker':['Upper Midcard',708],'Sting':['Main Event',718],'Hulk Hogan':['Main Event',719],
+'Lita':['Upper Midcard',704],'Jade Cargill':['Upper Midcard',702],'AJ Styles':['Main Event',713],'Finn Bálor':['Upper Midcard',706],
+'Naomi':['Midcard',693],'Trish Stratus':['Upper Midcard',707],'Demolition Smash':['Midcard',691],'Demolition Ax':['Midcard',695],
+'Ultimate Warrior':['Main Event',713],'Macho Man Randy Savage':['Main Event',718],'Andre the Giant':['Main Event',715],
+'Roxanne Perez':['Midcard',699],'Brock Lesnar':['Main Event',720],'John Cena':['Main Event',720],'Sable':['Lower Midcard',687],
+'Big E':['Upper Midcard',702],'Kofi Kingston':['Upper Midcard',703],'Xavier Woods':['Midcard',697],'Rey Mysterio':['Main Event',713],
+'Dominik Mysterio':['Upper Midcard',701],'Hollywood Hogan':['Main Event',720],'Kevin Nash':['Main Event',713],'Scott Hall':['Upper Midcard',709],
+'Eric Bischoff':['Opener',674],'Syxx':['Midcard',693],'Chris Jericho':['Main Event',715],'Edge':['Main Event',716],
+'Eddie Guerrero':['Main Event',716],'Booker T':['Upper Midcard',708],'Batista':['Main Event',715],'Sabu':['Midcard',695],
+'New Jack':['Lower Midcard',681],'Mankind':['Upper Midcard',709],'Kane':['Main Event',712],'Damian Priest':['Upper Midcard',707],
+'Road Warrior Hawk':['Upper Midcard',705],'Road Warrior Animal':['Upper Midcard',704],'Demolition Crush':['Midcard',693],
+'British Bulldog':['Upper Midcard',707],'Yokozuna':['Main Event',712],'Jey Uso':['Main Event',711],'Jacob Fatu':['Upper Midcard',709],
+'Jimmy Uso':['Upper Midcard',702],'Solo Sikoa':['Upper Midcard',705],'LA Knight':['Upper Midcard',708]
 };
 const POSITION_RANGES={
-'Main Event':[720,740],'Upper Midcard':[700,719],'Midcard':[680,699],'Lower Midcard':[660,679],'Opener':[640,659]
+'Main Event':[710,720],'Upper Midcard':[700,709],'Midcard':[690,699],'Lower Midcard':[680,689],'Opener':[670,679]
 };
 function normalizePositionStats(w){
   const keys=['str','stk','tec','agi','sub','cha','star','fnr'];
