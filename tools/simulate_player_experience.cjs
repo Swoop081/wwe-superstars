@@ -26,3 +26,13 @@ function gauntletMatch(profile,p,cpu,stage,level){let node=gauntletNode(stage,cp
 let daily={runsPerProfile:100,profiles:{}};
 for(const profile of Object.keys(profiles)){let d={days:0,gauntletMatches:0,gauntletWins:0,gauntletCompletions:0,roadMatches:0,roadWins:0,exhibitionNeeded:0,finalLevelSum:0,maxRoadNodeSum:0};for(let run=0;run<daily.runsPerProfile;run++){let p=g.BASE[Math.floor(rnd()*g.BASE.length)],cpu=p,level=1,wins=0,attempts=0;while(wins<5&&attempts<50){attempts++;let stage=wins+1;if(gauntletMatch(profile,p,cpu,stage,level)){wins++;level++}}d.days++;d.gauntletMatches+=attempts;d.gauntletWins+=wins;d.gauntletCompletions+=+(wins===5);let nodeNo=1,maxNode=1;for(let m=0;m<50;m++){let node=g.roadNode(nodeNo),r=one(profile,p,node,level);d.roadMatches++;if(r.win){d.roadWins++;nodeNo++}else nodeNo=Math.max(1,nodeNo-1);maxNode=Math.max(maxNode,nodeNo)}d.exhibitionNeeded+=+(maxNode<25);d.finalLevelSum+=level;d.maxRoadNodeSum+=maxNode}d.gauntletWinRate=d.gauntletWins/d.gauntletMatches;d.gauntletCompletionRate=d.gauntletCompletions/d.days;d.avgGauntletMatches=d.gauntletMatches/d.days;d.roadWinRate=d.roadWins/d.roadMatches;d.exhibitionNeedRate=d.exhibitionNeeded/d.days;d.avgFinalLevel=d.finalLevelSum/d.days;d.avgMaxRoadNode=d.maxRoadNodeSum/d.days;daily.profiles[profile]=d;console.log('DAILY',profile,JSON.stringify(d))}
 out.dailyLoop=daily;fs.writeFileSync('tools/player-experience-results.json',JSON.stringify(out,null,2)+'\\n');
+
+// Exhibition economy audit: unlimited wins, random reward from the actual BASE roster.
+// Geometric model measures the grind required to target a specific Superstar duplicate.
+const rosterSize=g.BASE.length;
+const targetP=1/rosterSize;
+function expectedWinsForCopies(copies){return copies/targetP}
+function winsForChance(copies,chance){let n=0,p=0;while(p<chance&&n<100000){n++;let q=1-targetP,p0=Math.pow(q,n),sum=p0,term=p0;for(let k=1;k<copies;k++){term*=((n-k+1)/k)*(targetP/q);sum+=term}p=1-sum}return n}
+out.exhibitionEconomy={rosterSize,targetRewardProbability:targetP,expectedWinsPerTargetCopy:1/targetP,targets:{one:{expectedWins:expectedWinsForCopies(1),winsFor50pct:winsForChance(1,.5),winsFor90pct:winsForChance(1,.9)},five:{expectedWins:expectedWinsForCopies(5),winsFor50pct:winsForChance(5,.5),winsFor90pct:winsForChance(5,.9)}}};
+console.log('EXHIBITION_ECONOMY',JSON.stringify(out.exhibitionEconomy));
+fs.writeFileSync('tools/player-experience-results.json',JSON.stringify(out,null,2)+'\\n');
