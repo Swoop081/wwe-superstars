@@ -627,3 +627,13 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   background:linear-gradient(180deg,#05050538,#05050572 68%,#050505b8)!important
 }
 .exhibition-event .kicker,.exhibition-event .title,.exhibition-event .sub{z-index:2!important}
+
+/* v0.8.33: compact Road play button so match description remains visible */
+.road-destination .road-play{
+  width:auto!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:11px 18px!important;
+  font-size:clamp(18px,5vw,25px)!important;
+  line-height:1!important;
+}
