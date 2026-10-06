@@ -437,3 +437,22 @@
 
 /* v0.8.07: top-anchor strongest Superstar on wide roster tile */
 .home-collection .home-tile-art{object-fit:cover!important;object-position:center top!important;transform:none!important}
+
+/* v0.8.09: black/silver visual consistency pass */
+:root{--bg:#050505;--panel:#0b0b0c;--panel2:#111214;--line:#303236;--muted:#aeb2b8;--accent:#f1f3f5}
+html,body,#app{background:#050505!important;color:#f5f5f5!important}
+body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505 58%) fixed!important}
+.topbar{background:linear-gradient(180deg,#111214,#080809)!important;border-color:#2c2e32!important;color:#f4f4f4!important}
+.btn{background:linear-gradient(180deg,#f4f4f4,#bfc2c6)!important;color:#050505!important;border-color:#fff!important;box-shadow:0 7px 20px #000a!important}.btn.secondary{background:#111214!important;color:#f4f4f4!important;border-color:#3a3c40!important}
+.game-logo{object-fit:contain!important;filter:drop-shadow(0 7px 12px #000c)!important}
+.startscreen,.home-collage-screen,.road-screen,.gauntlet-screen,.exhibition-screen,.victory-screen,.upgrade-screen,.new-superstar-screen{background:#050505!important}
+.startglow{background:radial-gradient(circle,#ffffff1d,transparent 64%)!important}
+.home-collage-screen{background:radial-gradient(circle at 50% -8%,#34363a55,transparent 34%),#050505!important}.home-top{color:#eee!important}.home-top small{color:#999da4!important}.home-tile{background:#0d0e10!important;border-color:#4a4c50!important}.home-career{background:linear-gradient(180deg,#151619,#0a0b0c)!important;border-color:#34363a!important;color:#eee!important}.tile-copy small{color:#d4d6d9!important}
+.road-screen{background:#050505!important}.road-hero{background:linear-gradient(180deg,#151619,#080809)!important;border-color:#34363a!important}.road-back,.road-stage,.road-rule{color:#f0f0f0!important}.road-destination{border-color:#3b3d41!important;box-shadow:0 14px 34px #000c!important}
+.gauntlet-kicker,.victory-record,.upgrade-level small,.exhibition-event .kicker{color:#d2d4d7!important}.gauntlet-progress .current{background:#e8e8e8!important;color:#050505!important;border-color:#fff!important;box-shadow:0 0 0 4px #ffffff22,0 4px 12px #000!important}.gauntlet-hero{background:#090909c9!important;border-color:#353535!important}
+.exhibition-screen:before{background:linear-gradient(180deg,#05050588 0,#090909aa 42%,#050505 100%),radial-gradient(circle at 50% 25%,transparent,#050505bb 75%)!important}.exhibition-event .sub{color:#ddd!important}
+.cards .card,.card{border-color:#55585d!important}.back{background:linear-gradient(160deg,#17181a,#050506)!important}.back-stats>div{background:#111214!important;border-color:#34363a!important}
+.battle{background:#050505!important}.battle-logo-wrap{background:linear-gradient(180deg,#121315,#070708)!important;border-color:#2e3033!important}.hpbar{background:#18191b!important;border-color:#393b3f!important}.turn-log,.turn-play{border-color:#34363a!important}
+.reward,.finish{background-color:#050505!important}.reward-divider{background:#d8dadd!important;box-shadow:0 0 12px #ffffff55!important}.premium-pack{box-shadow:0 15px 40px #000b,0 0 28px #ffffff24!important}.upgrade-summary strong{background:#111214cc!important;color:#eee!important;border-color:#3c3e42!important}.upgrade-level span{color:#ccc!important}
+.title,.kicker,.sub{color:inherit}.sub{color:#b5b8bd!important}
+@media(max-width:480px){.topbar{min-height:44px}.btn{min-height:46px}.cards{gap:10px}.hero{padding-left:14px!important;padding-right:14px!important}}
