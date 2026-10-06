@@ -610,3 +610,20 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   background-position:center 45%!important;
 }
 .exhibition-event.has-city-photo{background-image:none!important}
+
+/* v0.8.31: dedicated Exhibition header photo layer; avoids iOS negative-z stacking */
+.exhibition-event{isolation:isolate!important;background:#0a0a0a!important}
+.exhibition-city-photo{
+  position:absolute!important;z-index:0!important;inset:0!important;
+  background-size:cover!important;background-position:center 45%!important;
+  background-repeat:no-repeat!important;opacity:0!important;
+  filter:saturate(.95) contrast(1.06) brightness(.82)!important;
+  transition:opacity .25s ease!important;pointer-events:none!important
+}
+.exhibition-city-photo.loaded{opacity:1!important}
+.exhibition-event:before{display:none!important}
+.exhibition-event:after{
+  z-index:1!important;
+  background:linear-gradient(180deg,#05050538,#05050572 68%,#050505b8)!important
+}
+.exhibition-event .kicker,.exhibition-event .title,.exhibition-event .sub{z-index:2!important}
