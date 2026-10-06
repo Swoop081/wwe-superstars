@@ -434,3 +434,6 @@
 
 /* v0.8.04: keep Home photography bright; shade only beneath typography */
 .home-tile-art{filter:saturate(.92) contrast(1.03) brightness(.96)!important}.tile-shade{inset:auto 0 0!important;height:43%!important;background:linear-gradient(180deg,transparent 0,#02071170 28%,#020711e8 100%)!important}.home-road .tile-shade{height:34%!important}.home-gauntlet .tile-shade,.home-exhibition .tile-shade{height:48%!important}.home-collection .home-tile-art{filter:saturate(.88) contrast(1.04) brightness(.94)!important}.home-collection .tile-shade{inset:auto 0 0!important;width:68%!important;height:62%!important;background:radial-gradient(ellipse at 18% 100%,#020711f5 0,#020711c8 42%,transparent 75%)!important}
+
+/* v0.8.07: top-anchor strongest Superstar on wide roster tile */
+.home-collection .home-tile-art{object-fit:cover!important;object-position:center top!important;transform:none!important}
