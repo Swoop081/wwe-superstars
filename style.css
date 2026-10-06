@@ -812,3 +812,9 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .matchtype-menu>.kicker{width:100%;text-align:center!important}
 .matchtype-card{align-items:center!important;text-align:center!important}
 .matchtype-card b,.matchtype-card span,.matchtype-card small{width:100%;text-align:center!important}
+
+/* Battle card readability: larger live LVL/HP and Superstar names */
+.versus .card .corner small,.versus .card .corner b{font-size:clamp(16px,4.7vw,24px)!important;line-height:.82!important}
+.versus .card .corner{min-width:44px!important;top:4px!important}
+.versus .card .levelcorner{left:5px!important}.versus .card .hpcorner{right:5px!important}
+.versus .card .name{font-size:clamp(20px,5.2vw,27px)!important;line-height:.9!important;margin-bottom:-3px!important}
