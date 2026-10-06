@@ -804,3 +804,11 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .tag-benches{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:6px 0 8px}
 .tag-bench{min-width:0;padding:7px 9px;border:1px solid #34363a;background:#0c0d0f}.tag-bench.cpu{text-align:right}.tag-bench small,.tag-bench b,.tag-bench span{display:block}.tag-bench small{font:700 6px/1 'Oswald',sans-serif;letter-spacing:.7px;color:#8e9298}.tag-bench b{margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:700 10px/1 'Oswald',sans-serif}.tag-bench span{margin-top:3px;font:400 13px/1 'Bangers',sans-serif;color:#d7d9dc}
 .action-tag{border-color:#d7d9dc!important}
+
+/* v0.8.58: Exhibition match-type screen polish */
+.matchtype-logo{width:100%;display:flex;align-items:center;justify-content:center;padding:12px 8px 0;box-sizing:border-box}
+.matchtype-logo .game-logo{width:min(96vw,650px)!important;height:auto!important;max-height:150px!important;object-fit:contain!important}
+.matchtype-menu{min-height:0!important;flex:1 1 auto!important;justify-content:center!important;padding:10px 18px max(24px,env(safe-area-inset-bottom))!important}
+.matchtype-menu>.kicker{width:100%;text-align:center!important}
+.matchtype-card{align-items:center!important;text-align:center!important}
+.matchtype-card b,.matchtype-card span,.matchtype-card small{width:100%;text-align:center!important}
