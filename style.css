@@ -589,3 +589,8 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   text-transform:uppercase!important;
   color:#eee!important
 }
+
+/* v0.8.26: clear iPhone Dynamic Island on Superstar Road without shrinking content */
+.road-screen{
+  padding-top:calc(env(safe-area-inset-top) + 34px)!important;
+}
