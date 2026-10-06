@@ -684,3 +684,15 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   .reveal-stage .card{max-height:46dvh!important}
   .welcome-next{min-height:50px!important}
 }
+
+/* v0.8.39: make active match-rule bonuses visible on attack cards */
+.attack.modified-attack b{line-height:.9!important}
+.attack .match-bonus{
+  display:block!important;
+  margin-top:4px!important;
+  font:700 8px/1 'Oswald',sans-serif!important;
+  letter-spacing:1px!important;
+  color:#fff!important;
+  text-transform:uppercase!important;
+  opacity:.78!important
+}
