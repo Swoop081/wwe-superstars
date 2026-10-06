@@ -390,3 +390,12 @@
 .card .corner small{font-family:'Oswald','Arial Narrow',sans-serif!important;font-weight:700!important;letter-spacing:.7px!important}
 .road-fighter-name{font-family:'Honk',Impact,sans-serif!important;font-weight:400!important;letter-spacing:.15px!important}
 .road-fighter-name small{font-family:'Oswald','Arial Narrow',sans-serif!important;font-weight:700!important}
+
+/* v0.7.95: clean Oswald Superstar names */
+.card .name{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-width:100%!important;margin:0 0 -7px!important;padding:0 1px!important;box-sizing:border-box!important;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;filter:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;-webkit-text-fill-color:#fff!important;-webkit-text-stroke:0!important;color:#fff!important;font-family:'Oswald','Arial Narrow',sans-serif!important;font-weight:700!important;font-size:clamp(20px,5.2vw,25px)!important;line-height:.92!important;letter-spacing:-.25px!important;text-align:left!important;text-transform:uppercase!important;text-shadow:0 2px 5px #000,0 0 8px #000!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;transform:none!important}
+.card .name:before,.card .name:after{display:none!important;content:none!important}
+.card .name br{display:none}
+.versus .card .name{font-size:clamp(16px,4vw,21px)!important;margin-bottom:-5px!important}
+.reveal-stage .card .name,.reward .card .name{font-size:clamp(27px,7vw,30px)!important;margin-bottom:-8px!important}
+.road-mini-card .name{display:none!important}
+.road-fighter-name{font-family:'Oswald','Arial Narrow',sans-serif!important;font-weight:700!important;letter-spacing:-.1px!important}
