@@ -492,3 +492,14 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
  .home-collage{grid-template-rows:minmax(158px,1.4fr) minmax(104px,.9fr) minmax(148px,1.12fr)!important}
  .home-career{min-height:48px!important}
 }
+
+/* v0.8.16: tighter tile captions + premium Career Stats treatment */
+.home-tile .tile-copy{left:0!important;right:0!important;bottom:0!important;padding:0 0 10px 10px!important}
+.home-road .tile-copy{padding:0 0 11px 11px!important}.home-gauntlet .tile-copy,.home-exhibition .tile-copy{padding:0 0 9px 9px!important}.home-collection .tile-copy{padding:0 0 10px 11px!important}
+.home-tile .tile-copy>*{margin-left:0!important}
+.home-career{position:relative!important;overflow:hidden!important;border:1px solid #55585e!important;background:linear-gradient(110deg,#090a0c 0%,#1b1d21 48%,#090a0c 100%)!important;box-shadow:inset 0 1px 0 #ffffff20,0 8px 22px #0008!important;letter-spacing:.12em!important}
+.home-career:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,#ffffff0c 43%,#ffffff22 50%,#ffffff08 57%,transparent 78%);transform:translateX(-45%);pointer-events:none}
+.home-career:after{content:"★";position:absolute;right:42px;top:50%;transform:translateY(-50%);font-size:30px;color:#ffffff0d;text-shadow:-18px 0 #ffffff08,18px 0 #ffffff08;pointer-events:none}
+.home-career span,.home-career strong{position:relative;z-index:1}
+.home-career{font-family:'Oswald',sans-serif!important;font-weight:700!important;font-size:18px!important;text-transform:uppercase!important}
+.home-career .arrow,.home-career>i{position:relative;z-index:2;color:#fff!important;font-size:26px!important}
