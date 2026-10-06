@@ -478,3 +478,17 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
  .home-collage{grid-template-rows:145px 98px 122px!important}
  .home-career{min-height:46px!important}
 }
+
+/* v0.8.15: fill Home viewport, larger masthead, preserve roster portrait heads */
+.home-shell{height:calc(100dvh - max(22px,env(safe-area-inset-top) + env(safe-area-inset-bottom)))!important;min-height:0!important}
+.home-logo.home-collage-logo{height:142px!important;margin:-4px 0 7px!important}
+.home-logo.home-collage-logo .game-logo{width:100%!important;height:142px!important;max-height:142px!important;object-fit:contain!important}
+.home-collage{flex:1 1 auto!important;grid-template-rows:minmax(178px,1.42fr) minmax(116px,.9fr) minmax(164px,1.12fr)!important}
+.home-career{margin-top:7px!important;min-height:54px!important}
+.home-collection .home-tile-art{object-fit:cover!important;object-position:center 12%!important;height:100%!important;width:100%!important}
+.home-collection .tile-shade{height:66%!important}
+@media(max-height:780px){
+ .home-logo.home-collage-logo,.home-logo.home-collage-logo .game-logo{height:122px!important;max-height:122px!important}
+ .home-collage{grid-template-rows:minmax(158px,1.4fr) minmax(104px,.9fr) minmax(148px,1.12fr)!important}
+ .home-career{min-height:48px!important}
+}
