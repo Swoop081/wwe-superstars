@@ -789,3 +789,9 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .shop-home-price .coin-home .coin-face{font-size:22px!important}
 @keyframes coinSpin{0%{transform:perspective(90px) rotateY(0deg)}50%{transform:perspective(90px) rotateY(180deg)}100%{transform:perspective(90px) rotateY(360deg)}}
 @media(prefers-reduced-motion:reduce){.coin-icon{animation:none!important}}
+
+/* v0.8.52: compact Home Shop coin */
+.shop-home-price{right:10px!important;top:10px!important;gap:4px!important}
+.shop-home-price .coin-home{width:25px!important;height:25px!important;border-width:1px!important;box-shadow:inset 0 0 0 2px #9b6815,0 2px 7px #000a!important}
+.shop-home-price .coin-home .coin-face{font-size:11px!important}
+.shop-home-price b{font-size:25px!important;line-height:25px!important}
