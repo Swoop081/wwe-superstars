@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.63';
+const APP_VERSION='0.8.64';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -457,10 +457,6 @@ function attack(pk){
  let nextPhp=b.php-cd-cReflect,nextChp=b.chp-pd-pReflect;
  b.php=Math.max(0,nextPhp);b.chp=Math.max(0,nextChp);
  if(b.tag){
-   // Apron recovery: roughly one-sixth of an average normal move each completed exchange.
-   let pBenchStats=statsAt(b.p2,b.pl2),cBenchStats=statsAt(b.cpu2,b.cl2);
-   let pRegen=Math.max(1,Math.round(avgStat(pBenchStats)/6)),cRegen=Math.max(1,Math.round(avgStat(cBenchStats)/6));
-   b.p2hp=Math.min(b.p2max,b.p2hp+pRegen);b.c2hp=Math.min(b.c2max,b.c2hp+cRegen);
    if(pTagged){[b.p,b.p2]=[b.p2,b.p];[b.pl,b.pl2]=[b.pl2,b.pl];[b.php,b.p2hp]=[b.p2hp,b.php];[b.pmax,b.p2max]=[b.p2max,b.pmax];b.pBoost=null;reloadTagActions(b,'p')}
    if(cTagged){[b.cpu,b.cpu2]=[b.cpu2,b.cpu];[b.cl,b.cl2]=[b.cl2,b.cl];[b.chp,b.c2hp]=[b.c2hp,b.chp];[b.cmax,b.c2max]=[b.c2max,b.cmax];b.cBoost=null;reloadTagActions(b,'c')}
  }
