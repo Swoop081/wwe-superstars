@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.58';
+const APP_VERSION='0.8.59';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -441,8 +441,10 @@ function attack(pk){
  let php=b.php,chp=b.chp;
  let pr=pa?resolveAction(pk,'p',b,ps):blank(),cr=ca?resolveAction(ck,'c',b,cs):blank();
  pr.healed=b.php-php;cr.healed=b.chp-chp;pr.boost=pn.boost||0;cr.boost=cn.boost||0;
- let pTagged=!!pr.tag,cTagged=!!cr.tag,cancelled=pr.cancel||cr.cancel,pReflect=0,cReflect=0;
- if(cancelled){pd=0;cd=0}else{
+ let pTagged=!!pr.tag,cTagged=!!cr.tag,pCancel=!!pr.cancel&&!pTagged,cCancel=!!cr.cancel&&!cTagged,cancelled=pCancel||cCancel,pReflect=0,cReflect=0;
+ // TAG only makes the tagging wrestler escape the opponent's targeted effects.
+ // Self-effects (healing/boosts) still resolve and the opponent's chosen card is still spent.
+ if(pCancel||cCancel){pd=0;cd=0}else{
    if(!pa)b.pBoost=null;if(!ca)b.cBoost=null;
    pd+=cr.incoming||0;cd+=pr.incoming||0;
    pr.blocked=Math.min(pr.block||0,cd);cr.blocked=Math.min(cr.block||0,pd);
@@ -450,6 +452,8 @@ function attack(pk){
    pReflect=Math.min(pr.reflect||0,pr.blocked);cReflect=Math.min(cr.reflect||0,cr.blocked);
    pd=Math.max(0,pd-cr.blocked);cd=Math.max(0,cd-pr.blocked);
  }
+ if(pTagged){cd=0;cReflect=0;pr.blocked=0}
+ if(cTagged){pd=0;pReflect=0;cr.blocked=0}
  let nextPhp=b.php-cd-cReflect,nextChp=b.chp-pd-pReflect;
  b.php=Math.max(0,nextPhp);b.chp=Math.max(0,nextChp);
  if(b.tag){
