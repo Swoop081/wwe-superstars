@@ -723,3 +723,15 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
  .home-collage{grid-template-rows:minmax(160px,1.5fr) minmax(105px,.95fr) minmax(125px,1.1fr)!important}
  .home-career{flex-basis:50px!important}
 }
+
+/* v0.8.43: compact 3x3 Daily Shop, premium offers first */
+.shop-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+.shop-card{aspect-ratio:5/7!important}
+.shop-card .card .corner{transform:scale(.72)!important;transform-origin:top left!important}
+.shop-card .card .hpcorner{transform-origin:top right!important}
+.shop-card .card .name{font-size:clamp(10px,2.9vw,14px)!important;line-height:.9!important;left:5px!important;right:5px!important;bottom:5px!important}
+.shop-offer-copy{padding:7px 5px!important}
+.shop-offer-copy strong{font-size:clamp(9px,2.45vw,12px)!important}
+.shop-offer-copy span{font-size:6px!important;margin:4px 0 6px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.shop-offer-copy button{min-height:30px!important;font-size:9px!important;padding:0 3px!important}
+@media(min-width:600px){.shop-grid{gap:10px!important}.shop-offer-copy{padding:9px!important}.shop-offer-copy strong{font-size:14px!important}.shop-offer-copy span{font-size:8px!important}.shop-offer-copy button{font-size:11px!important}}
