@@ -456,3 +456,7 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .reward,.finish{background-color:#050505!important}.reward-divider{background:#d8dadd!important;box-shadow:0 0 12px #ffffff55!important}.premium-pack{box-shadow:0 15px 40px #000b,0 0 28px #ffffff24!important}.upgrade-summary strong{background:#111214cc!important;color:#eee!important;border-color:#3c3e42!important}.upgrade-level span{color:#ccc!important}
 .title,.kicker,.sub{color:inherit}.sub{color:#b5b8bd!important}
 @media(max-width:480px){.topbar{min-height:44px}.btn{min-height:46px}.cards{gap:10px}.hero{padding-left:14px!important;padding-right:14px!important}}
+
+/* v0.8.13: make game identity the dominant Home masthead */
+.home-logo.home-collage-logo{width:100%!important;max-width:none!important;margin:2px 0 10px!important;padding:0!important;display:flex!important;justify-content:center!important;align-items:center!important}
+.home-logo.home-collage-logo .game-logo{display:block!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;object-fit:contain!important}
