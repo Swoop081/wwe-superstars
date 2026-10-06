@@ -580,3 +580,12 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .exhibition-event:after{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(180deg,#05050555,#0505059a 65%,#050505d9),radial-gradient(circle at 50% 42%,transparent,#05050588 88%)}
 .exhibition-event .kicker,.exhibition-event .title,.exhibition-event .sub{position:relative;z-index:2;text-shadow:0 3px 12px #000!important}
 .exhibition-backdrop.loaded+.exhibition-top+.exhibition-event{background-image:var(--exhibition-city-image)}
+
+/* v0.8.25: match duplicate-upgrade category labels to bonus-pill typography */
+.duplicate-upgrade .upgrade-stat span{
+  font-family:'Oswald','Arial Narrow',sans-serif!important;
+  font-weight:700!important;
+  letter-spacing:.7px!important;
+  text-transform:uppercase!important;
+  color:#eee!important
+}
