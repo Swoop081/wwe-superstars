@@ -431,3 +431,6 @@
 /* v0.8.03: Home fills the phone viewport */
 .home-collage-screen{min-height:100dvh!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important}.home-shell{width:100%!important;min-height:calc(100dvh - 40px)!important;display:flex!important;flex-direction:column!important}.home-collage{flex:1 1 auto!important;min-height:0!important;grid-template-rows:minmax(210px,1.65fr) minmax(145px,1.05fr) minmax(180px,1.25fr)!important}.home-career{flex:0 0 auto!important;margin-bottom:0!important}.home-collage-logo{flex:0 0 70px!important}
 @media(max-height:760px){.home-collage{grid-template-rows:190px 130px 160px!important}}
+
+/* v0.8.04: keep Home photography bright; shade only beneath typography */
+.home-tile-art{filter:saturate(.92) contrast(1.03) brightness(.96)!important}.tile-shade{inset:auto 0 0!important;height:43%!important;background:linear-gradient(180deg,transparent 0,#02071170 28%,#020711e8 100%)!important}.home-road .tile-shade{height:34%!important}.home-gauntlet .tile-shade,.home-exhibition .tile-shade{height:48%!important}.home-collection .home-tile-art{filter:saturate(.88) contrast(1.04) brightness(.94)!important}.home-collection .tile-shade{inset:auto 0 0!important;width:68%!important;height:62%!important;background:radial-gradient(ellipse at 18% 100%,#020711f5 0,#020711c8 42%,transparent 75%)!important}
