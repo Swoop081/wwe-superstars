@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.54';
+const APP_VERSION='0.8.55';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -459,7 +459,7 @@ function attack(pk){
    if(cTagged){[b.cpu,b.cpu2]=[b.cpu2,b.cpu];[b.cl,b.cl2]=[b.cl2,b.cl];[b.chp,b.c2hp]=[b.c2hp,b.chp];[b.cmax,b.c2max]=[b.c2max,b.cmax];b.cBoost=null}
  }
  showImpactFX(pk,ck,pd+pReflect,cd+cReflect,pr.healed,cr.healed);
- b.used.push(pk);b.hand=b.hand.filter(k=>k!==pk);b.cpuUsed.push(ck);b.cpuHand=b.cpuHand.filter(k=>k!==ck);
+ if(pk!=='act:tag')b.used.push(pk);b.hand=b.hand.filter(k=>k!==pk);if(ck!=='act:tag')b.cpuUsed.push(ck);b.cpuHand=b.cpuHand.filter(k=>k!==ck);
  let pName=pa?pa.name:KEYS.find(x=>x[0]===pk)[1],cName=ca?ca.name:KEYS.find(x=>x[0]===ck)[1];
  let pEffect=pTagged?'INCOMING MOVE NEGATED · TAGGED '+b.p.name.toUpperCase():pa?actionLogEffect(pr,pd,pReflect,cancelled):`${pd} DAMAGE`,cEffect=cTagged?'INCOMING MOVE NEGATED · TAGGED '+b.cpu.name.toUpperCase():ca?actionLogEffect(cr,cd,cReflect,cancelled):`${cd} DAMAGE`;
  b.pLog=`<strong>${pa?'<i>'+actionIcon(pk)+'</i> ':''}${pName.toUpperCase()}</strong><span>${pEffect}</span>`;b.cLog=`<strong>${ca?'<i>'+actionIcon(ck)+'</i> ':''}${cName.toUpperCase()}</strong><span>${cEffect}</span>`;
