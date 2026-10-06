@@ -602,3 +602,11 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .fighter-log strong i{font-style:normal!important}
 .fighter-log span{min-width:0!important;font-size:10px!important;font-weight:700!important;color:#b9c8df!important;letter-spacing:.2px!important}
 .hpbox:has(.fighter-log:not(:empty)){padding-bottom:9px!important}
+
+/* v0.8.30: reliably render Exhibition city photo inside event header */
+.exhibition-event.has-city-photo:before{
+  background-image:var(--exhibition-city-image)!important;
+  background-size:cover!important;
+  background-position:center 45%!important;
+}
+.exhibition-event.has-city-photo{background-image:none!important}
