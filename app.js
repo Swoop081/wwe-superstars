@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.66';
+const APP_VERSION='0.8.67';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -425,7 +425,7 @@ function actionLogEffect(r,damage,reflected,cancelled){
  if(r.blocked)parts.push(`BLOCKED ${r.blocked} DAMAGE`);
  if(r.boost)parts.push(`NEXT STAT ATTACK +${r.boost} DAMAGE`);
  if(r.incoming)parts.push(`OPPONENT +${r.incoming} DAMAGE THIS EXCHANGE`);
- if(r.cancel&&!r.tag)parts.push('ALL DAMAGE CANCELLED');
+ if(r.cancel&&!r.tag)parts.push('OPPONENT MOVE NEGATED');
  if(!parts.length)parts.push(cancelled?'DAMAGE CANCELLED':'NO DAMAGE');
  return parts.join(' · ');
 }
@@ -440,10 +440,15 @@ function attack(pk){
  let pn=pa?actionNumbers(pk,'p',b,ps):{},cn=ca?actionNumbers(ck,'c',b,cs):{};
  let pd=pa?(pn.damage||0):modifiedDamage(pk,ps[pk]+(b.pBoost||0),'p',b);
  let cd=ca?(cn.damage||0):modifiedDamage(ck,cs[ck]+(b.cBoost||0),'c',b);
- let php=b.php,chp=b.chp;
+ let php=b.php,chp=b.chp,pBoostBefore=b.pBoost||0,cBoostBefore=b.cBoost||0;
  let pr=pa?resolveAction(pk,'p',b,ps):blank(),cr=ca?resolveAction(ck,'c',b,cs):blank();
  pr.healed=b.php-php;cr.healed=b.chp-chp;pr.boost=pn.boost||0;cr.boost=cn.boost||0;
  let pTagged=!!pr.tag,cTagged=!!cr.tag,pCancel=!!pr.cancel&&!pTagged,cCancel=!!cr.cancel&&!cTagged,cancelled=pCancel||cCancel,pReflect=0,cReflect=0;
+ // DIRTY TACTICS negates the opponent's entire card, including self-heals and setup boosts.
+ // TAG is different: it only protects the wrestler tagging out, so opponent self-effects remain.
+ if(pCancel&&!cCancel){b.chp=chp;b.cBoost=cBoostBefore;cr.healed=0;cr.boost=0}
+ if(cCancel&&!pCancel){b.php=php;b.pBoost=pBoostBefore;pr.healed=0;pr.boost=0}
+ if(pCancel&&cCancel){b.php=php;b.chp=chp;b.pBoost=pBoostBefore;b.cBoost=cBoostBefore;pr.healed=cr.healed=pr.boost=cr.boost=0}
  // DIRTY TACTICS negates only the opponent's move while its own damage still lands.
  // TAG only makes the tagging wrestler escape the opponent's targeted effects.
  if(pCancel&&cCancel){pd=0;cd=0}else if(pCancel){pd=pr.damage||0;cd=0}else if(cCancel){pd=0;cd=cr.damage||0}else{
