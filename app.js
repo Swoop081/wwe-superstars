@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.75';
+const APP_VERSION='0.8.76';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -108,12 +108,40 @@ const BASE=[
 {name:'Shawn Michaels DX',cha:99,str:70,stk:94,tec:98,agi:92,iq:88,finisher:'SWEET CHIN MUSIC',tags:['Male','Attitude Era','Legend','Hall of Fame','D-Generation X']},
 {name:'X-Pac',cha:88,str:72,stk:88,tec:92,agi:97,iq:84,finisher:'X-FACTOR',tags:['Male','Attitude Era','Legend','D-Generation X','The Kliq']},
 {name:'Mickie James',cha:92,str:72,stk:90,tec:94,agi:88,iq:86,finisher:'MICKIE-DT',tags:['Female','Ruthless Aggression Era','Legend']},
-{name:'Bull Nakano',cha:88,str:94,stk:96,tec:90,agi:76,iq:88,finisher:'BULL NAKANO LEG DROP',tags:['Female','New Generation Era','Legend','Hall of Fame']}];
+{name:'Bull Nakano',cha:88,str:94,stk:96,tec:90,agi:76,iq:88,finisher:'BULL NAKANO LEG DROP',tags:['Female','New Generation Era','Legend','Hall of Fame']},
+{name:"Big Boss Man",cha:88,str:94,stk:92,tec:82,agi:68,iq:90,finisher:"BOSS MAN SLAM",tags:["Male","Golden Era","Attitude Era","Legend","Hall of Fame"]},
+{name:"Jake Roberts",cha:97,str:82,stk:86,tec:94,agi:68,iq:98,finisher:"DDT",tags:["Male","Golden Era","Legend","Hall of Fame"]},
+{name:"King Kong Bundy",cha:86,str:99,stk:96,tec:74,agi:65,iq:84,finisher:"ATLANTIC CITY AVALANCHE",tags:["Male","Golden Era","Legend"]},
+{name:"JBL",cha:96,str:94,stk:99,tec:86,agi:68,iq:94,finisher:"CLOTHESLINE FROM HELL",tags:["Male","Attitude Era","Ruthless Aggression Era","Legend","Hall of Fame","APA"]},
+{name:"Stacy Keibler",cha:99,str:68,stk:78,tec:80,agi:92,iq:84,finisher:"SPINNING HEEL KICK",tags:["Female","Attitude Era","Ruthless Aggression Era","Legend","Hall of Fame","WCW"]},
+{name:"Cora Jade",cha:92,str:70,stk:88,tec:94,agi:91,iq:86,finisher:"JADED",tags:["Female","Current Era","NXT"]},
+{name:"Kelani Jordan",cha:88,str:72,stk:82,tec:90,agi:99,iq:86,finisher:"SPLIT-LEGGED MOONSAULT",tags:["Female","Current Era","NXT"]},
+{name:"Kendal Grey",cha:82,str:88,stk:84,tec:98,agi:90,iq:94,finisher:"SHADES OF GREY",tags:["Female","Current Era","NXT"]},
+{name:"Jaida Parker",cha:94,str:92,stk:97,tec:80,agi:84,iq:86,finisher:"HIPNOTIC",tags:["Female","Current Era","NXT","OTM"]},
+{name:"La Parka",cha:97,str:78,stk:86,tec:92,agi:96,iq:88,finisher:"CORKSCREW SENTON",tags:["Male","Monday Night War Era","Legend","WCW","AAA"]},
+{name:"Rey Fenix",cha:91,str:72,stk:88,tec:96,agi:100,iq:92,finisher:"MEXICAN MUSCLE BUSTER",tags:["Male","Current Era","SmackDown","Lucha Brothers"]},
+{name:"Mr. Iguana",cha:97,str:76,stk:84,tec:90,agi:94,iq:86,finisher:"IGUANA-RANA",tags:["Male","Current Era","AAA"]},
+{name:"El Hijo del Vikingo",cha:88,str:74,stk:86,tec:96,agi:100,iq:92,finisher:"630 SENTON",tags:["Male","Current Era","AAA"]},
+{name:"Jushin Thunder Liger",cha:94,str:76,stk:90,tec:100,agi:99,iq:97,finisher:"LIGER BOMB",tags:["Male","New Generation Era","Monday Night War Era","Legend","Hall of Fame","WCW"]}];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
 // Keep this map additive: new roster members should receive era, division, brand,
 // faction/stable and tag-team metadata here as appropriate.
 const SUPERSTAR_TAGS={
+"Big Boss Man":["Male","Golden Era","Attitude Era","Legend","Hall of Fame"],
+"Jake Roberts":["Male","Golden Era","Legend","Hall of Fame"],
+"King Kong Bundy":["Male","Golden Era","Legend"],
+"JBL":["Male","Attitude Era","Ruthless Aggression Era","Legend","Hall of Fame","APA"],
+"Stacy Keibler":["Female","Attitude Era","Ruthless Aggression Era","Legend","Hall of Fame","WCW"],
+"Cora Jade":["Female","Current Era","NXT"],
+"Kelani Jordan":["Female","Current Era","NXT"],
+"Kendal Grey":["Female","Current Era","NXT"],
+"Jaida Parker":["Female","Current Era","NXT","OTM"],
+"La Parka":["Male","Monday Night War Era","Legend","WCW","AAA"],
+"Rey Fenix":["Male","Current Era","SmackDown","Lucha Brothers"],
+"Mr. Iguana":["Male","Current Era","AAA"],
+"El Hijo del Vikingo":["Male","Current Era","AAA"],
+"Jushin Thunder Liger":["Male","New Generation Era","Monday Night War Era","Legend","Hall of Fame","WCW"],
 'Roman Reigns':['Male','Current Era','SmackDown','The Bloodline','The Shield'],
 'Cody Rhodes':['Male','Current Era','SmackDown','Legacy'],
 'Rhea Ripley':['Female','Current Era','RAW','Judgment Day'],
