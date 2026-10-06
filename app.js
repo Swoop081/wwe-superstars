@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.56';
+const APP_VERSION='0.8.57';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -392,7 +392,9 @@ const ACTIONS=[
 ];
 function actionBy(id){return ACTIONS.find(a=>a.id===String(id).replace('act:',''))}
 function actionIcon(id){let k=String(id).replace('act:',''),icons={defence:'◆',chair:'▰',lowblow:'▼',ref:'◉',crowd:'★',adrenaline:'ϟ',reverse:'↶',cheap:'✦',secondwind:'↟',tag:'⇄',mindgames:'◎',fighting:'✊',brawl:'✹'};return icons[k]||'★'}
-function initActionDecks(b){if(b.actionInit)return;b.actionInit=true;let pick=()=>{let p=[...ACTIONS],o=[];p=[...new Map(p.filter(Boolean).map(a=>[a.id,a])).values()];while(o.length<3&&p.length){let i=Math.floor(Math.random()*p.length);o.push('act:'+p.splice(i,1)[0].id)}return o};if(b.tag){b.pDecks={};b.cDecks={};[b.p,b.p2].forEach(w=>b.pDecks[w.name]=pick());[b.cpu,b.cpu2].forEach(w=>b.cDecks[w.name]=pick());b.actionCards=b.pDecks[b.p.name];b.cpuActionCards=b.cDecks[b.cpu.name]}else{b.actionCards=pick();b.cpuActionCards=pick()}}
+function randomActions(count=3){let p=ACTIONS.filter(a=>a.id!=='tag'),o=[];while(o.length<count&&p.length){let i=Math.floor(Math.random()*p.length);o.push('act:'+p.splice(i,1)[0].id)}return o}
+function initActionDecks(b){if(b.actionInit)return;b.actionInit=true;b.actionCards=randomActions(b.tag?2:3);b.cpuActionCards=randomActions(b.tag?2:3)}
+function reloadTagActions(b,side){if(!b.tag)return;if(side==='p'){b.actionCards=randomActions(2);b.used=[];b.hand=[]}else{b.cpuActionCards=randomActions(2);b.cpuUsed=[];b.cpuHand=[]}}
 function avgStat(stats){let v=Object.values(stats);return v.reduce((a,b)=>a+b,0)/v.length}
 function actionNumbers(id,side,b,stats){let n=baseActionNumbers(id,side,b,stats);if(n.damage)n.damage=modifiedDamage(id,n.damage,side,b);return n}
 function modifiedDamage(id,damage,side,b){if(!(b.road||b.gauntlet))return damage;let m=b.node.mod.id,k=String(id).replace('act:',''),hp=side==='p'?b.php:b.chp,max=side==='p'?b.pmax:b.cmax;if(m==='comeback'&&hp/max<.3)return Math.round(damage*1.25);if(m==='hardcore'&&['chair','lowblow','cheap','brawl'].includes(k))return Math.round(damage*1.25);if(m==='submission'&&k==='sub'||m==='aerial'&&k==='agi'||m==='technical'&&k==='tec')return Math.round(damage*1.35);if(m==='mainEvent'&&['cha','star','fnr'].includes(k))return Math.round(damage*1.2);return damage}
@@ -455,8 +457,8 @@ function attack(pk){
    let pBenchStats=statsAt(b.p2,b.pl2),cBenchStats=statsAt(b.cpu2,b.cl2);
    let pRegen=Math.max(1,Math.round(avgStat(pBenchStats)/6)),cRegen=Math.max(1,Math.round(avgStat(cBenchStats)/6));
    b.p2hp=Math.min(b.p2max,b.p2hp+pRegen);b.c2hp=Math.min(b.c2max,b.c2hp+cRegen);
-   if(pTagged){[b.p,b.p2]=[b.p2,b.p];[b.pl,b.pl2]=[b.pl2,b.pl];[b.php,b.p2hp]=[b.p2hp,b.php];[b.pmax,b.p2max]=[b.p2max,b.pmax];b.pBoost=null;b.actionCards=b.pDecks[b.p.name];b.used=[];b.hand=[]}
-   if(cTagged){[b.cpu,b.cpu2]=[b.cpu2,b.cpu];[b.cl,b.cl2]=[b.cl2,b.cl];[b.chp,b.c2hp]=[b.c2hp,b.chp];[b.cmax,b.c2max]=[b.c2max,b.cmax];b.cBoost=null;b.cpuActionCards=b.cDecks[b.cpu.name];b.cpuUsed=[];b.cpuHand=[]}
+   if(pTagged){[b.p,b.p2]=[b.p2,b.p];[b.pl,b.pl2]=[b.pl2,b.pl];[b.php,b.p2hp]=[b.p2hp,b.php];[b.pmax,b.p2max]=[b.p2max,b.pmax];b.pBoost=null;reloadTagActions(b,'p')}
+   if(cTagged){[b.cpu,b.cpu2]=[b.cpu2,b.cpu];[b.cl,b.cl2]=[b.cl2,b.cl];[b.chp,b.c2hp]=[b.c2hp,b.chp];[b.cmax,b.c2max]=[b.c2max,b.cmax];b.cBoost=null;reloadTagActions(b,'c')}
  }
  showImpactFX(pk,ck,pd+pReflect,cd+cReflect,pr.healed,cr.healed);
  if(pk!=='act:tag')b.used.push(pk);b.hand=b.hand.filter(k=>k!==pk);if(ck!=='act:tag')b.cpuUsed.push(ck);b.cpuHand=b.cpuHand.filter(k=>k!==ck);
