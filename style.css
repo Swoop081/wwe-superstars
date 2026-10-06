@@ -460,3 +460,21 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 /* v0.8.13: make game identity the dominant Home masthead */
 .home-logo.home-collage-logo{width:100%!important;max-width:none!important;margin:2px 0 10px!important;padding:0!important;display:flex!important;justify-content:center!important;align-items:center!important}
 .home-logo.home-collage-logo .game-logo{display:block!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;object-fit:contain!important}
+
+/* v0.8.14: safe-area Home compression for large masthead */
+.home-collage-screen{padding-top:max(10px,env(safe-area-inset-top))!important;padding-bottom:max(12px,env(safe-area-inset-bottom))!important}
+.home-shell{min-height:calc(100dvh - max(22px,env(safe-area-inset-top) + env(safe-area-inset-bottom)))!important}
+.home-top{flex:0 0 auto!important;margin-bottom:0!important}
+.home-logo.home-collage-logo{flex:0 0 auto!important;height:112px!important;margin:-2px 0 5px!important;overflow:visible!important}
+.home-logo.home-collage-logo .game-logo{width:94%!important;height:112px!important;max-height:112px!important;object-fit:contain!important}
+.home-collage{flex:0 0 auto!important;min-height:0!important;grid-template-rows:158px 108px 136px!important;gap:7px!important}
+.home-road{grid-row:1/3!important}.home-gauntlet{grid-row:1!important}.home-exhibition{grid-row:2!important}.home-collection{grid-row:3!important}
+.home-tile{min-height:0!important}
+.home-road .tile-copy{padding:13px 14px!important}.home-gauntlet .tile-copy,.home-exhibition .tile-copy{padding:10px 11px!important}.home-collection .tile-copy{padding:12px 14px!important}
+.home-road .tile-title{line-height:.86!important}.home-gauntlet .tile-title,.home-exhibition .tile-title{line-height:.88!important}
+.home-career{flex:0 0 auto!important;margin-top:7px!important;min-height:50px!important;padding:0 14px!important}
+@media(max-height:780px){
+ .home-logo.home-collage-logo,.home-logo.home-collage-logo .game-logo{height:94px!important;max-height:94px!important}
+ .home-collage{grid-template-rows:145px 98px 122px!important}
+ .home-career{min-height:46px!important}
+}
