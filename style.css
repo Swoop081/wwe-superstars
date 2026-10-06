@@ -702,3 +702,24 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .home-road{grid-column:1!important;grid-row:1/3!important}.home-gauntlet{grid-column:2!important;grid-row:1!important}.home-exhibition{grid-column:2!important;grid-row:2!important}.home-shop{grid-column:1!important;grid-row:3!important;background:radial-gradient(circle at 75% 28%,#ffffff1d,transparent 35%),linear-gradient(145deg,#25272b,#08090a)!important}.home-shop .shop-home-mark{position:absolute;right:14px;top:9px;font:400 58px/1 'Bangers',sans-serif;color:#d7d9dc;text-shadow:0 4px 15px #000}.home-shop .tile-copy strong{font-size:clamp(25px,7vw,36px)}.home-collection{grid-column:2!important;grid-row:3!important}.home-collection .tile-copy{max-width:92%!important}.home-collection .tile-copy strong{font-size:clamp(20px,5.4vw,28px)!important}.home-collection .tile-shade{width:100%!important}.home-career{margin-top:7px!important}
 .shop-screen{padding-top:max(10px,env(safe-area-inset-top))!important}.shop-coins{font:700 18px/1 'Bangers',sans-serif!important}.shop-head{display:flex;justify-content:space-between;align-items:flex-end;margin:18px 2px 14px}.coin-progress{text-align:right}.coin-progress b{display:block;font:400 26px/1 'Bangers',sans-serif}.coin-progress span{font:700 7px/1 'Oswald',sans-serif;letter-spacing:1px;color:#aeb2b8}.shop-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:max(20px,env(safe-area-inset-bottom))}.shop-offer{overflow:hidden;border:1px solid #383a3e;background:#0c0d0f;box-shadow:0 8px 22px #0008}.shop-card{width:100%;aspect-ratio:5/6;overflow:hidden}.shop-card .card{width:100%!important;height:100%!important}.shop-offer-copy{padding:9px}.shop-offer-copy strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:700 13px/1 'Oswald',sans-serif;text-transform:uppercase}.shop-offer-copy span{display:block;margin:5px 0 8px;font:700 8px/1 'Oswald',sans-serif;letter-spacing:.5px;color:#aeb2b8}.shop-offer-copy button{width:100%;min-height:34px;border:1px solid #eee;background:#eee;color:#050505;font:700 11px/1 'Oswald',sans-serif}.shop-offer-copy button:disabled{border-color:#333;background:#17181a;color:#666}.shop-offer.sold .shop-card{filter:grayscale(1) brightness(.45)}
 @media(max-height:780px){.home-collage{grid-template-rows:135px 90px 100px 100px!important}.home-logo.home-collage-logo,.home-logo.home-collage-logo .game-logo{height:82px!important;max-height:82px!important}}
+
+/* v0.8.42: fuller asymmetric Home + daily Shop feature art */
+.home-collage{flex:1 1 auto!important;display:grid!important;grid-template-columns:1.08fr .92fr!important;grid-template-rows:minmax(185px,1.55fr) minmax(125px,1fr) minmax(145px,1.15fr)!important;gap:8px!important}
+.home-road{grid-column:1!important;grid-row:1/3!important}
+.home-gauntlet{grid-column:2!important;grid-row:1!important}
+.home-exhibition{grid-column:2!important;grid-row:2!important}
+.home-shop{grid-column:1!important;grid-row:3!important}
+.home-collection{grid-column:2!important;grid-row:3!important}
+.home-shop .home-tile-art{object-position:center top!important;filter:saturate(.92) contrast(1.04) brightness(.96)!important}
+.home-shop .tile-shade{width:100%!important;height:62%!important;background:linear-gradient(180deg,transparent,#050505e8)!important}
+.home-shop .shop-home-mark{display:none!important}
+.shop-home-price{position:absolute;z-index:3;right:10px;top:9px;padding:5px 7px;border:1px solid #ffffff55;background:#050505b8;color:#fff;font:400 18px/1 'Bangers',sans-serif}
+.home-shop .tile-copy{max-width:94%!important}
+.home-shop .tile-copy strong{font-size:clamp(25px,7vw,36px)!important}
+.home-shop .tile-copy em{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-collection .tile-copy strong{font-size:clamp(19px,5.1vw,27px)!important}
+.home-career{flex:0 0 58px!important}
+@media(max-height:780px){
+ .home-collage{grid-template-rows:minmax(160px,1.5fr) minmax(105px,.95fr) minmax(125px,1.1fr)!important}
+ .home-career{flex-basis:50px!important}
+}
