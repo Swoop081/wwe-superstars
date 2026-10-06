@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.76';
+const APP_VERSION='0.8.77';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -122,12 +122,38 @@ const BASE=[
 {name:"Rey Fenix",cha:91,str:72,stk:88,tec:96,agi:100,iq:92,finisher:"MEXICAN MUSCLE BUSTER",tags:["Male","Current Era","SmackDown","Lucha Brothers"]},
 {name:"Mr. Iguana",cha:97,str:76,stk:84,tec:90,agi:94,iq:86,finisher:"IGUANA-RANA",tags:["Male","Current Era","AAA"]},
 {name:"El Hijo del Vikingo",cha:88,str:74,stk:86,tec:96,agi:100,iq:92,finisher:"630 SENTON",tags:["Male","Current Era","AAA"]},
-{name:"Jushin Thunder Liger",cha:94,str:76,stk:90,tec:100,agi:99,iq:97,finisher:"LIGER BOMB",tags:["Male","New Generation Era","Monday Night War Era","Legend","Hall of Fame","WCW"]}];
+{name:"Jushin Thunder Liger",cha:94,str:76,stk:90,tec:100,agi:99,iq:97,finisher:"LIGER BOMB",tags:["Male","New Generation Era","Monday Night War Era","Legend","Hall of Fame","WCW"]},
+{name:"Tazz",cha:91,str:92,stk:94,tec:100,agi:72,iq:96,finisher:"TAZZMISSION",tags:["Male","Attitude Era","ECW","Legend"]},
+{name:"Victoria",cha:94,str:88,stk:92,tec:91,agi:86,iq:88,finisher:"WIDOW'S PEAK",tags:["Female","Ruthless Aggression Era","Legend"]},
+{name:"Tajiri",cha:88,str:70,stk:98,tec:96,agi:97,iq:90,finisher:"BUZZSAW KICK",tags:["Male","Attitude Era","Ruthless Aggression Era","ECW","Legend"]},
+{name:"William Regal",cha:96,str:84,stk:92,tec:100,agi:68,iq:99,finisher:"KNEE TREMBLER",tags:["Male","Attitude Era","Ruthless Aggression Era","Legend","Hall of Fame"]},
+{name:"Fit Finlay",cha:86,str:92,stk:96,tec:96,agi:70,iq:94,finisher:"CELTIC CROSS",tags:["Male","Monday Night War Era","Ruthless Aggression Era","Legend","WCW"]},
+{name:"Steve Blackman",cha:78,str:92,stk:99,tec:94,agi:84,iq:90,finisher:"BICYCLE KICK",tags:["Male","Attitude Era","Legend"]},
+{name:"Raven",cha:97,str:82,stk:92,tec:91,agi:72,iq:98,finisher:"EVENFLOW DDT",tags:["Male","Monday Night War Era","Attitude Era","ECW","Legend","WCW"]},
+{name:"Jazz",cha:88,str:94,stk:94,tec:92,agi:78,iq:88,finisher:"JAZZ STINGER",tags:["Female","Attitude Era","Ruthless Aggression Era","ECW","Legend"]},
+{name:"Logan Paul",cha:99,str:86,stk:94,tec:82,agi:98,iq:78,finisher:"ONE LUCKY PUNCH",tags:["Male","Current Era","RAW"]},
+{name:"Drew McIntyre",cha:96,str:99,stk:97,tec:91,agi:76,iq:92,finisher:"CLAYMORE",tags:["Male","Current Era","SmackDown"]},
+{name:"Sheamus",cha:94,str:98,stk:99,tec:90,agi:72,iq:91,finisher:"BROGUE KICK",tags:["Male","Current Era","RAW","The Bar"]},
+{name:"Jeff Jarrett",cha:98,str:84,stk:90,tec:94,agi:78,iq:97,finisher:"THE STROKE",tags:["Male","New Generation Era","Attitude Era","Monday Night War Era","Legend","Hall of Fame","WCW"]},
+{name:"Mabel",cha:84,str:99,stk:96,tec:72,agi:65,iq:82,finisher:"BELLY-TO-BELLY SUPLEX",tags:["Male","New Generation Era","Legend","Men on a Mission"]}];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
 // Keep this map additive: new roster members should receive era, division, brand,
 // faction/stable and tag-team metadata here as appropriate.
 const SUPERSTAR_TAGS={
+"Tazz":["Male","Attitude Era","ECW","Legend"],
+"Victoria":["Female","Ruthless Aggression Era","Legend"],
+"Tajiri":["Male","Attitude Era","Ruthless Aggression Era","ECW","Legend"],
+"William Regal":["Male","Attitude Era","Ruthless Aggression Era","Legend","Hall of Fame"],
+"Fit Finlay":["Male","Monday Night War Era","Ruthless Aggression Era","Legend","WCW"],
+"Steve Blackman":["Male","Attitude Era","Legend"],
+"Raven":["Male","Monday Night War Era","Attitude Era","ECW","Legend","WCW"],
+"Jazz":["Female","Attitude Era","Ruthless Aggression Era","ECW","Legend"],
+"Logan Paul":["Male","Current Era","RAW"],
+"Drew McIntyre":["Male","Current Era","SmackDown"],
+"Sheamus":["Male","Current Era","RAW","The Bar"],
+"Jeff Jarrett":["Male","New Generation Era","Attitude Era","Monday Night War Era","Legend","Hall of Fame","WCW"],
+"Mabel":["Male","New Generation Era","Legend","Men on a Mission"],
 "Big Boss Man":["Male","Golden Era","Attitude Era","Legend","Hall of Fame"],
 "Jake Roberts":["Male","Golden Era","Legend","Hall of Fame"],
 "King Kong Bundy":["Male","Golden Era","Legend"],
