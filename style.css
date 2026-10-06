@@ -594,3 +594,11 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .road-screen{
   padding-top:calc(env(safe-area-inset-top) + 34px)!important;
 }
+
+/* v0.8.27: fighter-specific match tracker directly under each health bar */
+.fighter-log{display:flex!important;align-items:baseline!important;gap:5px!important;min-height:0!important;margin-top:5px!important;padding:0 2px!important;font-family:'Oswald',sans-serif!important;text-transform:uppercase!important;line-height:1.05!important}
+.fighter-log:empty{display:none!important}
+.fighter-log strong{flex:0 0 auto!important;font-size:12px!important;font-weight:700!important;color:#fff!important;letter-spacing:.25px!important;white-space:nowrap!important}
+.fighter-log strong i{font-style:normal!important}
+.fighter-log span{min-width:0!important;font-size:10px!important;font-weight:700!important;color:#b9c8df!important;letter-spacing:.2px!important}
+.hpbox:has(.fighter-log:not(:empty)){padding-bottom:9px!important}
