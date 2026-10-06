@@ -537,3 +537,8 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .new-superstar:before{z-index:-1!important}
 .new-card{position:relative!important;z-index:2!important;background:#050505!important}
 .new-card .card{position:relative!important;z-index:2!important}
+
+/* v0.8.20: branded Victory Pack */
+.premium-pack{padding:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
+.premium-pack .game-logo{display:block!important;width:100%!important;max-width:none!important;height:auto!important;object-fit:contain!important;padding:0!important;margin:0!important;filter:drop-shadow(0 7px 14px #000b)!important}
+.premium-pack span{position:absolute!important;right:8px!important;bottom:10px!important;margin:0!important;z-index:3!important}
