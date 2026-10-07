@@ -978,3 +978,9 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .road-level-coin{width:42px!important;height:42px!important}
 .road-levelup .sub{font-weight:900;letter-spacing:2px;color:#b8c7dd;margin-bottom:28px}
 .road-levelup .btn{width:min(90%,430px)}
+
+/* v0.9.10: keep reward Superstar headings inside the viewport */
+.new-name{max-width:100%;overflow-wrap:normal;white-space:nowrap}
+.new-name.name-fit-md{font-size:clamp(30px,8.5vw,46px)!important}
+.new-name.name-fit-lg{font-size:clamp(25px,7vw,38px)!important}
+.new-name.name-fit-xl{font-size:clamp(21px,5.8vw,32px)!important}
