@@ -965,3 +965,16 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 
 /* v0.9.01: compact Superstar names on the two match cards only */
 .battle .versus .card .name{font-size:clamp(20px,5.2vw,27px)!important;line-height:.9!important;margin-bottom:-3px!important}
+
+/* v0.9.02: major Superstar Road 15-match level milestone presentation */
+.road-levelup-screen{min-height:100dvh;display:grid;place-items:center;background:radial-gradient(circle at 50% 38%,#123a70 0,#06162e 34%,#02050a 70%);overflow:hidden}
+.road-levelup{position:relative;width:min(92vw,620px);min-height:72dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 20px;isolation:isolate}
+.road-levelup-rays{position:absolute;inset:4% -30%;z-index:-1;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.12) 0 3deg,transparent 3deg 14deg);mask-image:radial-gradient(circle,#000 0,transparent 68%);animation:roadRays 18s linear infinite}
+@keyframes roadRays{to{transform:rotate(360deg)}}
+.road-levelup .kicker{font-size:16px;letter-spacing:7px;color:#9bcaff}
+.road-levelup-label{font:900 clamp(46px,13vw,82px)/.85 'Oswald',Impact,sans-serif;letter-spacing:2px;color:#fff;text-shadow:0 5px 0 #0a4ea7;margin-top:22px}
+.road-levelup-number{font:900 clamp(150px,44vw,260px)/.82 'Oswald',Impact,sans-serif;color:#fff;text-shadow:0 10px 0 #0a4ea7,0 18px 35px #000;margin:16px 0}
+.road-levelup-coin{display:flex;align-items:center;gap:12px;font:900 28px/1 'Oswald',Impact,sans-serif;color:#ffe477;margin-bottom:18px}
+.road-level-coin{width:42px!important;height:42px!important}
+.road-levelup .sub{font-weight:900;letter-spacing:2px;color:#b8c7dd;margin-bottom:28px}
+.road-levelup .btn{width:min(90%,430px)}
