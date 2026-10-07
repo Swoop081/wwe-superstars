@@ -1290,3 +1290,13 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   padding:2px 3px 3px!important;
 }
 .battle .versus .card .name br{display:block!important}
+
+/* v0.9.42: align match-card name inset with LVL top-left inset. */
+.battle .versus .card .name{
+  width:calc(100% - 10px)!important;
+  left:5px!important;
+  right:auto!important;
+  bottom:5px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+}
