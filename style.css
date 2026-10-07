@@ -855,3 +855,16 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .card.font-kliq .name{font-family:'Bebas Neue',Impact,sans-serif}
 .card.font-pg .name{font-family:'Russo One',Impact,sans-serif}
 .card.font-reality .name{font-family:'Bebas Neue',Impact,sans-serif}
+
+/* v0.8.86: larger battle masthead and tighter play area */
+.battle-logo-wrap{height:104px!important;margin:0 0 5px!important;padding:0 4px!important;align-items:center!important}
+.battle-logo-wrap .game-logo{width:min(96vw,510px)!important;height:100px!important;max-height:100px!important;object-fit:contain!important}
+.battle .chooser{margin-top:18px!important}
+.battle .chooser h3{margin:5px 10px 9px!important}
+.battle .hpbox{margin-bottom:10px!important}
+.battle .fighter-log{margin-top:4px!important}
+@media(max-height:760px){
+ .battle-logo-wrap{height:90px!important}
+ .battle-logo-wrap .game-logo{height:86px!important;max-height:86px!important}
+ .battle .chooser{margin-top:10px!important}
+}
