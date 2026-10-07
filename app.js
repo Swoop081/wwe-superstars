@@ -703,9 +703,9 @@ const TAG_FONT_CLASSES=[
   ['The Bloodline','font-bloodline'],['Bloodline','font-bloodline'],['The Shield','font-shield'],['Shield','font-shield'],
   ['Evolution','font-evolution'],['Nation of Domination','font-nation'],['ECW','font-ecw'],
   ['LWO','font-lwo'],['Lucha Brothers','font-lucha'],['Damage CTRL','font-damage'],['Kabuki Warriors','font-kabuki'],
-  ['APA','font-apa'],['Demolition','font-demolition'],['Road Warriors','font-roadwarriors'],['The New Day','font-newday'],['New Day','font-newday'],
+  ['APA','font-apa'],['Judgment Day','font-judgment'],['Imperium','font-imperium'],['The Brood','font-brood'],['Hart Foundation','font-hart'],['Team Xtreme','font-xtreme'],['The Hardy Boyz','font-xtreme'],['Wyatt Family','font-wyatt'],['The Kliq','font-kliq'],['Demolition','font-demolition'],['Road Warriors','font-roadwarriors'],['The New Day','font-newday'],['New Day','font-newday'],
   ['Golden Era','font-golden'],['New Generation Era','font-newgen'],['Attitude Era','font-attitude'],
-  ['Ruthless Aggression Era','font-ruthless'],['Monday Night War Era','font-mnw'],['Current Era','font-current']
+  ['Ruthless Aggression Era','font-ruthless'],['PG Era','font-pg'],['Reality Era','font-reality'],['Monday Night War Era','font-mnw'],['Current Era','font-current']
 ];
 function superstarFontClass(w){let tags=w.tags||[];for(const [tag,cl] of TAG_FONT_CLASSES)if(tags.includes(tag))return cl;return 'font-current'}
 function card(w,l=1,c='',loading='eager'){let art=artImage(w.name,'cardart',loading),font=superstarFontClass(w);return '<div class="card '+c+' '+font+'">'+art+'<div class="corner levelcorner"><small>LVL</small><b>'+l+'</b></div><div class="corner hpcorner"><small>HP</small><b>'+hpOf(w,l)+'</b></div><div class="name">'+w.name+'</div></div>';}
