@@ -1255,3 +1255,6 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .card.font-superstar-94 .name{font-size:.88em!important;line-height:1.02!important} /* AJ Lee */
 .card.font-superstar-76 .name{line-height:1.08!important} /* Terry Funk */
 .card.font-superstar-72 .name{line-height:1.12!important} /* Triple H DX */
+
+/* v0.9.38: Vikingo explicit lucha/Viking display face; avoid Bungee Spice color-font rendering failure on iOS. */
+.card.font-superstar-112 .name,.collection-list-copy strong.font-superstar-112{font-family:'Germania One','Pirata One',serif!important;letter-spacing:.025em!important}
