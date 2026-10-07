@@ -1009,3 +1009,7 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .exhibition-menu-screen:before{display:none!important}
 .exhibition-menu-screen .matchtype-logo,.exhibition-menu-screen .topbar{position:relative!important;z-index:4!important;opacity:1!important;filter:none!important}
 .exhibition-menu-screen .matchtype-logo img{opacity:1!important;filter:none!important}
+
+/* v0.9.21: enlarged Superstar cards use the same large wrapping names as collection cards */
+.viewer-card .name.card-name-normal{font-size:22px!important;line-height:.9!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
+.viewer-card .name.card-name-single-long{font-size:18px!important;line-height:.9!important;white-space:nowrap!important}
