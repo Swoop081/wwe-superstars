@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.83';
+const APP_VERSION='0.8.84';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -327,6 +327,257 @@ const SUPERSTAR_TAGS={
 'Mickie James':['Female','Ruthless Aggression Era','Legend'],
 'Bull Nakano':['Female','New Generation Era','Legend','Hall of Fame']
 };
+// v0.8.84 tag audit: canonical additive corrections for Road, collection identity and typography.
+const TAG_AUDIT={
+  "Bayley": [
+    "NXT Alumni"
+  ],
+  "Alexa Bliss": [
+    "NXT Alumni"
+  ],
+  "Asuka": [
+    "NXT Alumni"
+  ],
+  "Nia Jax": [
+    "NXT Alumni"
+  ],
+  "Chelsea Green": [
+    "NXT Alumni"
+  ],
+  "Piper Niven": [
+    "NXT Alumni"
+  ],
+  "Raquel Rodriguez": [
+    "Judgment Day",
+    "NXT Alumni"
+  ],
+  "Kairi Sane": [
+    "NXT Alumni"
+  ],
+  "Lyra Valkyria": [
+    "NXT Alumni"
+  ],
+  "Zelina Vega": [
+    "LWO"
+  ],
+  "Kevin Owens": [
+    "NXT Alumni"
+  ],
+  "Shinsuke Nakamura": [
+    "NXT Alumni"
+  ],
+  "Braun Strowman": [
+    "Wyatt Family"
+  ],
+  "Carmelo Hayes": [
+    "NXT Alumni"
+  ],
+  "Trick Williams": [
+    "NXT Alumni"
+  ],
+  "Oba Femi": [
+    "NXT Alumni"
+  ],
+  "Penta": [
+    "Lucha Brothers",
+    "AAA"
+  ],
+  "Rey Fenix": [
+    "Lucha Brothers",
+    "AAA"
+  ],
+  "R-Truth": [
+    "PG Era"
+  ],
+  "The Miz": [
+    "Ruthless Aggression Era",
+    "PG Era"
+  ],
+  "Sheamus": [
+    "Ruthless Aggression Era",
+    "PG Era"
+  ],
+  "Drew McIntyre": [
+    "PG Era"
+  ],
+  "Logan Paul": [],
+  "Tazz": [
+    "ECW"
+  ],
+  "Victoria": [
+    "Ruthless Aggression Era"
+  ],
+  "Tajiri": [
+    "ECW"
+  ],
+  "William Regal": [
+    "Monday Night War Era"
+  ],
+  "Fit Finlay": [
+    "WCW"
+  ],
+  "Steve Blackman": [
+    "Attitude Era"
+  ],
+  "Raven": [
+    "ECW",
+    "WCW"
+  ],
+  "Jazz": [
+    "ECW"
+  ],
+  "Jeff Jarrett": [
+    "WCW"
+  ],
+  "Mabel": [
+    "Men on a Mission"
+  ],
+  "Road Warrior Hawk": [
+    "Golden Era",
+    "Road Warriors"
+  ],
+  "Road Warrior Animal": [
+    "Golden Era",
+    "Road Warriors"
+  ],
+  "Demolition Crush": [
+    "Golden Era",
+    "Demolition"
+  ],
+  "British Bulldog": [
+    "Golden Era",
+    "New Generation Era",
+    "Hart Foundation"
+  ],
+  "Yokozuna": [
+    "New Generation Era"
+  ],
+  "Rikishi": [
+    "Attitude Era"
+  ],
+  "Umaga": [
+    "Ruthless Aggression Era"
+  ],
+  "Triple H King of Kings": [
+    "Evolution"
+  ],
+  "Chainsaw Charlie": [
+    "ECW"
+  ],
+  "Ken Shamrock": [
+    "Attitude Era"
+  ],
+  "Dusty Rhodes": [
+    "Golden Era"
+  ],
+  "Goldust": [
+    "Attitude Era"
+  ],
+  "Mickie James": [
+    "Ruthless Aggression Era"
+  ],
+  "Bull Nakano": [
+    "New Generation Era"
+  ],
+  "Sabu": [
+    "Attitude Era",
+    "ECW"
+  ],
+  "New Jack": [
+    "Attitude Era",
+    "ECW"
+  ],
+  "Paige": [
+    "Reality Era"
+  ],
+  "Rob Van Dam": [
+    "ECW",
+    "Ruthless Aggression Era"
+  ],
+  "Kurt Angle": [
+    "Attitude Era",
+    "Ruthless Aggression Era",
+    "Team Angle"
+  ],
+  "Jeff Hardy": [
+    "Attitude Era",
+    "Ruthless Aggression Era",
+    "The Hardy Boyz",
+    "Team Xtreme"
+  ],
+  "Bret Hart": [
+    "New Generation Era",
+    "Hart Foundation"
+  ],
+  "Razor Ramon": [
+    "New Generation Era",
+    "The Kliq"
+  ],
+  "Diesel": [
+    "New Generation Era",
+    "The Kliq",
+    "Two Dudes with Attitudes"
+  ],
+  "Goldberg": [
+    "Monday Night War Era",
+    "WCW"
+  ],
+  "Sting": [
+    "Monday Night War Era",
+    "WCW"
+  ],
+  "Hulk Hogan": [
+    "Golden Era",
+    "Mega Powers"
+  ],
+  "Lita": [
+    "Attitude Era",
+    "Ruthless Aggression Era",
+    "Team Xtreme"
+  ],
+  "Trish Stratus": [
+    "Attitude Era",
+    "Ruthless Aggression Era"
+  ],
+  "Ultimate Warrior": [
+    "Golden Era"
+  ],
+  "Macho Man Randy Savage": [
+    "Golden Era",
+    "Mega Powers"
+  ],
+  "Andre the Giant": [
+    "Golden Era"
+  ],
+  "Brock Lesnar": [
+    "Ruthless Aggression Era"
+  ],
+  "John Cena": [
+    "Ruthless Aggression Era",
+    "PG Era"
+  ],
+  "Sable": [
+    "Attitude Era"
+  ],
+  "Chris Jericho": [
+    "Attitude Era",
+    "Ruthless Aggression Era"
+  ],
+  "Edge": [
+    "Attitude Era",
+    "Ruthless Aggression Era"
+  ],
+  "Eddie Guerrero": [
+    "Attitude Era",
+    "Ruthless Aggression Era"
+  ],
+  "Booker T": [
+    "Monday Night War Era",
+    "Ruthless Aggression Era",
+    "WCW"
+  ]
+};
+Object.entries(TAG_AUDIT).forEach(([name,tags])=>{SUPERSTAR_TAGS[name]=[...new Set([...(SUPERSTAR_TAGS[name]||[]),...tags])]});
 
 // Eight-category WWE Superstar rating system.
 // Level-1 profiles keep broadly comparable overall totals while preserving clear strengths/weaknesses.
