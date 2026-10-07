@@ -994,3 +994,8 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 /* v0.9.14: multi-word Superstar names wrap large; only long single words shrink */
 .card .name.card-name-normal{font-size:inherit!important;line-height:.92!important;white-space:normal!important;overflow-wrap:normal!important;word-break:normal!important}
 .card .name.card-name-single-long{font-size:clamp(16px,8.5cqw,34px)!important;line-height:.92!important;white-space:nowrap!important;letter-spacing:-.02em!important}
+
+/* v0.9.15: restore full-size short card names; shrink only genuinely wide single words */
+.card .name.card-name-normal{font-size:22px!important;line-height:.9!important}
+.card.road-mini-card .name.card-name-normal{font-size:22px!important}
+.card .name.card-name-single-long{font-size:18px!important;line-height:.9!important;white-space:nowrap!important}
