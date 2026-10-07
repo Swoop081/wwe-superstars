@@ -818,3 +818,6 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .versus .card .corner{min-width:44px!important;top:4px!important}
 .versus .card .levelcorner{left:5px!important}.versus .card .hpcorner{right:5px!important}
 .versus .card .name{font-size:clamp(20px,5.2vw,27px)!important;line-height:.9!important;margin-bottom:-3px!important}
+
+/* Treat the black matte in the supplied WWE Superstars logo as transparent over game backgrounds. */
+.game-logo{mix-blend-mode:screen!important;background:transparent!important}
