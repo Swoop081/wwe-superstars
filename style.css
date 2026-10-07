@@ -871,3 +871,34 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 /* v0.8.91 authored stat + action card artwork */
 .action-glyph{display:flex;align-items:center;justify-content:center;width:82px;height:82px;margin:0 auto 2px}
 .action-icon-img{display:block;width:82px;height:82px;object-fit:contain;pointer-events:none}
+
+/* v0.8.92: tag typography must override the legacy global Oswald card-name rule */
+.card .name{font-family:'Bebas Neue','Arial Narrow',sans-serif!important}
+.card.font-golden .name{font-family:'Alfa Slab One',Impact,serif!important}
+.card.font-newgen .name{font-family:'Bangers',Impact,sans-serif!important}
+.card.font-attitude .name{font-family:'Special Elite',Impact,sans-serif!important}
+.card.font-ruthless .name{font-family:'Russo One',Impact,sans-serif!important}
+.card.font-pg .name{font-family:'Russo One',Impact,sans-serif!important}
+.card.font-reality .name{font-family:'Bebas Neue',Impact,sans-serif!important}
+.card.font-mnw .name{font-family:'Graduate',Impact,serif!important}
+.card.font-current .name{font-family:'Teko','Arial Narrow',sans-serif!important}
+.card.font-ecw .name{font-family:'Permanent Marker',Impact,sans-serif!important}
+.card.font-dx .name{font-family:'Permanent Marker',Impact,sans-serif!important}
+.card.font-nwo .name{font-family:'Special Elite',Impact,sans-serif!important}
+.card.font-bloodline .name{font-family:'Pirata One',Impact,serif!important}
+.card.font-shield .name{font-family:'Black Ops One',Impact,sans-serif!important}
+.card.font-evolution .name{font-family:'Graduate',Impact,serif!important}
+.card.font-nation .name{font-family:'Black Ops One',Impact,sans-serif!important}
+.card.font-lwo .name,.card.font-lucha .name{font-family:'Bangers',Impact,sans-serif!important}
+.card.font-damage .name{font-family:'Russo One',Impact,sans-serif!important}
+.card.font-kabuki .name{font-family:'Metal Mania',Impact,sans-serif!important}
+.card.font-apa .name{font-family:'Black Ops One',Impact,sans-serif!important}
+.card.font-demolition .name,.card.font-roadwarriors .name{font-family:'Metal Mania',Impact,sans-serif!important}
+.card.font-newday .name{font-family:'Bangers',Impact,sans-serif!important}
+.card.font-judgment .name{font-family:'Metal Mania',Impact,sans-serif!important}
+.card.font-imperium .name{font-family:'Graduate',Impact,serif!important}
+.card.font-brood .name{font-family:'Creepster',Impact,sans-serif!important}
+.card.font-hart .name{font-family:'Alfa Slab One',Impact,serif!important}
+.card.font-xtreme .name{font-family:'Permanent Marker',Impact,sans-serif!important}
+.card.font-wyatt .name{font-family:'Special Elite',Impact,sans-serif!important}
+.card.font-kliq .name{font-family:'Bebas Neue',Impact,sans-serif!important}
