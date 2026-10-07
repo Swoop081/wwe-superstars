@@ -999,3 +999,8 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .card .name.card-name-normal{font-size:22px!important;line-height:.9!important}
 .card.road-mini-card .name.card-name-normal{font-size:22px!important}
 .card .name.card-name-single-long{font-size:18px!important;line-height:.9!important;white-space:nowrap!important}
+
+/* v0.9.18: reward headings keep multi-word Superstar names large */
+.new-name.name-fit-multi{font-size:clamp(42px,12vw,68px)!important;line-height:.88!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
+.new-name.name-fit-short{font-size:clamp(46px,13vw,72px)!important;line-height:.9!important}
+.new-name.name-fit-single-long{font-size:clamp(34px,9.5vw,54px)!important;line-height:.9!important;white-space:nowrap!important}
