@@ -1261,3 +1261,15 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 
 /* v0.9.39: Card Studio-managed per-Superstar typography. */
 .card .name{font-size:calc(1em * var(--name-size,1))!important;line-height:var(--name-leading,1)!important;letter-spacing:var(--name-tracking,0em)!important}
+
+/* v0.9.40: card-name typography scales from each card's own width.
+   Per-Superstar Card Studio size remains an optical multiplier, not an absolute screen size. */
+.card{container-type:inline-size}
+.card .name{
+  font-size:calc(clamp(14px,9cqw,34px) * var(--name-size,1))!important;
+  line-height:var(--name-leading,1)!important;
+  letter-spacing:var(--name-tracking,0em)!important
+}
+.shop-card .card .name{font-size:calc(clamp(9px,8.2cqw,14px) * var(--name-size,1))!important}
+.versus .card .name{font-size:calc(clamp(13px,8.4cqw,25px) * var(--name-size,1))!important}
+.viewer-card .name,.reveal-stage .card .name,.reward .card .name{font-size:calc(clamp(20px,9cqw,38px) * var(--name-size,1))!important}
