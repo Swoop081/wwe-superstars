@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.77';
+const APP_VERSION='0.8.78';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -135,12 +135,50 @@ const BASE=[
 {name:"Drew McIntyre",cha:96,str:99,stk:97,tec:91,agi:76,iq:92,finisher:"CLAYMORE",tags:["Male","Current Era","SmackDown"]},
 {name:"Sheamus",cha:94,str:98,stk:99,tec:90,agi:72,iq:91,finisher:"BROGUE KICK",tags:["Male","Current Era","RAW","The Bar"]},
 {name:"Jeff Jarrett",cha:98,str:84,stk:90,tec:94,agi:78,iq:97,finisher:"THE STROKE",tags:["Male","New Generation Era","Attitude Era","Monday Night War Era","Legend","Hall of Fame","WCW"]},
-{name:"Mabel",cha:84,str:99,stk:96,tec:72,agi:65,iq:82,finisher:"BELLY-TO-BELLY SUPLEX",tags:["Male","New Generation Era","Legend","Men on a Mission"]}];
+{name:"Mabel",cha:84,str:99,stk:96,tec:72,agi:65,iq:82,finisher:"BELLY-TO-BELLY SUPLEX",tags:["Male","New Generation Era","Legend","Men on a Mission"]},
+{name:"Bayley",cha:96,str:82,stk:94,tec:96,agi:90,iq:97,finisher:"ROSE PLANT",tags:["Female","Current Era","RAW","Damage CTRL"]},
+{name:"Alexa Bliss",cha:98,str:72,stk:88,tec:92,agi:91,iq:96,finisher:"SISTER ABIGAIL",tags:["Female","Current Era","SmackDown"]},
+{name:"Asuka",cha:94,str:84,stk:97,tec:100,agi:94,iq:96,finisher:"ASUKA LOCK",tags:["Female","Current Era","RAW","Kabuki Warriors"]},
+{name:"Nia Jax",cha:93,str:100,stk:99,tec:76,agi:65,iq:86,finisher:"ANNIHILATOR",tags:["Female","Current Era","SmackDown"]},
+{name:"Chelsea Green",cha:99,str:74,stk:88,tec:87,agi:86,iq:94,finisher:"UNPRETTIER",tags:["Female","Current Era","SmackDown"]},
+{name:"Piper Niven",cha:87,str:98,stk:99,tec:86,agi:70,iq:88,finisher:"PIPER DRIVER",tags:["Female","Current Era","SmackDown"]},
+{name:"Raquel Rodriguez",cha:90,str:99,stk:97,tec:84,agi:76,iq:88,finisher:"TEJANA BOMB",tags:["Female","Current Era","RAW"]},
+{name:"Kairi Sane",cha:93,str:72,stk:91,tec:96,agi:100,iq:94,finisher:"INSANE ELBOW",tags:["Female","Current Era","RAW","Kabuki Warriors","Damage CTRL"]},
+{name:"Lyra Valkyria",cha:91,str:78,stk:91,tec:96,agi:97,iq:94,finisher:"NIGHTWING",tags:["Female","Current Era","RAW"]},
+{name:"Zelina Vega",cha:96,str:68,stk:84,tec:92,agi:98,iq:93,finisher:"CODE RED",tags:["Female","Current Era","SmackDown","LWO"]},
+{name:"Kevin Owens",cha:97,str:94,stk:99,tec:92,agi:82,iq:96,finisher:"STUNNER",tags:["Male","Current Era","SmackDown"]},
+{name:"Shinsuke Nakamura",cha:96,str:88,stk:96,tec:98,agi:90,iq:97,finisher:"KINSHASA",tags:["Male","Current Era","SmackDown"]},
+{name:"Braun Strowman",cha:92,str:100,stk:100,tec:74,agi:68,iq:84,finisher:"RUNNING POWERSLAM",tags:["Male","Current Era","RAW"]},
+{name:"R-Truth",cha:100,str:82,stk:93,tec:88,agi:90,iq:78,finisher:"LIE DETECTOR",tags:["Male","Current Era","RAW"]},
+{name:"The Miz",cha:100,str:82,stk:94,tec:91,agi:76,iq:99,finisher:"SKULL-CRUSHING FINALE",tags:["Male","Current Era","RAW"]},
+{name:"Carmelo Hayes",cha:95,str:76,stk:89,tec:95,agi:99,iq:92,finisher:"NOTHING BUT NET",tags:["Male","Current Era","SmackDown"]},
+{name:"Trick Williams",cha:98,str:92,stk:95,tec:84,agi:88,iq:90,finisher:"TRICK SHOT",tags:["Male","Current Era","SmackDown"]},
+{name:"Oba Femi",cha:93,str:100,stk:99,tec:88,agi:76,iq:91,finisher:"FALL FROM GRACE",tags:["Male","Current Era","RAW"]},
+{name:"Penta",cha:97,str:80,stk:94,tec:98,agi:99,iq:95,finisher:"MEXICAN DESTROYER",tags:["Male","Current Era","RAW","Lucha Brothers"]}];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
 // Keep this map additive: new roster members should receive era, division, brand,
 // faction/stable and tag-team metadata here as appropriate.
 const SUPERSTAR_TAGS={
+"Bayley":["Female","Current Era","RAW","Damage CTRL"],
+"Alexa Bliss":["Female","Current Era","SmackDown"],
+"Asuka":["Female","Current Era","RAW","Kabuki Warriors"],
+"Nia Jax":["Female","Current Era","SmackDown"],
+"Chelsea Green":["Female","Current Era","SmackDown"],
+"Piper Niven":["Female","Current Era","SmackDown"],
+"Raquel Rodriguez":["Female","Current Era","RAW"],
+"Kairi Sane":["Female","Current Era","RAW","Kabuki Warriors","Damage CTRL"],
+"Lyra Valkyria":["Female","Current Era","RAW"],
+"Zelina Vega":["Female","Current Era","SmackDown","LWO"],
+"Kevin Owens":["Male","Current Era","SmackDown"],
+"Shinsuke Nakamura":["Male","Current Era","SmackDown"],
+"Braun Strowman":["Male","Current Era","RAW"],
+"R-Truth":["Male","Current Era","RAW"],
+"The Miz":["Male","Current Era","RAW"],
+"Carmelo Hayes":["Male","Current Era","SmackDown"],
+"Trick Williams":["Male","Current Era","SmackDown"],
+"Oba Femi":["Male","Current Era","RAW"],
+"Penta":["Male","Current Era","RAW","Lucha Brothers"],
 "Tazz":["Male","Attitude Era","ECW","Legend"],
 "Victoria":["Female","Ruthless Aggression Era","Legend"],
 "Tajiri":["Male","Attitude Era","Ruthless Aggression Era","ECW","Legend"],
