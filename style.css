@@ -902,3 +902,12 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .card.font-xtreme .name{font-family:'Permanent Marker',Impact,sans-serif!important}
 .card.font-wyatt .name{font-family:'Special Elite',Impact,sans-serif!important}
 .card.font-kliq .name{font-family:'Bebas Neue',Impact,sans-serif!important}
+
+/* v0.8.94: one visual stage for all 8 stat + 13 action icons */
+.battle .attackicon,.battle .action-glyph{width:74px!important;height:74px!important;min-width:74px!important;min-height:74px!important;max-width:74px!important;max-height:74px!important;margin:0 auto 3px!important}
+.battle .attackicon{object-fit:contain!important}
+.battle .action-glyph{display:flex!important;align-items:center!important;justify-content:center!important;border:0!important;border-radius:0!important;background:none!important}
+.battle .action-icon-img{display:block!important;width:74px!important;height:74px!important;max-width:74px!important;max-height:74px!important;object-fit:contain!important;margin:0!important}
+@media(max-width:390px){
+ .battle .attackicon,.battle .action-glyph,.battle .action-icon-img{width:68px!important;height:68px!important;min-width:68px!important;min-height:68px!important;max-width:68px!important;max-height:68px!important}
+}
