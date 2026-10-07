@@ -1273,3 +1273,20 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .shop-card .card .name{font-size:calc(clamp(9px,8.2cqw,14px) * var(--name-size,1))!important}
 .versus .card .name{font-size:calc(clamp(13px,8.4cqw,25px) * var(--name-size,1))!important}
 .viewer-card .name,.reveal-stage .card .name,.reward .card .name{font-size:calc(clamp(20px,9cqw,38px) * var(--name-size,1))!important}
+
+/* v0.9.41: match-card names stack upward from the bottom edge.
+   Last word stays on the baseline; preceding words sit above it. */
+.battle .versus .card .name{
+  height:auto!important;
+  min-height:30px!important;
+  max-height:58px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-end!important;
+  align-items:flex-start!important;
+  overflow:visible!important;
+  bottom:5px!important;
+  margin:0!important;
+  padding:2px 3px 3px!important;
+}
+.battle .versus .card .name br{display:block!important}
