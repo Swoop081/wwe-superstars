@@ -867,3 +867,7 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
  .battle-logo-wrap .game-logo{height:86px!important;max-height:86px!important}
  .battle .chooser{margin-top:10px!important}
 }
+
+/* v0.8.91 authored stat + action card artwork */
+.action-glyph{display:flex;align-items:center;justify-content:center;width:82px;height:82px;margin:0 auto 2px}
+.action-icon-img{display:block;width:82px;height:82px;object-fit:contain;pointer-events:none}
