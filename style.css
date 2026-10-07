@@ -1004,3 +1004,8 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .new-name.name-fit-multi{font-size:clamp(42px,12vw,68px)!important;line-height:.88!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
 .new-name.name-fit-short{font-size:clamp(46px,13vw,72px)!important;line-height:.9!important}
 .new-name.name-fit-single-long{font-size:clamp(34px,9.5vw,54px)!important;line-height:.9!important;white-space:nowrap!important}
+
+/* v0.9.19: match-type menu logo/nav should not sit under Exhibition scenery shading */
+.exhibition-menu-screen:before{display:none!important}
+.exhibition-menu-screen .matchtype-logo,.exhibition-menu-screen .topbar{position:relative!important;z-index:4!important;opacity:1!important;filter:none!important}
+.exhibition-menu-screen .matchtype-logo img{opacity:1!important;filter:none!important}
