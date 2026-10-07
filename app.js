@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.81';
+const APP_VERSION='0.8.90';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -140,7 +140,7 @@ const BASE=[
 {name:"Alexa Bliss",cha:98,str:72,stk:88,tec:92,agi:91,iq:96,finisher:"SISTER ABIGAIL",tags:["Female","Current Era","SmackDown"]},
 {name:"Asuka",cha:94,str:84,stk:97,tec:100,agi:94,iq:96,finisher:"ASUKA LOCK",tags:["Female","Current Era","RAW","Kabuki Warriors"]},
 {name:"Nia Jax",cha:93,str:100,stk:99,tec:76,agi:65,iq:86,finisher:"ANNIHILATOR",tags:["Female","Current Era","SmackDown"]},
-{name:"Chelsea Green",cha:99,str:74,stk:88,tec:87,agi:86,iq:94,finisher:"UNPRETTIER",tags:["Female","Current Era","SmackDown"]},
+{name:"Chelsea Green",cha:99,str:74,stk:88,tec:87,agi:86,iq:94,finisher:"UNPRETTY-HER",tags:["Female","Current Era","SmackDown"]},
 {name:"Piper Niven",cha:87,str:98,stk:99,tec:86,agi:70,iq:88,finisher:"PIPER DRIVER",tags:["Female","Current Era","SmackDown"]},
 {name:"Raquel Rodriguez",cha:90,str:99,stk:97,tec:84,agi:76,iq:88,finisher:"TEJANA BOMB",tags:["Female","Current Era","RAW"]},
 {name:"Kairi Sane",cha:93,str:72,stk:91,tec:96,agi:100,iq:94,finisher:"INSANE ELBOW",tags:["Female","Current Era","RAW","Kabuki Warriors","Damage CTRL"]},
@@ -327,6 +327,257 @@ const SUPERSTAR_TAGS={
 'Mickie James':['Female','Ruthless Aggression Era','Legend'],
 'Bull Nakano':['Female','New Generation Era','Legend','Hall of Fame']
 };
+// v0.8.84 tag audit: canonical additive corrections for Road, collection identity and typography.
+const TAG_AUDIT={
+  "Bayley": [
+    "NXT Alumni"
+  ],
+  "Alexa Bliss": [
+    "NXT Alumni"
+  ],
+  "Asuka": [
+    "NXT Alumni"
+  ],
+  "Nia Jax": [
+    "NXT Alumni"
+  ],
+  "Chelsea Green": [
+    "NXT Alumni"
+  ],
+  "Piper Niven": [
+    "NXT Alumni"
+  ],
+  "Raquel Rodriguez": [
+    "Judgment Day",
+    "NXT Alumni"
+  ],
+  "Kairi Sane": [
+    "NXT Alumni"
+  ],
+  "Lyra Valkyria": [
+    "NXT Alumni"
+  ],
+  "Zelina Vega": [
+    "LWO"
+  ],
+  "Kevin Owens": [
+    "NXT Alumni"
+  ],
+  "Shinsuke Nakamura": [
+    "NXT Alumni"
+  ],
+  "Braun Strowman": [
+    "Wyatt Family"
+  ],
+  "Carmelo Hayes": [
+    "NXT Alumni"
+  ],
+  "Trick Williams": [
+    "NXT Alumni"
+  ],
+  "Oba Femi": [
+    "NXT Alumni"
+  ],
+  "Penta": [
+    "Lucha Brothers",
+    "AAA"
+  ],
+  "Rey Fenix": [
+    "Lucha Brothers",
+    "AAA"
+  ],
+  "R-Truth": [
+    "PG Era"
+  ],
+  "The Miz": [
+    "Ruthless Aggression Era",
+    "PG Era"
+  ],
+  "Sheamus": [
+    "Ruthless Aggression Era",
+    "PG Era"
+  ],
+  "Drew McIntyre": [
+    "PG Era"
+  ],
+  "Logan Paul": [],
+  "Tazz": [
+    "ECW"
+  ],
+  "Victoria": [
+    "Ruthless Aggression Era"
+  ],
+  "Tajiri": [
+    "ECW"
+  ],
+  "William Regal": [
+    "Monday Night War Era"
+  ],
+  "Fit Finlay": [
+    "WCW"
+  ],
+  "Steve Blackman": [
+    "Attitude Era"
+  ],
+  "Raven": [
+    "ECW",
+    "WCW"
+  ],
+  "Jazz": [
+    "ECW"
+  ],
+  "Jeff Jarrett": [
+    "WCW"
+  ],
+  "Mabel": [
+    "Men on a Mission"
+  ],
+  "Road Warrior Hawk": [
+    "Golden Era",
+    "Road Warriors"
+  ],
+  "Road Warrior Animal": [
+    "Golden Era",
+    "Road Warriors"
+  ],
+  "Demolition Crush": [
+    "Golden Era",
+    "Demolition"
+  ],
+  "British Bulldog": [
+    "Golden Era",
+    "New Generation Era",
+    "Hart Foundation"
+  ],
+  "Yokozuna": [
+    "New Generation Era"
+  ],
+  "Rikishi": [
+    "Attitude Era"
+  ],
+  "Umaga": [
+    "Ruthless Aggression Era"
+  ],
+  "Triple H King of Kings": [
+    "Evolution"
+  ],
+  "Chainsaw Charlie": [
+    "ECW"
+  ],
+  "Ken Shamrock": [
+    "Attitude Era"
+  ],
+  "Dusty Rhodes": [
+    "Golden Era"
+  ],
+  "Goldust": [
+    "Attitude Era"
+  ],
+  "Mickie James": [
+    "Ruthless Aggression Era"
+  ],
+  "Bull Nakano": [
+    "New Generation Era"
+  ],
+  "Sabu": [
+    "Attitude Era",
+    "ECW"
+  ],
+  "New Jack": [
+    "Attitude Era",
+    "ECW"
+  ],
+  "Paige": [
+    "Reality Era"
+  ],
+  "Rob Van Dam": [
+    "ECW",
+    "Ruthless Aggression Era"
+  ],
+  "Kurt Angle": [
+    "Attitude Era",
+    "Ruthless Aggression Era",
+    "Team Angle"
+  ],
+  "Jeff Hardy": [
+    "Attitude Era",
+    "Ruthless Aggression Era",
+    "The Hardy Boyz",
+    "Team Xtreme"
+  ],
+  "Bret Hart": [
+    "New Generation Era",
+    "Hart Foundation"
+  ],
+  "Razor Ramon": [
+    "New Generation Era",
+    "The Kliq"
+  ],
+  "Diesel": [
+    "New Generation Era",
+    "The Kliq",
+    "Two Dudes with Attitudes"
+  ],
+  "Goldberg": [
+    "Monday Night War Era",
+    "WCW"
+  ],
+  "Sting": [
+    "Monday Night War Era",
+    "WCW"
+  ],
+  "Hulk Hogan": [
+    "Golden Era",
+    "Mega Powers"
+  ],
+  "Lita": [
+    "Attitude Era",
+    "Ruthless Aggression Era",
+    "Team Xtreme"
+  ],
+  "Trish Stratus": [
+    "Attitude Era",
+    "Ruthless Aggression Era"
+  ],
+  "Ultimate Warrior": [
+    "Golden Era"
+  ],
+  "Macho Man Randy Savage": [
+    "Golden Era",
+    "Mega Powers"
+  ],
+  "Andre the Giant": [
+    "Golden Era"
+  ],
+  "Brock Lesnar": [
+    "Ruthless Aggression Era"
+  ],
+  "John Cena": [
+    "Ruthless Aggression Era",
+    "PG Era"
+  ],
+  "Sable": [
+    "Attitude Era"
+  ],
+  "Chris Jericho": [
+    "Attitude Era",
+    "Ruthless Aggression Era"
+  ],
+  "Edge": [
+    "Attitude Era",
+    "Ruthless Aggression Era"
+  ],
+  "Eddie Guerrero": [
+    "Attitude Era",
+    "Ruthless Aggression Era"
+  ],
+  "Booker T": [
+    "Monday Night War Era",
+    "Ruthless Aggression Era",
+    "WCW"
+  ]
+};
+Object.entries(TAG_AUDIT).forEach(([name,tags])=>{SUPERSTAR_TAGS[name]=[...new Set([...(SUPERSTAR_TAGS[name]||[]),...tags])]});
 
 // Eight-category WWE Superstar rating system.
 // Level-1 profiles keep broadly comparable overall totals while preserving clear strengths/weaknesses.
@@ -447,7 +698,17 @@ function artFallback(img){
 function artImage(name,c='',loading='eager'){
   return '<img class="'+c+'" src="'+artUrl(name,'webp')+'" alt="'+name+'" data-art-name="'+name+'" decoding="async" loading="'+loading+'" onerror="artFallback(this)">';
 }
-function card(w,l=1,c='',loading='eager'){let art=artImage(w.name,'cardart',loading);return '<div class="card '+c+'">'+art+'<div class="corner levelcorner"><small>LVL</small><b>'+l+'</b></div><div class="corner hpcorner"><small>HP</small><b>'+hpOf(w,l)+'</b></div><div class="name">'+w.name+'</div></div>';}
+const TAG_FONT_CLASSES=[
+  ['D-Generation X','font-dx'],['New Age Outlaws','font-dx'],['nWo','font-nwo'],['NWO','font-nwo'],
+  ['The Bloodline','font-bloodline'],['Bloodline','font-bloodline'],['The Shield','font-shield'],['Shield','font-shield'],
+  ['Evolution','font-evolution'],['Nation of Domination','font-nation'],['ECW','font-ecw'],
+  ['LWO','font-lwo'],['Lucha Brothers','font-lucha'],['Damage CTRL','font-damage'],['Kabuki Warriors','font-kabuki'],
+  ['APA','font-apa'],['Judgment Day','font-judgment'],['Imperium','font-imperium'],['The Brood','font-brood'],['Hart Foundation','font-hart'],['Team Xtreme','font-xtreme'],['The Hardy Boyz','font-xtreme'],['Wyatt Family','font-wyatt'],['The Kliq','font-kliq'],['Demolition','font-demolition'],['Road Warriors','font-roadwarriors'],['The New Day','font-newday'],['New Day','font-newday'],
+  ['Golden Era','font-golden'],['New Generation Era','font-newgen'],['Attitude Era','font-attitude'],
+  ['Ruthless Aggression Era','font-ruthless'],['PG Era','font-pg'],['Reality Era','font-reality'],['Monday Night War Era','font-mnw'],['Current Era','font-current']
+];
+function superstarFontClass(w){let tags=[...new Set([...(SUPERSTAR_TAGS[w.name]||[]),...(w.tags||[])])];for(const [tag,cl] of TAG_FONT_CLASSES)if(tags.includes(tag))return cl;return 'font-current'}
+function card(w,l=1,c='',loading='eager'){let art=artImage(w.name,'cardart',loading),font=superstarFontClass(w);return '<div class="card '+c+' '+font+'">'+art+'<div class="corner levelcorner"><small>LVL</small><b>'+l+'</b></div><div class="corner hpcorner"><small>HP</small><b>'+hpOf(w,l)+'</b></div><div class="name">'+w.name+'</div></div>';}
 function cardBack(w,l=1,c=''){let s=statsAt(w,l);return '<div class="card card-back '+c+'"><div class="back-title">'+w.name+'</div><div class="back-stats">'+KEYS.map(([k,label])=>'<div><span>'+label+'</span><b>'+s[k]+'</b></div>').join('')+'</div><div class="back-hint">TAP TO RETURN</div></div>';}
 function openCard(n,l){let w=BASE.find(x=>x.name===n);if(!w)return;let overlay=document.createElement('div');overlay.className='card-viewer';overlay.onclick=e=>{if(e.target===overlay)overlay.remove()};overlay.innerHTML='<div class="card-viewer-inner" onclick="event.stopPropagation()"><div class="flip-card" onclick="this.classList.toggle(\'flipped\')"><div class="flip-card-inner"><div class="flip-face flip-front">'+card(w,l,'viewer-card')+'</div><div class="flip-face flip-back">'+cardBack(w,l,'viewer-card')+'</div></div></div></div>';document.body.appendChild(overlay);}
 function shell(x,c=''){app.innerHTML=`<section class="screen ${c}">${x}</section>`}
@@ -681,13 +942,13 @@ function preloadRosterInBackground(){
 function preloadFinisher(w){if(!w)return;loadFinisherMedia().then(media=>{let raw=media[w.name]||'',url=tenorEmbed(raw);if(!url)return;if(/\.(?:gif|webp)(?:$|\?)/i.test(raw)){let i=new Image();i.src=url}else{let l=document.createElement('link');l.rel='preconnect';l.href='https://tenor.com';l.crossOrigin='anonymous';document.head.appendChild(l)}})}
 function preloadMatchMedia(...ws){let wrestlers=ws.flat().filter(Boolean);preloadArt(...wrestlers);wrestlers.forEach(preloadFinisher)}
 function tenorEmbed(url){if(!url)return'';let m=url.match(/(?:\/view\/[^?#]*-gif-)(\d+)/i);return m?'https://tenor.com/embed/'+m[1]:url}
-async function finish(win){let b=state.b;if(win)save.wins++;else save.losses++;awardMatchCoin();let resultWrestler=b.p;recordGame(resultWrestler.name,win);let r=recordStats(resultWrestler.name);state.winAward=win&&r.wins>0&&r.wins%50===0?resultWrestler.name:null;if(b.road){save.roadLevel=win?(save.roadLevel||1)+1:Math.max(1,(save.roadLevel||1)-1)}persist();let w=win?b.p:b.cpu,media=await loadFinisherMedia();let raw=media[w.name]||'',url=tenorEmbed(raw),direct=/\.(?:gif|webp|mp4)(?:$|\?)/i.test(raw);shell(`<div class="finish-show"><div class="finish-head"><div class="kicker">${win?'YOU WIN':'DEFEAT'}</div><div class="big">${w.finisher}</div><div class="sub">${w.name} hits the finisher!</div></div>${url?`<div class="finisher-media">${direct?`<img src="${url}" alt="${w.name} finisher">`:`<iframe src="${url}" title="${w.name} finisher" allow="autoplay; fullscreen" scrolling="no" frameborder="0"></iframe>`}</div>`:`<div class="finisher-media missing"><span>FINISHER CLIP</span><b>${w.name}</b><small>Add a URL in Finisher Studio</small></div>`}<div class="pin-stage"><div class="pin-label">PIN COUNT</div><div id="pinCount" class="pin-number">1</div></div><div id="finishAction" class="finish-action"></div></div>`,'finish-screen');let n=1,el=document.querySelector('#pinCount');let timer=setInterval(()=>{n++;if(el){el.classList.remove('pop');void el.offsetWidth;el.textContent=n;el.classList.add('pop')}if(n===3){clearInterval(timer);setTimeout(()=>{let a=document.querySelector('#finishAction');if(a)a.innerHTML=win?(b.gauntlet?'<button class="btn" onclick="claimGauntletReward()">CLAIM '+b.cpu.name.toUpperCase()+'</button>':'<button class="btn" onclick="rewardPack(true)">CLAIM 2 REWARDS</button>'):(b.gauntlet?'<button class="btn secondary" onclick="dailyGauntlet()">TRY AGAIN</button>':'<button class="btn" onclick="rewardPack(false)">CLAIM 1 REWARD</button>')},700)}},900)}
+async function finish(win){let b=state.b;if(win)save.wins++;else save.losses++;awardMatchCoin();let resultWrestler=b.p;recordGame(resultWrestler.name,win);let r=recordStats(resultWrestler.name);state.winAward=win&&r.wins>0&&r.wins%50===0?resultWrestler.name:null;if(b.road){save.roadLevel=win?(save.roadLevel||1)+1:Math.max(1,(save.roadLevel||1)-1)}persist();let w=win?b.p:b.cpu,media=await loadFinisherMedia();let raw=media[w.name]||'',url=tenorEmbed(raw),direct=/\.(?:gif|webp|mp4)(?:$|\?)/i.test(raw);shell(`<div class="finish-show"><div class="finish-head"><div class="kicker">${win?'YOU WIN':'DEFEAT'}</div><div class="big">${w.finisher}</div><div class="sub">${w.name} hits the finisher!</div></div>${url?`<div class="finisher-media">${direct?`<img src="${url}" alt="${w.name} finisher">`:`<iframe src="${url}" title="${w.name} finisher" allow="autoplay; fullscreen" scrolling="no" frameborder="0"></iframe>`}</div>`:`<div class="finisher-media missing"><span>FINISHER CLIP</span><b>${w.name}</b><small>Add a URL in Finisher Studio</small></div>`}<div class="pin-stage"><div class="pin-label">PIN COUNT</div><div id="pinCount" class="pin-number">1</div></div><div id="finishAction" class="finish-action"></div></div>`,'finish-screen');let n=1,el=document.querySelector('#pinCount');let timer=setInterval(()=>{n++;if(el){el.classList.remove('pop');void el.offsetWidth;el.textContent=n;el.classList.add('pop')}if(n===3){clearInterval(timer);setTimeout(()=>{let a=document.querySelector('#finishAction');if(a)a.innerHTML=win?(b.gauntlet?'<button class="btn" onclick="claimGauntletReward()">CLAIM '+b.cpu.name.toUpperCase()+'</button>':'<button class="btn" onclick="rewardPack(true)">CLAIM 2 REWARDS</button>'):(b.gauntlet?'<button class="btn" onclick="rewardPack(false)">CLAIM CONSOLATION CARD</button>':'<button class="btn" onclick="rewardPack(false)">CLAIM 1 REWARD</button>')},700)}},900)}
 function claimGauntletReward(){let d=ensureDaily();if(d.wins>=5)return dailyGauntlet();let w=dailyFeatured(),old=level(w.name),neu=old+1;save.roster[w.name]=neu;ensureRecord(w.name);d.wins++;persist();let next=state.winAward?'claimWinAward()':'dailyGauntlet()';if(old)return duplicateUpgrade(w,old,neu,next,'DAILY GAUNTLET · '+d.wins+'/5');shell(`<div class="new-backdrop">${artImage(w.name,'new-bg','eager')}</div><div class="hero finish new-superstar"><div class="kicker">DAILY GAUNTLET · ${d.wins}/5</div><div class="new-name">${w.name}</div><div class="new-card">${card(w,neu,'flash')}</div><div class="new-level">LVL ${neu}</div><div class="sub">Added to your WWE Superstars collection.</div><button class="btn" onclick="${next}">Continue</button></div>`,'reward new-superstar-screen')}
 function rewardReturn(){return state.b?.road?'road()':'home()'}
 function rewardPack(win=true){let w=state.b?.p,r=w?recordStats(w.name):null;state.matchRewards=Array.from({length:win?2:1},()=>BASE[Math.floor(Math.random()*BASE.length)]);state.matchRewardIndex=0;state.matchRewardWin=win;shell(`<div class="victory-backdrop">${w?artImage(w.name,'victory-bg','eager'):''}</div><div class="hero finish victory-reward"><div class="kicker">${win?'WINNER':'DEFEAT'}</div><div class="victory-name">${w?.name||'MATCH COMPLETE'}</div>${r?`<div class="victory-record">${r.wins} WINS · ${r.losses} LOSSES · ${r.pct}%</div>`:''}<div class="reward-divider"></div><div class="kicker">MATCH REWARD</div><div class="title">${win?'Victory Pack · 2 Cards':'Consolation Pack · 1 Card'}</div><div class="pack premium-pack" onclick="openReward()">${logo()}<span>TAP TO OPEN</span></div></div>`,'reward victory-screen')}
 function duplicateUpgrade(w,old,neu,next,kicker='DUPLICATE ABSORBED'){let before=statsAt(w,old),after=statsAt(w,neu),bh=hpOf(w,old),ah=hpOf(w,neu);shell(`<div class="upgrade-backdrop">${artImage(w.name,'upgrade-bg','eager')}</div><div class="hero finish duplicate-upgrade"><div class="kicker">${kicker}</div><div class="upgrade-name">${w.name}</div><div class="upgrade-card">${card(w,old,'flash')}</div><div class="upgrade-level"><small>LEVEL UP</small><b class="level-old">${old}</b><span>→</span><b class="level-new">${neu}</b></div><div class="upgrade-summary"><strong>HP +${ah-bh}</strong><strong>ALL STATS +${after[KEYS[0][0]]-before[KEYS[0][0]]}</strong></div><div class="upgrade-stats">${KEYS.map(([k,label])=>`<div class="upgrade-stat"><span>${label}</span><b id="up-${k}">${before[k]}</b><i>▲</i><em>+${after[k]-before[k]}</em></div>`).join('')}<div class="upgrade-stat hp-up"><span>HP</span><b id="up-hp">${bh}</b><i>▲</i><em>+${ah-bh}</em></div></div><div class="upgrade-message">LEVEL ${neu}</div><button id="upgradeContinue" class="btn upgrade-continue" onclick="${next}">Continue</button></div>`,'reward upgrade-screen');setTimeout(()=>{let c=document.querySelector('.upgrade-card');if(c)c.innerHTML=card(w,neu,'flash');let lv=document.querySelector('.level-new');if(lv){lv.classList.add('slam');}KEYS.forEach(([k])=>tickUpgrade('up-'+k,before[k],after[k]));tickUpgrade('up-hp',bh,ah);document.querySelectorAll('.upgrade-stat').forEach((el,i)=>setTimeout(()=>el.classList.add('rising'),i*70));let m=document.querySelector('.upgrade-message');if(m)m.classList.add('show');let btn=document.querySelector('#upgradeContinue');if(btn)btn.classList.add('show')},650)}
 function tickUpgrade(id,from,to){let el=document.getElementById(id);if(!el)return;let start=performance.now(),dur=700;function step(t){let p=Math.min(1,(t-start)/dur),e=1-Math.pow(1-p,3);el.textContent=Math.round(from+(to-from)*e);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
-function nextMatchReward(){state.matchRewardIndex=(state.matchRewardIndex||0)+1;if(state.matchRewardIndex<(state.matchRewards?.length||0))return openReward();let returnTo=state.b?.road?'road':'home';state.matchRewards=null;state.matchRewardIndex=0;state.matchRewardWin=null;state.b=null;if(state.winAward)return claimWinAward();return returnTo==='road'?road():home()}
+function nextMatchReward(){state.matchRewardIndex=(state.matchRewardIndex||0)+1;if(state.matchRewardIndex<(state.matchRewards?.length||0))return openReward();let returnTo=state.b?.gauntlet?'gauntlet':(state.b?.road?'road':'home');state.matchRewards=null;state.matchRewardIndex=0;state.matchRewardWin=null;state.b=null;if(state.winAward)return claimWinAward();return returnTo==='gauntlet'?dailyGauntlet():(returnTo==='road'?road():home())}
 function openReward(){if(!state.matchRewards?.length){state.matchRewards=[BASE[Math.floor(Math.random()*BASE.length)]];state.matchRewardIndex=0}let idx=state.matchRewardIndex||0,w=state.matchRewards[idx],old=level(w.name),neu=old+1,total=state.matchRewards.length;save.roster[w.name]=neu;ensureRecord(w.name);persist();let next='nextMatchReward()',kicker=total>1?'REWARD '+(idx+1)+' OF '+total:(state.matchRewardWin===false?'CONSOLATION REWARD':'MATCH REWARD');if(old)return duplicateUpgrade(w,old,neu,next,kicker);shell(`<div class="new-backdrop">${artImage(w.name,'new-bg','eager')}</div><div class="hero finish new-superstar"><div class="kicker">${kicker}</div><div class="new-name">${w.name}</div><div class="new-card">${card(w,neu,'flash')}</div><div class="new-level">LVL ${neu}</div><div class="sub">Added to your WWE Superstars collection.</div><button class="btn" onclick="${next}">${idx+1<total?'NEXT REWARD':'CONTINUE'}</button></div>`,'reward new-superstar-screen')}
 function claimWinAward(){let n=state.winAward;if(!n)return state.b?.gauntlet?dailyGauntlet():(state.b?.road?road():home());let w=BASE.find(x=>x.name===n),old=level(n),neu=old+1,next=state.b?.gauntlet?'dailyGauntlet()':(state.b?.road?'road()':'home()');save.roster[n]=neu;state.winAward=null;persist();if(old)return duplicateUpgrade(w,old,neu,next,'50-WIN AWARD');shell(`<div class="new-backdrop">${artImage(w.name,'new-bg','eager')}</div><div class="hero finish new-superstar"><div class="kicker">50-WIN AWARD</div><div class="new-name">${w.name}</div><div class="new-card">${card(w,neu,'flash')}</div><div class="new-level">LVL ${neu}</div><div class="sub">Bonus Superstar added to your collection.</div><button class="btn" onclick="${next}">Continue</button></div>`,'reward new-superstar-screen')}function bootGame(){start();setTimeout(()=>checkForUpdate(),700);setInterval(()=>checkForUpdate(),60000);setTimeout(()=>loadFinisherMedia(),1800);setTimeout(()=>preloadRosterInBackground(),5000)}
 bootGame();
