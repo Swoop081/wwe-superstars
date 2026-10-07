@@ -962,3 +962,6 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .shop-card .card .name{font-size:clamp(12px,3.48vw,16.8px)!important}
 .road-card-name{font-size:clamp(14.4px,4.2vw,20.4px)!important}
 .back-title{font-size:clamp(27.6px,8.4vw,38.4px)!important}
+
+/* v0.9.01: compact Superstar names on the two match cards only */
+.battle .versus .card .name{font-size:clamp(20px,5.2vw,27px)!important;line-height:.9!important;margin-bottom:-3px!important}
