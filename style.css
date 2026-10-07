@@ -1248,3 +1248,10 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 
 /* v0.9.35 explicit short-name exceptions */
 .card.font-superstar-17 .name{}
+
+/* v0.9.36: per-font optical sizing/leading fixes from collection QA. */
+.card.font-superstar-11 .name{font-size:.82em!important;line-height:.92!important} /* Charlotte Flair */
+.card.font-superstar-101 .name{font-size:.82em!important;line-height:.92!important} /* Jake Roberts */
+.card.font-superstar-94 .name{font-size:.88em!important;line-height:1.02!important} /* AJ Lee */
+.card.font-superstar-76 .name{line-height:1.08!important} /* Terry Funk */
+.card.font-superstar-72 .name{line-height:1.12!important} /* Triple H DX */
