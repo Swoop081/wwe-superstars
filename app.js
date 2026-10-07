@@ -1,4 +1,4 @@
-const APP_VERSION='0.9.12';
+const APP_VERSION='0.9.13';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -772,7 +772,7 @@ const ROAD_MODS=[
 {id:'random',name:'CHAOS',desc:'Attack categories fully reshuffle every turn.'}
 ];
 const ROAD_BROAD_TAGS=['Male','Female','Current Era','Legend','Hall of Fame','RAW','SmackDown','NXT','Golden Era','New Generation Era','Attitude Era','Ruthless Aggression Era','Monday Night War Era','ECW','WCW'];
-function roadSeed(n,salt=0){let x=(n*9301+49297+salt*2339)%233280;return x/233280}
+function roadSeed(n,salt=0){let x=Math.imul((n+1)^(salt+0x9e3779b9),0x85ebca6b);x^=x>>>13;x=Math.imul(x,0xc2b2ae35);x^=x>>>16;return (x>>>0)/4294967296}
 function roadBand(n){return 1+Math.floor((n-1)/15)}
 function roadEligibleRequirements(n){
  let owned=BASE.filter(w=>level(w.name)),all=[...new Set(BASE.flatMap(w=>w.tags||[]))],band=roadBand(n);
@@ -782,7 +782,7 @@ function roadEligibleRequirements(n){
    return rosterCount>=minRoster&&ownedCount>=minOwned;
  });
 }
-function roadBlock(){let n=save.roadLevel||1;if(!save.roadQueue)save.roadQueue={};let nodes=[];for(let i=0;i<3;i++){let match=n+i,key=String(match),node=save.roadQueue[key];if(!node){let exclude=nodes.map(x=>x.mod.id);node=roadNode(match,exclude);save.roadQueue[key]=node}nodes.push(node)}for(let key of Object.keys(save.roadQueue)){if(+key<n-3)delete save.roadQueue[key]}save.roadNodes=nodes;state.roadNodes=nodes;persist();return nodes}
+function roadBlock(){let n=save.roadLevel||1;if(save.roadQueueVersion!==2){save.roadQueue={};save.roadQueueVersion=2}if(!save.roadQueue)save.roadQueue={};let nodes=[];for(let i=0;i<3;i++){let match=n+i,key=String(match),node=save.roadQueue[key];if(!node){let exclude=nodes.map(x=>x.mod.id);node=roadNode(match,exclude);save.roadQueue[key]=node}nodes.push(node)}for(let key of Object.keys(save.roadQueue)){if(+key<n-3)delete save.roadQueue[key]}save.roadNodes=nodes;state.roadNodes=nodes;persist();return nodes}
 function roadNode(n,excludeMods=[]){
  let band=roadBand(n),seed=roadSeed(n),allMods=ROAD_MODS.slice(0,Math.min(ROAD_MODS.length,6+band*2)),mods=allMods.filter(m=>!excludeMods.includes(m.id));if(!mods.length)mods=allMods;let mod=mods[Math.floor(seed*mods.length)],pool=[...KEYS.map(x=>x[0])],blocked=null;
  if(mod.id==='noStat'){blocked=pool[Math.floor(roadSeed(n,1)*pool.length)];pool=pool.filter(x=>x!==blocked)}
