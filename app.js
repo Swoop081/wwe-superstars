@@ -1,4 +1,4 @@
-const APP_VERSION='0.8.80';
+const APP_VERSION='0.8.81';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -436,30 +436,22 @@ const STAT_PER_LEVEL=10;function statsAt(w,lvl){let add=Math.max(0,lvl-1)*STAT_P
 // Share versioned URLs between displayed cards and preload requests.
 function artFile(name,format='webp'){return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.'+format}
 function artUrl(name,format='webp'){return 'assets/superstars/'+artFile(name,format)+'?v='+APP_VERSION}
-const failedWebpArt=new Set();
 function artFallback(img){
-  if(!img.dataset.pngFallback){
-    img.dataset.pngFallback='1';
-    failedWebpArt.add(img.dataset.artName);
-    img.src=artUrl(img.dataset.artName,'png');
-  }else{
-    img.onerror=null;
-    const placeholder=document.createElement('div');
-    placeholder.className='sil';
-    placeholder.setAttribute('role','img');
-    placeholder.setAttribute('aria-label',img.alt||img.dataset.artName);
-    img.replaceWith(placeholder);
-  }
+  img.onerror=null;
+  const placeholder=document.createElement('div');
+  placeholder.className='sil';
+  placeholder.setAttribute('role','img');
+  placeholder.setAttribute('aria-label',img.alt||img.dataset.artName);
+  img.replaceWith(placeholder);
 }
 function artImage(name,c='',loading='eager'){
-  let fallback=failedWebpArt.has(name);
-  return '<img class="'+c+'" src="'+artUrl(name,fallback?'png':'webp')+'" alt="'+name+'" data-art-name="'+name+'"'+(fallback?' data-png-fallback="1"':'')+' decoding="async" loading="'+loading+'" onerror="artFallback(this)">';
+  return '<img class="'+c+'" src="'+artUrl(name,'webp')+'" alt="'+name+'" data-art-name="'+name+'" decoding="async" loading="'+loading+'" onerror="artFallback(this)">';
 }
 function card(w,l=1,c='',loading='eager'){let art=artImage(w.name,'cardart',loading);return '<div class="card '+c+'">'+art+'<div class="corner levelcorner"><small>LVL</small><b>'+l+'</b></div><div class="corner hpcorner"><small>HP</small><b>'+hpOf(w,l)+'</b></div><div class="name">'+w.name+'</div></div>';}
 function cardBack(w,l=1,c=''){let s=statsAt(w,l);return '<div class="card card-back '+c+'"><div class="back-title">'+w.name+'</div><div class="back-stats">'+KEYS.map(([k,label])=>'<div><span>'+label+'</span><b>'+s[k]+'</b></div>').join('')+'</div><div class="back-hint">TAP TO RETURN</div></div>';}
 function openCard(n,l){let w=BASE.find(x=>x.name===n);if(!w)return;let overlay=document.createElement('div');overlay.className='card-viewer';overlay.onclick=e=>{if(e.target===overlay)overlay.remove()};overlay.innerHTML='<div class="card-viewer-inner" onclick="event.stopPropagation()"><div class="flip-card" onclick="this.classList.toggle(\'flipped\')"><div class="flip-card-inner"><div class="flip-face flip-front">'+card(w,l,'viewer-card')+'</div><div class="flip-face flip-back">'+cardBack(w,l,'viewer-card')+'</div></div></div></div>';document.body.appendChild(overlay);}
 function shell(x,c=''){app.innerHTML=`<section class="screen ${c}">${x}</section>`}
-function logo(){return '<img class="game-logo" src="assets/ui/wwe-superstars-logo.png?v='+APP_VERSION+'" alt="WWE Superstars" onerror="this.onerror=null;this.src=\'https://en.wikipedia.org/wiki/Special:Redirect/file/WWE_Superstars_logo.png\'">'}
+function logo(){return '<img class="game-logo" src="assets/wwe-superstar-logo.png?v='+APP_VERSION+'" alt="WWE Superstars">'}
 function versionBadge(){return '<div class="version-badge">VERSION '+APP_VERSION+'</div>'}
 function start(){document.title='WWE Superstars · '+APP_VERSION;if(save)return home();shell(`<div class="startscreen"><div class="startglow"></div><div class="start-brand">${logo()}<div class="start-eyebrow">YOUR CAREER STARTS HERE</div></div><div class="startcopy"><div class="start-title">BUILD YOUR<br>ROSTER</div><div class="kicker">5 RANDOM SUPERSTARS · LEVEL 1</div><button class="btn startbtn" onclick="welcome()">OPEN WELCOME PACK</button></div>${versionBadge()}</div>`,'start')}
 function welcome(){let p=[...BASE].sort(()=>Math.random()-.5).slice(0,5);state.picks=p;preloadArt(p);state.reveal=0;welcomeReveal()}
