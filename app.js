@@ -1,4 +1,4 @@
-const APP_VERSION='0.9.19';
+const APP_VERSION='0.9.20';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -91,7 +91,7 @@ const BASE=[
 {name:'Earthquake',cha:88,str:99,stk:96,tec:76,agi:65,iq:84,finisher:'EARTHQUAKE SPLASH',tags:['Male','Golden Era','Legend','Natural Disasters']},
 {name:'Typhoon',cha:82,str:98,stk:94,tec:74,agi:65,iq:82,finisher:'TIDAL WAVE',tags:['Male','Golden Era','Legend','Natural Disasters']},
 {name:'Sensational Sherri',cha:99,str:70,stk:86,tec:91,agi:84,iq:96,finisher:'SLEEPER HOLD',tags:['Female','Golden Era','New Generation Era','Legend','Hall of Fame']},
-{name:'Ultimo Dragon',cha:88,str:68,stk:86,tec:99,agi:100,iq:94,finisher:'DRAGON SLEEPER',tags:['Male','Monday Night War Era','Ruthless Aggression Era','Legend','WCW']},
+{name:'Ultimo Dragon',cha:88,str:68,stk:86,tec:99,agi:100,iq:94,finisher:'DRAGON BOMB',tags:['Male','Monday Night War Era','Ruthless Aggression Era','Legend','WCW']},
 {name:'Vader',cha:91,str:100,stk:99,tec:88,agi:82,iq:88,finisher:'VADER BOMB',tags:['Male','New Generation Era','Monday Night War Era','Legend','Hall of Fame','WCW']},
 {name:'Ken Shamrock',cha:88,str:94,stk:96,tec:99,agi:76,iq:92,finisher:'ANKLE LOCK',tags:['Male','Attitude Era','Legend']},
 {name:'Gangrel',cha:91,str:84,stk:88,tec:86,agi:82,iq:88,finisher:'IMPLANT DDT',tags:['Male','Attitude Era','Legend','The Brood']},
