@@ -1,144 +1,157 @@
 # WWE Superstars — Development Handoff
 
-Repository: Swoop081/wwe-superstars
-Branch: main
-Live site: https://swoop081.github.io/wwe-superstars/
-Current version: v0.8.53
-Primary target: iPhone / installed GitHub Pages web app
+Updated: 8 October 2026
+Branch: `main`
+Current app version: **0.9.33**
+Repository: `Swoop081/wwe-superstars`
 
-## Current game
-WWE Superstars is a fast single-tier collectible wrestling card game. Duplicates add +1 level indefinitely. Cards have 8 stats: Power, Striking, Technique, Aerial, Submission, Charisma, Star Power and Finisher.
+## Current state
+Mobile-first WWE collectible card game with Exhibition, 2v2 Tag, Superstar Road, Daily Gauntlet, Daily Shop, My Superstars, Career Stats, rewards/duplicates/level-ups, Action cards, stat attacks and finisher sequences.
 
-Modes:
-- Exhibition: random same-level opponent. Win = 2 independently random Superstar cards. Loss = 1 random Superstar card.
-- Superstar Road: infinite progression, about 25 matches per stage, randomized opponents/cities with modifiers. Win advances, loss moves back.
-- Daily Gauntlet: one random featured Superstar per day; 5 wins, each win awards that Superstar. Losses do not consume an attempt.
-- Daily Shop: coin economy described below.
-- Every 50 wins with an individual Superstar independently awards one duplicate of that Superstar.
+Current playable roster: **183 Superstar/persona cards** unless later roster work has landed. Superstar artwork is WebP-only at runtime under `assets/superstars/`.
 
-## Home screen — current approved direction
-Asymmetric photo collage with a 50/50 vertical split.
+## Project rules/preferences
+- Work directly on `main` when asked.
+- Bump `APP_VERSION` plus matching deployment/version refs in `index.html` for code/UI/game changes. User notices missed bumps.
+- Do **not** generate images in this project.
+- Keep implementation responses concise.
+- Cards should have square/right-angle presentation.
+- Superstar art uses automatic slugged WebP filenames.
+- `style.css` has many accumulated `!important` overrides; inspect source order/selectors before visual changes.
 
-Left:
-- Superstar Road — large upper panel spanning first two rows.
-- Daily Gauntlet — large lower panel.
+## Typography — latest work
+### v0.9.32
+Moved toward wrestler/persona-specific name themes rather than generic era fonts. Examples:
+- Sting → vigilante/distressed
+- Drew McIntyre → medieval
+- Undertaker → funeral gothic
+- King of Kings → royal
+- Triple H → industrial
+- DX → handwritten/graffiti
+- Bloodline → tribal/royal
+- Finn Bálor / Damian Priest → occult
+- Gangrel → vampire
+- Goldust → theatrical
+- Flair personas → luxury
+- Tiffany Stratton → glam
+- Jeff Hardy/Lita → extreme
+- Raven/Mankind → grunge
+- Cactus Jack → hardcore
+- Dude Love → psychedelic
+- Kane → monster
+- Demolition/Road Warriors → metal
+- Hogan/Warrior/Macho Man → 80s
+- nWo → distressed
+- Brock Lesnar → combat
+- Gunther → Imperium
+- William Regal → regal
+- Piper → Scottish
+- Sheamus → Celtic
+- Alexa/Bray → horror
+- Kabuki/IYO → kabuki
+- lucha wrestlers → lucha
+- Big Poppa Pump → graffiti
+- CM Punk/Liv → punk
 
-Right:
-- Exhibition — small upper panel.
-- My Superstars — small middle panel.
-- Shop — large lower panel.
+User explicitly wants each wrestler's typography to feel appropriate to that character/persona, not merely random different fonts.
 
-Career Stats sits full-width below.
+### v0.9.33
+Card-face names increased about **20%**. Default `cardNameHtml(name)` breaks at each space, e.g. `DREW / MCINTYRE`. Current explicit exception:
+- El Hijo del Vikingo → `EL HIJO` / `DEL VIKINGO`
 
-This is intentional: large Road upper-left and large Shop lower-right create opposing-corner weight. Do not make all panels equal.
+Add sensible exceptions when found rather than allowing awkward 4–5 line names.
 
-Shop Home panel uses the day's actual 3-Coin Superstar artwork. The image, name and price must all derive from the same local shopFeature value from dailyShopOffers()[0] so they cannot mismatch.
+## My Superstars
+Now has sorting plus Gallery/List view toggle. User prefers the compact collection-card name treatment (e.g. Drew over two lines). Long names must not overflow; Sensational Sherri exposed this issue previously.
 
-## Coin economy / Daily Shop
-- New player starts with 5 Coins.
-- Every 50 global matches played awards 1 Coin, win or loss.
-- Separate from individual Superstar 50-win duplicate reward.
-- Shop refreshes daily.
-- Nine unique Superstars:
-  - 1 x 3-copy offer = 3 Coins
-  - 3 x 2-copy offers = 2 Coins each
-  - 5 x 1-copy offers = 1 Coin each
-- 3x3 grid, highest-value offers first.
-- Purchases award copies, not absolute level. Level 7 + 3 copies = Level 10.
-- Purchased offers become SOLD for rest of day.
-- Shop header shows wallet balance and X/50 matches toward next Coin.
-- Do not repeat Superstar name below Shop card. Under-card text is only e.g. 3 COPIES · +3 LEVELS, then purchase button.
+## Superstar Road
+- Intended mix: roughly **75% singles / 25% tag**.
+- Better deterministic pseudo-random hash added in v0.9.13 after an obvious tag streak.
+- Losing Road does not move the player backwards.
+- Back-out option added after selecting a wrestler so player can leave the pre-battle screen.
+- Road should use the same Superstar font system.
 
-## Coin presentation
-Do not use the old Tenor iframe coin. It produced blue/grey square backgrounds.
-Current coin is native CSS animated spinning gold coin generated by coinIcon(). No external embed/background.
-On Home Shop panel the coin beside 3 should be approximately the same visual size as the numeral.
+## Exhibition / city imagery
+City screens should show recognizable landmarks. Amsterdam previously displayed a newspaper/Wikipedia-style image and was corrected. Avoid text/news/wiki screenshots as city art.
 
-## Update/cache system — important
-iOS/GitHub Pages caching repeatedly left installed web app builds several versions behind.
+## Shop
+Current requested design:
+- live countdown to daily reset
+- do **not** auto-refresh merely because all 9 offers are purchased
+- manual early reset costs **1 coin**
+- purchased slots remain sold until reset
+- Home Shop coin indicator shows player's balance, not feature price
+- feature price remains communicated separately
 
-v0.8.51 introduced automatic updating:
-- Root version.json contains current deployed version.
-- checkForUpdate() fetches version.json with cache no-store and timestamp.
-- Runs shortly after boot and every 60 seconds.
-- If deployed version differs from APP_VERSION, reload with version/timestamp URL parameters.
-- index.html dynamically injects app.js with version + timestamp to defeat stale iOS JS caching.
-- Session storage guards against infinite reload loops.
+Several iterations occurred; inspect current implementation before editing.
 
-Every release MUST update:
-1. APP_VERSION in app.js
-2. all hardcoded version/cache values in index.html
-3. version.json
+## Daily Gauntlet
+- Five wins completes daily featured Superstar.
+- Loss gives a consolation card without consuming Gauntlet progress.
+- Completed Gauntlet screen uses/needs the same countdown style as Shop for next daily reset.
 
-Do not blindly bump versions while Pages is still deploying. Rapid commits cancel intermediate Pages workflows; final commit normally deploys.
+## Finisher media — recent updates
+Current supplied Tenor URLs:
+- Sheamus: `https://tenor.com/en-AU/view/sheamus-brogue-kick-randy-orton-wwe-smack-down-gif-18269724`
+- Mabel: `https://tenor.com/en-AU/view/mabel-king-garbage-throw-hit-in-the-head-gif-14088856`
+- Terry Funk: `https://tenor.com/en-AU/view/wrestling-terry-funk-gif-22913387`
+- Trick Williams: `https://tenor.com/en-AU/view/trick-williams-trick-shot-dominik-mysterio-wwe-nxt-no-mercy-gif-5165358998844293037`
+- Ultimo Dragon: move changed to **DRAGON BOMB**, `https://tenor.com/en-AU/view/ultimo-dragon-running-powerbomb-rey-mysterio-wcw-hog-wild-gif-9793625920294012721`
+- Vince McMahon: `https://tenor.com/en-AU/view/vince-mcmahon-vince-mcmahon-meme-smiling-vince-vince-slay-slaying-vince-gif-16644628425610872887`
+- Dusty Rhodes: `https://tenor.com/en-AU/view/americandream-dusti-gif-21430938`
+- Damian Priest: `https://tenor.com/en-AU/view/wwe-smackdown-2025-wrestling-damian-priest-south-of-heavens-solo-sikoa-gif-8102207268440910832`
+- William Regal: `https://tenor.com/en-AU/view/william-regal-wave-hello-wwf-wwe-gif-737756867811856960`
+- Dude Love: `https://tenor.com/en-AU/view/dudelove-dude-love-wwe-farout-gif-5588569869191951268`
+- Xavier Woods: `https://tenor.com/en-AU/view/the-new-day-xavier-woods-big-e-wwe-smack-down-gif-15319515`
+- Syxx: `https://tenor.com/en-AU/view/4life-wwe-gif-19603531`
+- Candice Michelle: `https://tenor.com/en-AU/view/candice-michelle-gif-8376323`
+- Tiffany Stratton: `https://tenor.com/en-AU/view/tiffany-stratton-wwe-wwe-smackdown-moonsault-prettiest-moonsault-ever-gif-11183068753270097934`
 
-## Boot behavior
-A branded loading screen was briefly added because startup showed white. After optimization startup became fast and the splash flashed awkwardly.
+Tenor page URLs use the existing resolver. Some older URLs produced 404s; user is replacing them as encountered.
 
-As of v0.8.50:
-- No loading/splash screen.
-- Initial HTML/background immediately black.
-- Game starts directly.
-- Heavy finisher/roster preloading remains deferred.
-- Do not reintroduce loading screen unless startup becomes meaningfully slow again.
+## Persona naming convention
+User intentionally shortens persona card names:
+- **King of Kings**, not “Triple H King of Kings”
+- **Big Poppa Pump**, not “Scott Steiner Big Poppa Pump”
 
-## Recent versions
-- v0.8.39 — modified attack cards show actual post-modifier damage before play + BONUS APPLIED.
-- v0.8.40 — normal match rewards: 2 random cards win, 1 loss.
-- v0.8.41 — Daily Shop + Coin economy.
-- v0.8.42 — expanded asymmetric Home and Shop feature art.
-- v0.8.43 — Shop 3x3, premium offers first.
-- v0.8.44 — temporary branded boot screen.
-- v0.8.45–48 — Home ordering/layout and experimental Tenor coin refinements.
-- v0.8.49 — removed Tenor coin; native animated coin. Fixed Home to use highest-value Shop offer.
-- v0.8.50 — removed loading screen; retained black initial shell.
-- v0.8.51 — automatic deployed-version detection/self-refresh and cache-busting runtime loader.
-- v0.8.52 — Home coin reduced to price numeral size; Home Shop price fixed to 3 Coins.
-- v0.8.53 — removed duplicate Superstar names below Shop cards.
+Do not automatically expand persona names.
 
-## Key UI/design rules
-- Black/charcoal/silver premium presentation with full-color Superstar photography.
-- Bangers for prominent numeric values; Oswald Bold for Superstar names/labels.
-- Use exact WWE Superstars logo; do not substitute approximate logo.
-- Cards have square/right-angle corners; UI panels retain current rounded treatment.
-- Primary testing is iPhone; safe areas/Dynamic Island matter.
-- Do not shrink major content merely for safe-area issues.
-- Preserve asymmetric magazine/game-cover Home aesthetic.
-- Keep UI simple and fast.
-- Screenshots are code/UI references, not image-generation requests. Do not generate images unless explicitly requested.
+## Latest roster batch
+Most recent 17 additions:
+Vince McMahon, Shane McMahon, Stephanie McMahon, Toni Storm, Bobby Lashley, MVP, Scott Steiner, Rick Steiner, Big Poppa Pump, Nikki Bella, Brie Bella, Eva Marie, Rick Rude, Ivory, Michelle McCool, Sasha Banks, Carmella.
 
-## Road
-- Infinite.
-- roadBand(n)=1+Math.floor((n-1)/25).
-- Road nodes/opponents/cities randomized at runtime and cached in state.roadNodes for current three-match view.
-- Home uses cached current Road opponent so Home and Road agree.
-- City backgrounds use Wikimedia Commons landmark-specific searches/cache.
-- Modifier examples: Submission +35%, Aerial +35%, Technique +35%.
-- Modified attack number is shown directly on attack card before play.
+They were added to playable BASE and Card Studio; moved to top of Card Studio. Their expected WebP art was confirmed on `main`.
 
-## Rewards / progression
-- Duplicates add levels indefinitely.
-- Normal win: 2 random Superstar copies, sequential reveals.
-- Normal loss: 1 random Superstar copy.
-- Gauntlet reward remains separate and targeted.
-- Individual Superstar every 50 wins: +1 copy.
-- Global every 50 matches: +1 Coin.
-- Shop purchases: +1/+2/+3 copies according to offer.
+## Gameplay/stat model
+BASE authors six core stats: `cha, str, stk, tec, agi, iq`. Displayed battle/card categories also include derived Submission, Star Power and Finisher.
 
-## Save/economy
-New onboarding save includes coins and coin match tracking. Existing saves migrate via ensureEconomy() without resetting roster.
-claimWelcome() initializes a new player with 5 Coins.
+Design intent:
+- meaningful Level 1 spread, roughly 65–100
+- clear strengths and about two weaknesses
+- main event / upper mid / mid / lower mid / opener tiers matter
+- weaker cards must retain a plausible upset path through Action cards/gameplay
+- Action cards should stay meaningful as levels increase
 
-## Implementation caution
-dailyShopOffers() builds nine deterministic daily offers then sorts descending by copies/value. The 3-Coin feature is dailyShopOffers()[0], not index 8. Home should use one local shopFeature variable rather than independently querying different positions.
+## Key files
+- `app.js`: game logic, roster, Road, Shop, Gauntlet, collection, battle, version
+- `style.css`: UI/typography; substantial override debt
+- `index.html`: loader/deployment refs
+- `card-studio/studio.js`: Card Studio roster
+- `finisher-media.json`: Tenor media
+- `assets/superstars/`: WebP wrestler art
+- `assets/`: stat/action/shared UI assets
 
-## Next chat
-Fetch current app.js, style.css, index.html and version.json from main before editing. Expected runtime/version marker: 0.8.53.
+## Icons
+8 stats: Power, Strike, Technique, Agility, Submission, Charisma, Star Power, Finisher.
 
-Most recent approved Shop presentation:
-- 3x3 grid.
-- Best cards first.
-- No duplicate Superstar name under card.
-- Native spinning gold coin.
-- Home feature shows actual 3-Coin Superstar.
-- Home coin approximately same size as the 3.
+13 Actions: Defence, Steel Chair, Low Blow, Dirty Tactics, Crowd Support, Adrenaline, Reverse It, Cheap Shot, Second Wind, Tag, Mind Games, Fighting Spirit, Wild Brawl.
+
+Battle UI should not repeat a category/action name beneath artwork when the icon itself already prints that name.
+
+## Progression observation
+A first-day test save progressed to 100+ owned cards and Drew McIntyre reached high levels quickly. Keep this in mind if progression/economy balance is audited.
+
+## Version note
+Current code/UI version is **0.9.33**. The latest commits after the version bump were media-only `finisher-media.json` URL replacements, so they did not require another app version bump.
+
+Always fetch current `main` before editing; GitHub is authoritative.
