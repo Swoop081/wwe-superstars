@@ -1258,3 +1258,6 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 
 /* v0.9.38: Vikingo explicit lucha/Viking display face; avoid Bungee Spice color-font rendering failure on iOS. */
 .card.font-superstar-112 .name,.collection-list-copy strong.font-superstar-112{font-family:'Germania One','Pirata One',serif!important;letter-spacing:.025em!important}
+
+/* v0.9.39: Card Studio-managed per-Superstar typography. */
+.card .name{font-size:calc(1em * var(--name-size,1))!important;line-height:var(--name-leading,1)!important;letter-spacing:var(--name-tracking,0em)!important}
