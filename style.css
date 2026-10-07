@@ -911,3 +911,12 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 @media(max-width:390px){
  .battle .attackicon,.battle .action-glyph,.battle .action-icon-img{width:68px!important;height:68px!important;min-width:68px!important;min-height:68px!important;max-width:68px!important;max-height:68px!important}
 }
+
+/* v0.8.95: compact action history inside HP panels */
+.battle .fighter-log{min-height:0!important;margin:4px 2px 0!important;display:flex!important;align-items:center!important;gap:8px!important;text-align:left!important;line-height:1.05!important}
+.battle .fighter-log:empty{display:none!important}
+.battle .fighter-log strong{display:flex!important;align-items:center!important;gap:5px!important;flex:0 0 auto!important;font-size:11px!important}
+.battle .fighter-log strong i{display:flex!important;width:32px!important;height:32px!important;align-items:center!important;justify-content:center!important;font-style:normal!important}
+.battle .fighter-log .action-icon-img{width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;max-width:32px!important;max-height:32px!important;object-fit:contain!important}
+.battle .fighter-log span{font-size:9px!important;line-height:1.15!important;flex:1 1 auto!important}
+.battle .hpbox{margin-bottom:8px!important}
