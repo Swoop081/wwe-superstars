@@ -1069,3 +1069,7 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .card.font-theme-lucha .name{font-family:'Bangers','Rye',fantasy!important;letter-spacing:.045em!important}
 .card.font-theme-graffiti .name{font-family:'Permanent Marker','Rock Salt',cursive!important;letter-spacing:-.055em!important}
 .card.font-theme-punk .name{font-family:'Rock Salt','Permanent Marker',cursive!important;letter-spacing:-.065em!important}
+
+/* v0.9.33: larger card-face names with deliberate word-per-line layout. */
+.card .name{font-size:1.2em!important;line-height:.82!important;white-space:normal!important}
+.card .name.card-name-single-long{font-size:1.05em!important}
