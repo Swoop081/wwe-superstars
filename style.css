@@ -953,3 +953,12 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .road-card-name.font-kabuki,.road-card-name.font-demolition,.road-card-name.font-roadwarriors,.road-card-name.font-judgment{font-family:'Metal Mania',Impact,sans-serif!important}
 .road-card-name.font-brood{font-family:'Creepster',Impact,sans-serif!important}
 .road-card-name.font-hart{font-family:'Alfa Slab One',Impact,serif!important}
+
+/* v0.9.00: Superstar names are 20% larger on card surfaces */
+.card .name{font-size:clamp(24px,6.24vw,30px)!important}
+.versus .card .name{font-size:clamp(24px,6.24vw,32.4px)!important}
+.reveal-stage .card .name,.reward .card .name{font-size:clamp(32.4px,8.4vw,36px)!important}
+.viewer-card .name{font-size:clamp(32.4px,8.4vw,40.8px)!important}
+.shop-card .card .name{font-size:clamp(12px,3.48vw,16.8px)!important}
+.road-card-name{font-size:clamp(14.4px,4.2vw,20.4px)!important}
+.back-title{font-size:clamp(27.6px,8.4vw,38.4px)!important}
