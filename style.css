@@ -1023,3 +1023,17 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 /* v0.9.27 — keep long card names contained while preserving two-line presentation */
 .card .name.card-name-lg{font-size:.68em!important;line-height:.88!important;max-width:94%!important;left:3%!important;right:3%!important}
 .card .name.card-name-xl{font-size:.56em!important;line-height:.86!important;max-width:94%!important;left:3%!important;right:3%!important}
+
+/* v0.9.31: persona-specific Superstar typography. Every roster persona resolves here before faction/era fallback. */
+.card.font-persona-bebas .name{font-family:'Bebas Neue',Impact,sans-serif;letter-spacing:.02em}
+.card.font-persona-russo .name{font-family:'Russo One',Impact,sans-serif;letter-spacing:-.025em}
+.card.font-persona-bangers .name{font-family:'Bangers',Impact,sans-serif;letter-spacing:.015em}
+.card.font-persona-graduate .name{font-family:'Graduate',Impact,serif;letter-spacing:-.035em}
+.card.font-persona-marker .name{font-family:'Permanent Marker',Impact,sans-serif;letter-spacing:-.04em}
+.card.font-persona-metal .name{font-family:'Metal Mania',Impact,sans-serif;letter-spacing:.01em}
+.card.font-persona-elite .name{font-family:'Special Elite',Impact,sans-serif;letter-spacing:-.02em}
+.card.font-persona-blackops .name{font-family:'Black Ops One',Impact,sans-serif;letter-spacing:-.045em}
+.card.font-persona-alfa .name{font-family:'Alfa Slab One',Impact,serif;letter-spacing:-.055em}
+.card.font-persona-teko .name{font-family:'Teko','Arial Narrow',sans-serif;letter-spacing:.015em}
+.card.font-persona-pirata .name{font-family:'Pirata One',Impact,serif;letter-spacing:.015em}
+.card.font-persona-oswald .name{font-family:'Oswald',Impact,sans-serif;letter-spacing:-.025em}
