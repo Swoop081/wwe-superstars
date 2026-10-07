@@ -1,0 +1,1269 @@
+{
+  "Roman Reigns": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Cody Rhodes": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Rhea Ripley": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "CM Punk": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "IYO SKY": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Seth Rollins": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Becky Lynch": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Randy Orton": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Bianca Belair": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Gunther": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Sami Zayn": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Charlotte Flair": {
+    "font": "Impact",
+    "size": 82,
+    "lineHeight": 92,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Tiffany Stratton": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Liv Morgan": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lola Vice": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Stone Cold Steve Austin": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "The Rock": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Triple H": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "one"
+  },
+  "The Undertaker": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Shawn Michaels": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Paige": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Rob Van Dam": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kurt Angle": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jeff Hardy": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Sol Ruca": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Giulia": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Stephanie Vaquer": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Bret Hart": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Razor Ramon": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Diesel": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Blake Monroe": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Goldberg": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Bron Breakker": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Sting": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Hulk Hogan": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lita": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jade Cargill": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "AJ Styles": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Finn Bálor": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Naomi": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Trish Stratus": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Demolition Smash": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Demolition Ax": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Ultimate Warrior": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Macho Man Randy Savage": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Andre the Giant": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Roxanne Perez": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Brock Lesnar": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "John Cena": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Sable": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Big E": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "one"
+  },
+  "Kofi Kingston": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Xavier Woods": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Rey Mysterio": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Dominik Mysterio": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Hollywood Hogan": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kevin Nash": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Scott Hall": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Eric Bischoff": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Syxx": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Chris Jericho": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Edge": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Eddie Guerrero": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Booker T": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Batista": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Sabu": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "New Jack": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Mankind": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kane": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Damian Priest": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Road Warrior Hawk": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Road Warrior Animal": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Demolition Crush": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "British Bulldog": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Yokozuna": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jey Uso": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jacob Fatu": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jimmy Uso": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Solo Sikoa": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "LA Knight": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Faarooq": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Mark Henry": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kama Mustafa": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Rikishi": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Umaga": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Triple H DX": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 112,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "King of Kings": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Cactus Jack": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Dude Love": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Terry Funk": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 108,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Chainsaw Charlie": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kamala": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Rowdy Roddy Piper": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lex Luger": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "The Godfather": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Hacksaw Jim Duggan": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Mr Perfect": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Earthquake": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Typhoon": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Sensational Sherri": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Ultimo Dragon": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Vader": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Ken Shamrock": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Gangrel": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Dusty Rhodes": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Goldust": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Ric Flair": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "AJ Lee": {
+    "font": "Impact",
+    "size": 88,
+    "lineHeight": 102,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Candice Michelle": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Maryse": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Torrie Wilson": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Road Dogg": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Billy Gunn": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Chyna": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Shawn Michaels DX": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "X-Pac": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Mickie James": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Bull Nakano": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Big Boss Man": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jake Roberts": {
+    "font": "Impact",
+    "size": 82,
+    "lineHeight": 92,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "King Kong Bundy": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "JBL": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Stacy Keibler": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Cora Jade": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kelani Jordan": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kendal Grey": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jaida Parker": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "La Parka": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Rey Fenix": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Mr. Iguana": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "El Hijo del Vikingo": {
+    "font": "Germania One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 2.5,
+    "layout": "vikingo"
+  },
+  "Jushin Thunder Liger": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Tazz": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Victoria": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Tajiri": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "William Regal": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Fit Finlay": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Steve Blackman": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Raven": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jazz": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Logan Paul": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Drew McIntyre": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Sheamus": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jeff Jarrett": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Mabel": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Bayley": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Alexa Bliss": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Asuka": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Nia Jax": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Chelsea Green": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Piper Niven": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Raquel Rodriguez": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kairi Sane": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lyra Valkyria": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Zelina Vega": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kevin Owens": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Shinsuke Nakamura": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Braun Strowman": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "R-Truth": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "The Miz": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Carmelo Hayes": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Trick Williams": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Oba Femi": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Penta": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Vince McMahon": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Shane McMahon": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Stephanie McMahon": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Toni Storm": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Bobby Lashley": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "MVP": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Scott Steiner": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Rick Steiner": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Big Poppa Pump": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Nikki Bella": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Brie Bella": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Eva Marie": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Rick Rude": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Ivory": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Michelle McCool": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Sasha Banks": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Carmella": {
+    "font": "Impact",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  }
+}
