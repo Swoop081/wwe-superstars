@@ -920,3 +920,18 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .battle .fighter-log .action-icon-img{width:32px!important;height:32px!important;min-width:32px!important;min-height:32px!important;max-width:32px!important;max-height:32px!important;object-fit:contain!important}
 .battle .fighter-log span{font-size:9px!important;line-height:1.15!important;flex:1 1 auto!important}
 .battle .hpbox{margin-bottom:8px!important}
+
+/* v0.8.97: card backs use the authored eight-stat icon set and expose level gains */
+.card-back .back-title{margin-bottom:10px!important}
+.card-back .back-stats{gap:7px!important}
+.card-back .back-stats>div.back-stat{min-height:88px!important;padding:5px 3px 6px!important}
+.card-back .back-stat img{display:block;width:46px!important;height:46px!important;object-fit:contain!important;margin:0 auto -2px!important}
+.card-back .back-stat b{font-size:24px!important;line-height:1!important;margin-top:0!important}
+.card-back .back-stat small{display:block;margin-top:3px;font:900 7px/1 system-ui;letter-spacing:.7px;color:#7fb5ff;text-transform:uppercase;white-space:nowrap}
+.card-back .back-stat small.base-stat{color:#707782}
+.card-back .back-hint{margin-top:10px!important}
+@media(max-width:390px){
+ .card-back .back-stats>div.back-stat{min-height:80px!important}
+ .card-back .back-stat img{width:40px!important;height:40px!important}
+ .card-back .back-stat b{font-size:22px!important}
+}
