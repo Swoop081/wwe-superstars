@@ -1,4 +1,4 @@
-const APP_VERSION='0.9.06';
+const APP_VERSION='0.9.07';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -154,7 +154,25 @@ const BASE=[
 {name:"Carmelo Hayes",cha:95,str:76,stk:89,tec:95,agi:99,iq:92,finisher:"NOTHING BUT NET",tags:["Male","Current Era","SmackDown"]},
 {name:"Trick Williams",cha:98,str:92,stk:95,tec:84,agi:88,iq:90,finisher:"TRICK SHOT",tags:["Male","Current Era","SmackDown"]},
 {name:"Oba Femi",cha:93,str:100,stk:99,tec:88,agi:76,iq:91,finisher:"FALL FROM GRACE",tags:["Male","Current Era","RAW"]},
-{name:"Penta",cha:97,str:80,stk:94,tec:98,agi:99,iq:95,finisher:"MEXICAN DESTROYER",tags:["Male","Current Era","RAW","Lucha Brothers"]}];
+{name:"Penta",cha:97,str:80,stk:94,tec:98,agi:99,iq:95,finisher:"MEXICAN DESTROYER",tags:["Male","Current Era","RAW","Lucha Brothers"]},
+{name:"Vince McMahon",cha:99,str:72,stk:86,tec:70,agi:65,iq:98,finisher:"MCMAHON STUNNER",tags:["Male","Attitude Era","Ruthless Aggression Era","Legend","The Corporation"]},
+{name:"Shane McMahon",cha:94,str:78,stk:88,tec:76,agi:92,iq:84,finisher:"COAST TO COAST",tags:["Male","Attitude Era","Ruthless Aggression Era","Legend","The Corporation"]},
+{name:"Stephanie McMahon",cha:99,str:70,stk:84,tec:76,agi:68,iq:97,finisher:"PEDIGREE",tags:["Female","Attitude Era","Ruthless Aggression Era","Legend","The Corporation"]},
+{name:"Toni Storm",cha:94,str:84,stk:92,tec:96,agi:90,iq:91,finisher:"STORM ZERO",tags:["Female","Current Era","Legend"]},
+{name:"Bobby Lashley",cha:91,str:100,stk:96,tec:92,agi:78,iq:88,finisher:"HURT LOCK",tags:["Male","Ruthless Aggression Era","Current Era","Legend","The Hurt Business"]},
+{name:"MVP",cha:96,str:86,stk:90,tec:88,agi:78,iq:94,finisher:"PLAYMAKER",tags:["Male","Ruthless Aggression Era","Current Era","Legend","The Hurt Business"]},
+{name:"Scott Steiner",cha:88,str:98,stk:94,tec:94,agi:82,iq:88,finisher:"STEINER SCREWDRIVER",tags:["Male","New Generation Era","Monday Night War Era","Legend","Hall of Fame","WCW","Steiner Brothers"]},
+{name:"Rick Steiner",cha:84,str:97,stk:94,tec:92,agi:80,iq:88,finisher:"STEINER DRIVER",tags:["Male","New Generation Era","Monday Night War Era","Legend","Hall of Fame","WCW","Steiner Brothers"]},
+{name:"Big Poppa Pump",cha:99,str:100,stk:98,tec:90,agi:72,iq:92,finisher:"STEINER RECLINER",tags:["Male","Monday Night War Era","Ruthless Aggression Era","Legend","Hall of Fame","WCW"]},
+{name:"Nikki Bella",cha:96,str:88,stk:90,tec:88,agi:84,iq:90,finisher:"RACK ATTACK",tags:["Female","PG Era","Reality Era","Legend","Hall of Fame","Bella Twins"]},
+{name:"Brie Bella",cha:92,str:78,stk:88,tec:90,agi:92,iq:88,finisher:"BELLA BUSTER",tags:["Female","PG Era","Reality Era","Legend","Hall of Fame","Bella Twins"]},
+{name:"Eva Marie",cha:95,str:68,stk:80,tec:74,agi:84,iq:78,finisher:"SLICED RED",tags:["Female","Reality Era","Legend"]},
+{name:"Rick Rude",cha:100,str:88,stk:94,tec:92,agi:76,iq:94,finisher:"RUDE AWAKENING",tags:["Male","Golden Era","Legend","Hall of Fame"]},
+{name:"Ivory",cha:91,str:78,stk:90,tec:92,agi:84,iq:90,finisher:"POISON IVORY",tags:["Female","Attitude Era","Legend","Hall of Fame","Right to Censor"]},
+{name:"Michelle McCool",cha:94,str:82,stk:92,tec:94,agi:86,iq:91,finisher:"FAITH BREAKER",tags:["Female","Ruthless Aggression Era","PG Era","Legend","LayCool"]},
+{name:"Sasha Banks",cha:99,str:76,stk:92,tec:98,agi:94,iq:96,finisher:"BANK STATEMENT",tags:["Female","Reality Era","Current Era","Legend","Four Horsewomen"]},
+{name:"Carmella",cha:98,str:72,stk:88,tec:90,agi:92,iq:94,finisher:"CODE OF SILENCE",tags:["Female","Reality Era","Current Era","Legend"]}
+];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
 // Keep this map additive: new roster members should receive era, division, brand,
