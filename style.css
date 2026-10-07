@@ -935,3 +935,21 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
  .card-back .back-stat img{width:40px!important;height:40px!important}
  .card-back .back-stat b{font-size:22px!important}
 }
+
+/* v0.8.98: Superstar Road opponent names inherit the same tag-driven typography */
+.road-card-name.font-golden{font-family:'Alfa Slab One',Impact,serif!important}
+.road-card-name.font-newgen{font-family:'Bangers',Impact,sans-serif!important}
+.road-card-name.font-attitude{font-family:'Special Elite',Impact,sans-serif!important}
+.road-card-name.font-ruthless,.road-card-name.font-pg{font-family:'Russo One',Impact,sans-serif!important}
+.road-card-name.font-reality,.road-card-name.font-kliq{font-family:'Bebas Neue',Impact,sans-serif!important}
+.road-card-name.font-mnw,.road-card-name.font-evolution,.road-card-name.font-imperium{font-family:'Graduate',Impact,serif!important}
+.road-card-name.font-current{font-family:'Teko','Arial Narrow',sans-serif!important}
+.road-card-name.font-ecw,.road-card-name.font-dx,.road-card-name.font-xtreme{font-family:'Permanent Marker',Impact,sans-serif!important}
+.road-card-name.font-nwo,.road-card-name.font-wyatt{font-family:'Special Elite',Impact,sans-serif!important}
+.road-card-name.font-bloodline{font-family:'Pirata One',Impact,serif!important}
+.road-card-name.font-shield,.road-card-name.font-nation,.road-card-name.font-apa{font-family:'Black Ops One',Impact,sans-serif!important}
+.road-card-name.font-lwo,.road-card-name.font-lucha,.road-card-name.font-newgen,.road-card-name.font-newday{font-family:'Bangers',Impact,sans-serif!important}
+.road-card-name.font-damage{font-family:'Russo One',Impact,sans-serif!important}
+.road-card-name.font-kabuki,.road-card-name.font-demolition,.road-card-name.font-roadwarriors,.road-card-name.font-judgment{font-family:'Metal Mania',Impact,sans-serif!important}
+.road-card-name.font-brood{font-family:'Creepster',Impact,sans-serif!important}
+.road-card-name.font-hart{font-family:'Alfa Slab One',Impact,serif!important}
