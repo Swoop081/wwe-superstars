@@ -821,3 +821,27 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 
 /* Treat the black matte in the supplied WWE Superstars logo as transparent over game backgrounds. */
 .game-logo{mix-blend-mode:screen!important;background:transparent!important}
+
+/* Tag-driven Superstar typography. Specific faction/team tags win before era fallbacks. */
+@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Bangers&family=Bebas+Neue&family=Black+Ops+One&family=Creepster&family=Graduate&family=Metal+Mania&family=Permanent+Marker&family=Pirata+One&family=Russo+One&family=Special+Elite&family=Teko:wght@700&display=swap');
+.card .name{font-family:'Bebas Neue','Arial Narrow',sans-serif}
+.card.font-golden .name{font-family:'Alfa Slab One',Impact,serif}
+.card.font-newgen .name{font-family:'Bangers',Impact,sans-serif}
+.card.font-attitude .name{font-family:'Special Elite',Impact,sans-serif}
+.card.font-ruthless .name{font-family:'Russo One',Impact,sans-serif}
+.card.font-mnw .name{font-family:'Graduate',Impact,serif}
+.card.font-current .name{font-family:'Teko','Arial Narrow',sans-serif}
+.card.font-ecw .name{font-family:'Permanent Marker',Impact,sans-serif}
+.card.font-dx .name{font-family:'Permanent Marker',Impact,sans-serif;letter-spacing:-.02em}
+.card.font-nwo .name{font-family:'Special Elite',Impact,sans-serif;letter-spacing:.02em}
+.card.font-bloodline .name{font-family:'Pirata One',Impact,serif}
+.card.font-shield .name{font-family:'Black Ops One',Impact,sans-serif}
+.card.font-evolution .name{font-family:'Graduate',Impact,serif}
+.card.font-nation .name{font-family:'Black Ops One',Impact,sans-serif}
+.card.font-lwo .name,.card.font-lucha .name{font-family:'Bangers',Impact,sans-serif}
+.card.font-damage .name{font-family:'Russo One',Impact,sans-serif}
+.card.font-kabuki .name{font-family:'Metal Mania',Impact,sans-serif}
+.card.font-apa .name{font-family:'Black Ops One',Impact,sans-serif}
+.card.font-demolition .name{font-family:'Metal Mania',Impact,sans-serif}
+.card.font-roadwarriors .name{font-family:'Metal Mania',Impact,sans-serif}
+.card.font-newday .name{font-family:'Bangers',Impact,sans-serif}
