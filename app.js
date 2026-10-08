@@ -1075,6 +1075,9 @@ const LIVE_EVENTS=[
 function liveToday(){let epoch=new Date(2026,9,8),now=new Date(),day=Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-epoch)/86400000);return LIVE_EVENTS[((day%LIVE_EVENTS.length)+LIVE_EVENTS.length)%LIVE_EVENTS.length]}
 function liveProgress(){let key=dailyKey()+'-'+liveToday().name;if(!save.liveProgress||save.liveProgress.key!==key){save.liveProgress={key,completed:[]};persist()}return save.liveProgress}
 const LIVE_EVENT_LOGOS={
+'SUMMERSLAM 2026 — NIGHT 1':'https://assets.khelnow.com/news/uploads/2024/05/WWE-SummerSlam-2026.png',
+'SUMMERSLAM 2026 — NIGHT 2':'https://assets.khelnow.com/news/uploads/2024/05/WWE-SummerSlam-2026.png',
+'NXT HALLOWEEN HAVOC 2025':'https://www.wwe.com/f/styles/og_image/public/2025/10/NXT_Halloween_Havoc_Logo_2025.png',
 'BACKLASH 2026':'https://commons.wikimedia.org/wiki/Special:FilePath/Backlash_2026.png',
 'WRESTLEMANIA 42':'https://commons.wikimedia.org/wiki/Special:FilePath/Djxug13-98d10349-5c16-4c75-806c-aef3a811753e.png',
 'CROWN JEWEL 2025':'https://commons.wikimedia.org/wiki/Special:FilePath/Crown_Jewel_2025_logo.png',
