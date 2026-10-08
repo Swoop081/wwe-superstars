@@ -1,4 +1,4 @@
-const APP_VERSION='0.9.116';
+const APP_VERSION='0.9.117';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR',tags:["Male","SmackDown","Current Era"]},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES',tags:["Male","SmackDown","Current Era"]},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE',tags:["Female","RAW","Current Era"]},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP',tags:["Male","RAW","Current Era"]},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT',tags:["Female","RAW","Current Era"]},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP',tags:["Male","RAW","Current Era"]},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM',tags:["Female","RAW","Current Era"]},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO',tags:["Male","SmackDown","Current Era"]},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.',tags:["Female","SmackDown","Current Era"]},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB',tags:["Male","RAW","Current Era"]},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK',tags:["Male","RAW","Current Era"]},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT',tags:["Female","SmackDown","Current Era"]},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -696,27 +696,49 @@ const CARD_POSITION={
 'British Bulldog':['Upper Midcard',707],'Yokozuna':['Main Event',712],'Jey Uso':['Main Event',711],'Jacob Fatu':['Upper Midcard',709],
 'Jimmy Uso':['Upper Midcard',702],'Solo Sikoa':['Upper Midcard',705],'LA Knight':['Upper Midcard',708],'Faarooq':['Upper Midcard',704],'Mark Henry':['Upper Midcard',707],"D'Lo Brown":['Midcard',694],'Kama Mustafa':['Lower Midcard',686],"The Rock '98":['Main Event',716],'Rikishi':['Upper Midcard',704],'Umaga':['Upper Midcard',708],'Triple H DX':['Main Event',716],'King of Kings':['Main Event',720],'Cactus Jack':['Upper Midcard',709],'Dude Love':['Upper Midcard',703],'Terry Funk':['Main Event',712],'Chainsaw Charlie':['Midcard',696],'Kamala':['Midcard',694],'Rowdy Roddy Piper':['Main Event',716],'Lex Luger':['Main Event',712],'The Godfather':['Midcard',696],'Hacksaw Jim Duggan':['Upper Midcard',702],'Mr Perfect':['Main Event',712],'Earthquake':['Upper Midcard',704],'Typhoon':['Midcard',694],'Sensational Sherri':['Upper Midcard',700],'Ultimo Dragon':['Upper Midcard',708],'Vader':['Main Event',716],'Ken Shamrock':['Upper Midcard',709],'Gangrel':['Midcard',693],'Dusty Rhodes':['Main Event',718],'Goldust':['Upper Midcard',705],'Ric Flair':['Main Event',720],'AJ Lee':['Main Event',712],'Candice Michelle':['Midcard',690],'Maryse':['Upper Midcard',700],'Torrie Wilson':['Upper Midcard',699],'Road Dogg':['Midcard',692],'Billy Gunn':['Upper Midcard',701],'Chyna':['Upper Midcard',707],'Shawn Michaels DX':['Main Event',719],'X-Pac':['Midcard',697],'Mickie James':['Upper Midcard',702],'Bull Nakano':['Upper Midcard',706]
 };
-const POSITION_RANGES={
-'Main Event':[710,720],'Upper Midcard':[700,709],'Midcard':[690,699],'Lower Midcard':[680,689],'Opener':[670,679]
-};
+/* v0.9.117: achievement-led quintiles, 239 cards divided 48/48/48/48/47.
+   Ranking weights combine curated title/history prominence and existing card rankings.
+   A wrestler's eight-stat total is tier-based, while signature strengths are preserved. */
+const TIER_NAMES=['Main Event','Upper Midcard','Midcard','Lower Midcard','Opener'];
+const POSITION_RANGES={'Main Event':[710,720],'Upper Midcard':[700,709],'Midcard':[690,699],'Lower Midcard':[680,689],'Opener':[670,679]};
+const TITLE_LEGENDS=["Stone Cold Steve Austin","The Rock","Hulk Hogan","Hollywood Hogan","John Cena","Roman Reigns","Cody Rhodes","The Undertaker","Triple H","King of Kings","Triple H DX","Shawn Michaels","Shawn Michaels DX","Bret Hart","Ric Flair","Randy Orton","Brock Lesnar","Kurt Angle","CM Punk","Seth Rollins","Edge","Chris Jericho","Batista","Goldberg","Sting","Macho Man Randy Savage","Ultimate Warrior","Andre the Giant","Diesel","Kevin Nash","Yokozuna","Kane","Eddie Guerrero","Rey Mysterio","Booker T","King Booker","AJ Styles","Drew McIntyre","Gunther","Bobby Lashley","Sheamus","Kevin Owens","JBL","Jeff Hardy","The Miz","Jey Uso","Becky Lynch","Charlotte Flair"];
+const OTHER_CHAMPIONS=["Rhea Ripley","Bianca Belair","Bayley","Sasha Banks","IYO SKY","Asuka","Trish Stratus","Lita","Alexa Bliss","Liv Morgan","Naomi","Nia Jax","Toni Storm","AJ Lee","Mickie James","Paige","Nikki Bella","Roxanne Perez","Tiffany Stratton","Damian Priest","Finn Bálor","Demon Balor","Big E","Kofi Kingston","Sami Zayn","Shinsuke Nakamura","Braun Strowman","Mankind","Cactus Jack","Dusty Rhodes","Vader","Terry Funk","Lex Luger","Mr Perfect","Rowdy Roddy Piper","Rick Rude","Scott Steiner","Big Poppa Pump","Jeff Jarrett","Dean Ambrose","Roman Reigns (Shield)","Seth Rollins (Shield)","Dean Ambrose (Shield)"];
+const ranking=new Map();
+TITLE_LEGENDS.forEach((n,i)=>ranking.set(n,10000-i*2));
+OTHER_CHAMPIONS.forEach((n,i)=>{if(!ranking.has(n))ranking.set(n,9000-i*2)});
+const ranked=[...BASE].sort((a,b)=>{
+ const score=w=>ranking.get(w.name)??((CARD_POSITION[w.name]?.[1]??690)*10);
+ return score(b)-score(a)||a.name.localeCompare(b.name);
+});
+const tierCounts=TIER_NAMES.map((_,i)=>Math.floor(BASE.length/5)+(i<BASE.length%5?1:0));
+let offset=0;
+for(let t=0;t<TIER_NAMES.length;t++){
+ const [lo,hi]=POSITION_RANGES[TIER_NAMES[t]];
+ for(const [i,w] of ranked.slice(offset,offset+tierCounts[t]).entries()){
+   w.position=TIER_NAMES[t];
+   w.tierTarget=hi-Math.floor(i*(hi-lo+1)/tierCounts[t]);
+ }
+ offset+=tierCounts[t];
+}
 function normalizePositionStats(w){
-  const keys=['str','stk','tec','agi','sub','cha','star','fnr'];
-  const spec=CARD_POSITION[w.name]||['Midcard',690],target=spec[1];
-  w.position=spec[0];
-  let delta=target-keys.reduce((n,k)=>n+w[k],0);
-  const order=[...keys].sort((a,b)=>{
-    const da=Math.abs(w[a]-82.5),db=Math.abs(w[b]-82.5);
-    return da-db||keys.indexOf(a)-keys.indexOf(b);
-  });
-  while(delta){
-    let moved=false;
-    for(const k of order){
-      if(delta>0&&w[k]<100){w[k]++;delta--;moved=true}
-      else if(delta<0&&w[k]>65){w[k]--;delta++;moved=true}
-      if(!delta)break;
-    }
-    if(!moved)break;
-  }
+ const keys=['str','stk','tec','agi','sub','cha','star','fnr'],target=w.tierTarget;
+ // Push strongest and weakest categories apart while retaining each wrestler's original order.
+ const rankedKeys=[...keys].sort((a,b)=>w[b]-w[a]||keys.indexOf(a)-keys.indexOf(b));
+ const high=rankedKeys.slice(0,2),low=rankedKeys.slice(-2);
+ for(let k of high)w[k]=Math.max(w[k],94);
+ for(let k of low)w[k]=Math.min(w[k],69);
+ let delta=target-keys.reduce((n,k)=>n+w[k],0),guard=0;
+ while(delta&&guard++<2000){
+   let moved=false;
+   const order=[...keys].sort((a,b)=>Math.abs(w[a]-83)-Math.abs(w[b]-83)||keys.indexOf(a)-keys.indexOf(b));
+   for(const k of order){
+     const lower=low.includes(k)?65:70,upper=high.includes(k)?100:93;
+     if(delta>0&&w[k]<upper){w[k]++;delta--;moved=true}
+     else if(delta<0&&w[k]>lower){w[k]--;delta++;moved=true}
+     if(!delta)break;
+   }
+   if(!moved)break;
+ }
 }
 BASE.forEach(normalizePositionStats);
 
@@ -765,7 +787,7 @@ function buyShopOffer(id,index){ensureEconomy();let offer=dailyShopOffers()[inde
 function ensureRecord(n){if(!save.records)save.records={};if(!save.records[n])save.records[n]={wins:0,losses:0,streak:0,bestStreak:0};return save.records[n]}
 function recordGame(n,win){let r=ensureRecord(n);if(win){r.wins++;r.streak=Math.max(1,r.streak+1);r.bestStreak=Math.max(r.bestStreak,r.streak)}else{r.losses++;r.streak=Math.min(-1,r.streak-1)}}
 function recordStats(n){let r=ensureRecord(n),g=r.wins+r.losses,p=g?Math.round(r.wins/g*100):0;return {...r,games:g,pct:p}}
-const STAT_PER_LEVEL=10;function statsAt(w,lvl){let add=Math.max(0,lvl-1)*STAT_PER_LEVEL;return Object.fromEntries(KEYS.map(([k])=>[k,w[k]+add]))}function baseHpOf(w){let v=KEYS.map(([k])=>w[k]).sort((a,b)=>a-b).slice(2,-2);return v.reduce((a,b)=>a+b,0)}const HP_PER_LEVEL=40;function hpOf(w,lvl){return baseHpOf(w)+Math.max(0,lvl-1)*HP_PER_LEVEL}function level(n){return save?.roster?.[n]||0}
+const STAT_PER_LEVEL=6;function statsAt(w,lvl){let add=Math.max(0,lvl-1)*STAT_PER_LEVEL;return Object.fromEntries(KEYS.map(([k])=>[k,w[k]+add]))}function baseHpOf(w){let v=KEYS.map(([k])=>w[k]).sort((a,b)=>a-b).slice(2,-2);return v.reduce((a,b)=>a+b,0)}const HP_PER_LEVEL=32;function hpOf(w,lvl){return baseHpOf(w)+Math.max(0,lvl-1)*HP_PER_LEVEL}function level(n){return save?.roster?.[n]||0}
 // Share versioned URLs between displayed cards and preload requests.
 function artFile(name,format='webp'){const slug=name==='King of Kings'?'triple-h-king-of-kings':name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');return slug+'.'+format}
 function artUrl(name,format='webp'){return 'assets/superstars/'+artFile(name,format)+'?v='+APP_VERSION}
