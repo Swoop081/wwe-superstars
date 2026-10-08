@@ -125,3 +125,19 @@
  position:absolute!important;z-index:2!important;bottom:0!important;
  height:48%!important;background:linear-gradient(0deg,#020612f5,transparent)!important;
 }
+
+/* v0.9.139: exactly match Superstar Road's full-width top hero footprint. */
+.home-v2 .home-page:nth-child(3) .home-page-grid{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ grid-template-rows:minmax(0,1.8fr) minmax(0,1fr)!important;
+}
+.home-v2 .home-page:nth-child(3) .home-page-grid>.home-faction{
+ grid-column:1 / -1!important;
+ grid-row:1!important;
+ width:100%!important;
+ height:100%!important;
+ max-height:100%!important;
+}
+.home-v2 .home-page:nth-child(3) .home-faction .tile-copy strong{
+ font-size:clamp(32px,9vw,56px)!important;
+}
