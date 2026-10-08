@@ -1458,3 +1458,10 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 /* v0.9.53: centred full-width match action beneath both portraits */
 .live-screen .live-match .live-play-button{display:block!important;position:relative!important;width:100%!important;max-width:none!important;min-width:0!important;height:32px!important;min-height:32px!important;max-height:32px!important;box-sizing:border-box!important;margin:7px auto 0!important;padding:0 8px!important;border-radius:4px!important;border:1px solid #d5d5d5!important;background:linear-gradient(180deg,#f0f0f0,#c8c8c8)!important;color:#111!important;text-align:center!important;font:700 13px/30px Oswald,Impact,sans-serif!important;letter-spacing:1px!important;box-shadow:none!important;transform:none!important}
 .live-screen .live-match .live-play-button:disabled{background:#27292e!important;border:1px solid #50535a!important;color:#c3c5cc!important;opacity:1!important}
+
+/* WWE Live event logos */
+.live-screen .live-event-logo{position:relative;display:flex;align-items:center;justify-content:center;min-height:90px;max-height:155px;padding:4px 12px;margin:4px auto 8px;overflow:hidden}
+.live-screen .live-event-logo img{display:block;max-width:100%;width:auto;height:auto;max-height:145px;object-fit:contain}
+.live-screen .live-event-logo span{display:none}
+.live-screen .live-event-logo.logo-failed img{display:none}
+.live-screen .live-event-logo.logo-failed span{display:block;font:800 clamp(26px,7vw,40px)/1.05 Oswald,Impact,sans-serif;text-transform:uppercase;text-align:center}
