@@ -763,7 +763,7 @@ function recordGame(n,win){let r=ensureRecord(n);if(win){r.wins++;r.streak=Math.
 function recordStats(n){let r=ensureRecord(n),g=r.wins+r.losses,p=g?Math.round(r.wins/g*100):0;return {...r,games:g,pct:p}}
 const STAT_PER_LEVEL=10;function statsAt(w,lvl){let add=Math.max(0,lvl-1)*STAT_PER_LEVEL;return Object.fromEntries(KEYS.map(([k])=>[k,w[k]+add]))}function baseHpOf(w){let v=KEYS.map(([k])=>w[k]).sort((a,b)=>a-b).slice(2,-2);return v.reduce((a,b)=>a+b,0)}const HP_PER_LEVEL=40;function hpOf(w,lvl){return baseHpOf(w)+Math.max(0,lvl-1)*HP_PER_LEVEL}function level(n){return save?.roster?.[n]||0}
 // Share versioned URLs between displayed cards and preload requests.
-function artFile(name,format='webp'){return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.'+format}
+function artFile(name,format='webp'){const slug=name==='King of Kings'?'triple-h-king-of-kings':name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');return slug+'.'+format}
 function artUrl(name,format='webp'){return 'assets/superstars/'+artFile(name,format)+'?v='+APP_VERSION}
 function artFallback(img){
   img.onerror=null;
