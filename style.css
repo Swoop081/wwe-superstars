@@ -1834,3 +1834,13 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 
 /* v0.9.153: CPU multi-person bench matches the compact player tag buttons. */
 .tag-benches .tag-bench.cpu>div{display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;min-height:44px!important;height:auto!important;margin:4px 0!important;padding:7px 5px!important;border:1px solid #626c80!important;border-radius:7px!important;background:#242936!important;color:#fff!important;text-align:center!important;font:700 clamp(11px,3.15vw,16px)/1.18 'Oswald',Impact,sans-serif!important;line-height:1.18!important}
+
+/* v0.9.158: explicit earned coin milestone notification. */
+.coin-award-screen{min-height:75dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:28px 18px;text-align:center;color:#fff}
+.coin-award-screen h1{margin:0;color:#f3cf77;font:900 clamp(34px,9vw,58px) Oswald,Impact,sans-serif}
+.coin-award-amount{font:900 clamp(30px,9vw,52px) Oswald,Impact,sans-serif;color:#f3cf77}
+.coin-award-reason{display:flex;flex-direction:column;gap:5px;width:100%;max-width:440px;padding:13px 10px;background:#171d2b;border:1px solid #cba85d}
+.coin-award-reason strong{font:700 20px Oswald,Impact,sans-serif;color:#f3cf77}
+.coin-award-reason small{font-size:14px;color:#ddd}
+.coin-award-screen p{font:700 19px Oswald,Impact,sans-serif}
+.coin-award-screen .btn{width:100%;max-width:440px}
