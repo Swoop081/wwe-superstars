@@ -1359,3 +1359,16 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .card.font-superstar-213 .name{font-family:"Pirata One",Impact,sans-serif!important}
 .card.font-superstar-214 .name{font-family:"Rock Salt",Impact,sans-serif!important}
 .card.font-superstar-215 .name{font-family:"Russo One",Impact,sans-serif!important}
+
+/* v0.9.45: two-page swipeable home */
+.home-v2 .home-pages-viewport{width:100%;overflow:hidden;touch-action:pan-y}
+.home-v2 .home-pages-track{display:flex;width:200%;transition:transform .28s ease;align-items:flex-start}
+.home-v2 .home-page{width:50%;flex:0 0 50%;min-width:0;padding:0 2px;box-sizing:border-box}
+.home-v2 .home-page-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.home-v2 .home-page-grid .home-tile{min-width:0;grid-column:auto!important;grid-row:auto!important;min-height:155px}
+.home-v2 .home-page-grid .home-tile-large{grid-column:1/-1!important;min-height:235px}
+.home-v2 .home-page-grid .home-tile.home-gauntlet.home-tile-large{min-height:200px}
+.home-v2 .home-page-rail{position:sticky;bottom:0;z-index:5;display:flex;gap:8px;justify-content:center;padding:14px 6px max(14px,env(safe-area-inset-bottom));background:linear-gradient(0deg,#080808 75%,transparent)}
+.home-v2 .home-nav-page{flex:1;min-height:44px;border:1px solid #555;background:#181818;color:#aaa;font:800 13px Impact,sans-serif;letter-spacing:.1em;border-radius:4px}
+.home-v2 .home-nav-page.active{background:#f1f1f1;color:#111;border-color:white}
+.home-v2 .home-stats .tile-shade,.home-v2 .home-live .tile-shade{background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.1))}
