@@ -35,3 +35,22 @@
 /* v0.9.131: the track must remain viewport-width; each slide is one viewport. */
 .home-v2 .home-pages-track{width:100%!important;display:flex!important;flex-wrap:nowrap!important;align-items:stretch!important}
 .home-v2 .home-pages-track>.home-page{box-sizing:border-box!important;width:100%!important;min-width:100%!important;max-width:100%!important;flex:0 0 100%!important}
+
+/* v0.9.133: compact iPhone controls; superstar art is the visual priority. */
+.fw-page{padding:12px 12px 72px!important}
+.fw-page .fw-back{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:auto!important;min-width:104px!important;height:34px!important;min-height:34px!important;max-height:34px!important;padding:0 13px!important;margin:0 0 8px!important;border-radius:3px!important;font:700 14px/1 Oswald,Impact,sans-serif!important;letter-spacing:.05em!important}
+.fw-page .fw-kicker{margin-top:8px!important}
+.fw-page h1{margin:8px 0!important}
+.fw-page h2{margin:12px 0 7px!important}
+.fw-page p{margin:7px 0!important}
+.fw-page .fw-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;margin:10px 0 12px!important}
+.fw-page .fw-actions .btn{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;height:38px!important;min-height:38px!important;max-height:38px!important;padding:0 8px!important;margin:0!important;border-radius:3px!important;font:700 15px/1 Oswald,Impact,sans-serif!important;letter-spacing:.04em!important;white-space:nowrap!important}
+.fw-page .fw-actions .btn:disabled{opacity:.45!important}
+.fw-page .fw-picked{gap:5px!important}
+.fw-page .fw-slot{min-height:64px!important;padding:3px 1px!important}
+.fw-page .fw-slot small{font-size:clamp(7px,1.8vw,10px)!important;letter-spacing:0!important;margin-top:3px!important;overflow-wrap:anywhere}
+.fw-page .fw-empty{padding:21px 0 14px!important}
+.fw-page .fw-roster{gap:6px!important}
+.fw-page .fw-wrestler{padding:2px!important}
+.fw-page .fw-play,.fw-page .fw-final-button{height:38px!important;min-height:38px!important;padding:0 8px!important;border-radius:3px!important;font:700 15px/1 Oswald,Impact,sans-serif!important}
+@media(max-width:430px){.fw-page{padding-inline:10px!important}.fw-page h1{font-size:clamp(25px,7vw,34px)!important}}
