@@ -1749,3 +1749,12 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 
 /* v0.9.113: reduce Superstar Road home title by 20% from v0.9.112. */
 .home-v2 .home-road .tile-copy strong{font-size:clamp(56px,14.4vw,81.6px)!important}
+
+/* v0.9.115: Braun Strowman — imposing, industrial monster typography. */
+.card.font-superstar-137 .name,.collection-list-copy strong.font-superstar-137{
+  font-family:'Black Ops One',Impact,sans-serif!important;
+  font-weight:900!important;
+  letter-spacing:-.045em!important;
+  line-height:.9!important;
+  text-transform:uppercase!important;
+}
