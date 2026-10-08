@@ -221,7 +221,13 @@ const BASE=[
 {name:"Dean Ambrose",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"DIRTY DEEDS",tags:["Male","Reality Era"]},
 {name:"Ricky Saints",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"ROSHAMBO",tags:["Male","NXT"]},
 {name:"Roman Reigns (Shield)",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"SPEAR",tags:["Male","Reality Era","The Shield"]},
-{name:"Royce Keys",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"POWERBOMB",tags:["Male","Current Era"]}
+{name:"Royce Keys",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"POWERBOMB",tags:["Male","Current Era"]},
+{name:"Seth Rollins (Shield)",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"BLACKOUT",tags:["Male","Reality Era","The Shield"]},
+{name:"Dean Ambrose (Shield)",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"DIRTY DEEDS",tags:["Male","Reality Era","The Shield"]},
+{name:"Tatum Paxley",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"PSYCHO TRAP",tags:["Female","NXT"]},
+{name:"Thea Hail",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"KIMURA LOCK",tags:["Female","NXT"]},
+{name:"Tony D'Angelo",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"SPINEBUSTER",tags:["Male","NXT"]},
+{name:"Wade Barrett",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"BULL HAMMER",tags:["Male","PG Era"]}
 ];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
