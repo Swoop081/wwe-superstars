@@ -14,27 +14,31 @@ shell('<div class="fw-page"><button class="btn fw-back" onclick="home()">← HOM
 }
 function pick(name){if(picks.includes(name))picks=picks.filter(x=>x!==name);else if(picks.length<4&&owned().some(w=>w.name===name))picks.push(name);selection()}
 function clear(){picks=[];selection()}
-function begin(){if(picks.length!==4)return;save.factionWarfare=rules().createSeason(picks,{world:picks[0],intercontinental:picks[1],tag:picks.slice(2)});persist();dashboard()}
+function begin(){if(picks.length!==4)return;const roles={world:picks[0],intercontinental:picks[1],tag:picks.slice(2)};const levels={world:level(picks[0]),intercontinental:level(picks[1]),tag:picks.slice(2).map(level)};const opponents=rules().generateOpponents(BASE.map(w=>w.name),picks,levels);save.factionWarfare=rules().createSeason(picks,roles,opponents);persist();dashboard()}
 function launch(division){
  const season=save.factionWarfare,match=rules().available(season).find(x=>x.division===division);
  if(!match)return dashboard();
  const names=division==='tag'?season.roles.tag:[season.roles[division]];
- const pool=BASE.filter(w=>!season.members.includes(w.name)).sort(()=>Math.random()-.5);
+ const faction=season.opponents?.length?season.opponents[(season.week-1)%season.opponents.length]:null;
  const mk=(w,l)=>({w,l,hp:hpOf(w,l),max:hpOf(w,l)});
  const players=names.map(n=>{const w=BASE.find(x=>x.name===n);return mk(w,level(n))});
- const opponents=pool.slice(0,names.length).map((w,i)=>mk(w,players[i].l));
+ const fallback=BASE.filter(w=>!season.members.includes(w.name)).sort(()=>Math.random()-.5);
+ const cpuNames=faction?(division==='tag'?faction.members.slice(2,4):[faction.members[division==='world'?0:1]]):fallback.slice(0,names.length).map(w=>w.name);
+ const cpuLevels=faction?(division==='tag'?faction.levels.tag:[faction.levels[division]]):players.map(p=>p.l);
+ const opponents=cpuNames.map((n,i)=>mk(BASE.find(w=>w.name===n)||fallback[i],cpuLevels[i]));
  let b;
  if(names.length>1){b={multi:true,tag:true,teams:{p:players,c:opponents},avail:KEYS.map(x=>x[0]),log:'FACTION WARFARE · TAG TEAM'};multiSync(b)}
  else {const p=players[0],c=opponents[0];b={p:p.w,cpu:c.w,pl:p.l,cl:c.l,php:p.hp,chp:c.hp,pmax:p.max,cmax:c.max,avail:KEYS.map(x=>x[0]),log:'FACTION WARFARE · '+match.kind.toUpperCase()}}
- b.faction={division,kind:match.kind};
+ b.faction={division,kind:match.kind,opponent:faction?.name||'Challengers'};
  state.b=b;preloadMatchMedia(...[...players,...opponents].map(x=>x.w));battle();
 }
 function finalMatch(){
  const season=save.factionWarfare;if(!['final-ready','final-retry'].includes(season?.status))return dashboard();
- const pool=BASE.filter(w=>!season.members.includes(w.name)).sort(()=>Math.random()-.5);
+ const faction=season.opponents?.[Math.floor(Math.random()*season.opponents.length)];
  const mk=(w,l)=>({w,l,hp:hpOf(w,l),max:hpOf(w,l)});
  const players=season.members.map(n=>{const w=BASE.find(x=>x.name===n);return mk(w,level(n))});
- const opponents=pool.slice(0,4).map((w,i)=>mk(w,players[i].l));
+ const fallback=BASE.filter(w=>!season.members.includes(w.name)).sort(()=>Math.random()-.5);
+ const opponents=(faction?faction.members:fallback.slice(0,4).map(w=>w.name)).map((n,i)=>mk(BASE.find(w=>w.name===n)||fallback[i],faction?[faction.levels.world,faction.levels.intercontinental,...faction.levels.tag][i]:players[i].l));
  const b={multi:true,tag:true,teams:{p:players,c:opponents},avail:KEYS.map(x=>x[0]),log:'FACTION WARFARE · WARGAMES ELIMINATION',faction:{final:true}};
  multiSync(b);state.b=b;preloadMatchMedia(...[...players,...opponents].map(x=>x.w));battle();
 }
