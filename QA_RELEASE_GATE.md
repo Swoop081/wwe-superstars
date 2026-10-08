@@ -38,3 +38,10 @@ No claim of 'bug-free' or v1.0-ready until the above are verified.
 - Corrected static test to validate normalized eight-stat records instead of raw six-stat records. Previously the test incorrectly inspected the raw BASE declaration.
 - Browser/asset/gameplay GitHub Actions runs have not been verified as passing; the available connector exposes only PR-filtered workflow runs, which returned none for the latest commit. CI status remains unknown, not green.
 - Release gate remains blocked pending observable mobile Chromium results, missing artwork check, multi-team stress tests and device QA.
+
+## Additional QA — 2026-10-08
+- Executed isolated source-code simulations: 120 singles matches and 180 multi-team matches (60 each of 2v2, 3v3 and 4v4). All reached a match-ending state without HP invariant failures; 217 manual substitutions were exercised. These are simulated-DOM tests, not full browser tests.
+- Exercised shop purchasing and repeat-purchase prevention in an isolated runtime; coin deductions, level increments, and nonnegative balance passed.
+- Balance simulations: 1,000 optimized matches produced approximately 50.7% player wins using the actual finish() callback; 1,000 random-card matches produced approximately 30.1% player wins. No balance changes requested.
+- Added tests/qa-match-stress.cjs (300-match browser stress regression), corrected shop smoke selector and added HTTP server readiness check to CI. These new CI tests still need a confirmed passing workflow run.
+- User approved existing balance. Do not alter combat difficulty solely to force random selection to 50% wins.
