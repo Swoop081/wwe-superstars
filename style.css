@@ -1428,3 +1428,18 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .live-screen .live-match{padding:10px!important}
 .live-screen .live-heading{padding:10px 8px 14px!important}
 .live-screen .live-heading .title{font-size:clamp(29px,8vw,48px)!important}
+
+
+/* v0.9.50 compact WWE Live: art-forward, main event first */
+.live-screen .live-heading{padding:4px 4px 10px!important}
+.live-screen .live-heading .title{font-size:clamp(27px,7vw,40px)!important;margin:5px 0!important}
+.live-screen .live-matches{gap:8px!important;padding-bottom:20px!important}
+.live-screen .live-match{padding:7px 9px 9px!important;border-radius:7px!important}
+.live-screen .live-match-number{font-size:11px!important;line-height:1.2!important;letter-spacing:1.5px!important;margin:0 0 5px!important}
+.live-screen .live-matchup{gap:5px!important;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr)!important}
+.live-screen .live-matchup>div{gap:3px!important}
+.live-screen .live-matchup .live-portrait,.live-screen .live-matchup picture,.live-screen .live-matchup picture img,.live-screen .live-matchup img.live-portrait{height:158px!important;max-height:158px!important;border-radius:4px!important}
+.live-screen .live-matchup b{font-size:clamp(13px,3.8vw,18px)!important}
+.live-screen .live-matchup strong{font-size:19px!important}
+.live-screen .live-partners{padding:4px!important;font-size:10px!important}
+.live-screen .live-match button.btn{display:block!important;width:100%!important;min-height:0!important;height:34px!important;max-height:34px!important;padding:0 10px!important;margin:7px 0 0!important;font-size:14px!important;line-height:32px!important;letter-spacing:1px!important;border-radius:5px!important}
