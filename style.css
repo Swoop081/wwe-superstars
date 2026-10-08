@@ -1465,3 +1465,16 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .live-screen .live-event-logo span{display:none}
 .live-screen .live-event-logo.logo-failed img{display:none}
 .live-screen .live-event-logo.logo-failed span{display:block;font:800 clamp(26px,7vw,40px)/1.05 Oswald,Impact,sans-serif;text-transform:uppercase;text-align:center}
+
+/* v0.9.79: portrait WWE Live and Daily Gauntlet feature tiles */
+.home-v2 .home-page:nth-child(2) .home-page-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:minmax(0,1.65fr) minmax(0,1fr)!important}
+.home-v2 .home-page:nth-child(2) .home-page-grid .home-tile-large{grid-column:auto!important;grid-row:1!important;min-width:0!important}
+.home-v2 .home-page:nth-child(2) .home-live{grid-column:1!important}
+.home-v2 .home-page:nth-child(2) .home-gauntlet{grid-column:2!important}
+.home-v2 .home-page:nth-child(2) .home-collection{grid-column:1!important;grid-row:2!important}
+.home-v2 .home-page:nth-child(2) .home-stats{grid-column:2!important;grid-row:2!important}
+.home-v2 .home-page:nth-child(2) .home-tile-large .home-tile-art{object-position:center top!important}
+.home-v2 .home-page:nth-child(2) .home-tile-large .tile-copy{max-width:100%!important;left:10px!important;right:7px!important;bottom:11px!important}
+.home-v2 .home-page:nth-child(2) .home-tile-large .tile-copy strong{font-size:clamp(25px,6.2vw,39px)!important;line-height:.96!important}
+.home-v2 .home-page:nth-child(2) .home-tile-large .tile-copy small{font-size:clamp(8px,2vw,11px)!important;letter-spacing:1px!important}
+.home-v2 .home-page:nth-child(2) .home-tile-large .tile-copy em{font-size:clamp(8px,2vw,11px)!important;line-height:1.15!important}
