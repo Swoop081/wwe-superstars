@@ -191,7 +191,17 @@ const BASE=[
 {name:"Ethan Page",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"EGO'S EDGE",tags:["Male","NXT"]},
 {name:"Fallon Henley",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"FAMOUSER",tags:["Female","NXT"]},
 {name:"Demon Bálor",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"COUP DE GRÂCE",tags:["Male","Current Era"]},
-{name:"Grayson Waller",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"ROLLING STUNNER",tags:["Male","Current Era"]}
+{name:"Grayson Waller",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"ROLLING STUNNER",tags:["Male","Current Era"]},
+{name:"Jacy Jayne",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"RUNNING KNEE",tags:["Female","NXT"]},
+{name:"JD McDonagh",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"DEVIL INSIDE",tags:["Male","Current Era"]},
+{name:"Je'Von Evans",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"OG CUTTER",tags:["Male","NXT"]},
+{name:"Joe Hendry",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"STANDING OVATION",tags:["Male","Current Era"]},
+{name:"Johnny Gargano",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"ONE FINAL BEAT",tags:["Male","Current Era"]},
+{name:"Jordynne Grace",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"JUGGERNAUT DRIVER",tags:["Female","Current Era"]},
+{name:"Karmen Petrovic",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"SPINNING HEEL KICK",tags:["Female","NXT"]},
+{name:"Kit Wilson",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"TWISTED NECKBREAKER",tags:["Male","Current Era"]},
+{name:"Kiana James",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"401K",tags:["Female","Current Era"]},
+{name:"Lady Shani",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"SHANI DRIVER",tags:["Female","Current Era"]}
 ];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
