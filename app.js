@@ -1,4 +1,4 @@
-const APP_VERSION='0.9.79';
+const APP_VERSION='0.9.80';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -782,7 +782,7 @@ function artImage(name,c='',loading='eager'){
 }
 let TYPOGRAPHY={};
 const TYPOGRAPHY_READY=fetch('card-typography.json?v='+APP_VERSION).then(r=>r.ok?r.json():{}).then(v=>{TYPOGRAPHY=v||{};return TYPOGRAPHY}).catch(()=>TYPOGRAPHY={});
-function typographyStyle(name){const t=TYPOGRAPHY[name]||{};return '--name-size:'+((t.size||100)/100)+';--name-leading:'+((t.lineHeight||100)/100)+';--name-tracking:'+((t.letterSpacing||0)/100)+'em'}
+function typographyStyle(name){const t=TYPOGRAPHY[name]||{};return '--name-fit:'+Math.min(1,8/Math.max(8,...name.trim().split(/\s+/).map(w=>w.length))).toFixed(3)+';--name-size:'+((t.size||100)/100)+';--name-leading:'+((t.lineHeight||100)/100)+';--name-tracking:'+((t.letterSpacing||0)/100)+'em'}
 const PERSONA_FONT_CLASSES={
   "Roman Reigns": "font-superstar-0",
   "Cody Rhodes": "font-superstar-1",
