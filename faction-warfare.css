@@ -73,3 +73,9 @@
 .fw-slot-card .card .levelcorner{left:3px!important}
 .fw-slot-card .card .hpcorner{right:3px!important}
 .fw-slot-card .card .corner small,.fw-slot-card .card .corner b{font-size:clamp(7px,7cqw,11px)!important;line-height:.9!important}
+
+.fw-opponent-heading{font:700 13px Oswald,Impact,sans-serif;letter-spacing:.09em;color:#e6bd58;margin:14px 0 6px}
+.fw-opponent-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:0 0 16px}
+.fw-opponent{min-width:0;padding:7px;background:#151b28;border:1px solid #343d50}
+.fw-opponent strong{display:block;color:#e6bd58;font:700 13px Oswald,Impact,sans-serif}
+.fw-opponent small{display:block;color:#bac1d1;font:11px/1.35 Arial,sans-serif;overflow-wrap:anywhere}
