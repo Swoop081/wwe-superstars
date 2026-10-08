@@ -1787,3 +1787,11 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   border-color:#7a8290!important;
   opacity:1!important;
 }
+
+/* v0.9.119: WWE Live side picker must never expand a wrestler portrait to full screen. */
+.live-screen .live-side-choices{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:start!important;gap:8px!important;width:100%!important;max-width:100%!important}
+.live-screen .live-side-choice{box-sizing:border-box!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;padding:8px 5px 12px!important}
+.live-screen .live-side-art{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(0,1fr))!important;width:100%!important;min-width:0!important;max-width:100%!important;overflow:hidden!important}
+.live-screen .live-side-art img,.live-screen .live-side-art picture,.live-screen .live-side-art picture img{display:block!important;box-sizing:border-box!important;width:100%!important;max-width:100%!important;height:auto!important;max-height:min(46vh,310px)!important;min-height:0!important;aspect-ratio:3/4!important;object-fit:contain!important;object-position:center top!important;pointer-events:none!important}
+.live-screen .live-side-choice>b{overflow-wrap:anywhere!important;font-size:clamp(14px,3.7vw,22px)!important}
+.live-screen .live-side-choice>span{display:block!important;white-space:normal!important;line-height:1.2!important}
