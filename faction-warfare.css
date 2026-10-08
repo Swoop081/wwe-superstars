@@ -31,3 +31,7 @@
 .home-v2 .home-page-faction .home-page-grid{position:relative;z-index:3;pointer-events:auto!important}
 .home-v2 .home-page-faction .home-faction{position:relative;z-index:4;pointer-events:auto!important;cursor:pointer;touch-action:manipulation}
 .home-v2 .home-page-faction .home-faction .tile-copy,.home-v2 .home-page-faction .home-faction .tile-shade{pointer-events:none!important}
+
+/* v0.9.131: the track must remain viewport-width; each slide is one viewport. */
+.home-v2 .home-pages-track{width:100%!important;display:flex!important;flex-wrap:nowrap!important;align-items:stretch!important}
+.home-v2 .home-pages-track>.home-page{box-sizing:border-box!important;width:100%!important;min-width:100%!important;max-width:100%!important;flex:0 0 100%!important}
