@@ -1608,3 +1608,16 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .home-v2 .home-gauntlet .tile-copy strong{font-family:'Cinzel Decorative','Bangers',serif!important;font-weight:900!important;letter-spacing:-.055em!important;font-size:clamp(18px,4.8vw,26px)!important;line-height:.98!important}
 .home-v2 .home-collection .tile-copy strong{font-family:'Graduate',Impact,sans-serif!important;letter-spacing:-.065em!important;font-size:clamp(17px,4.35vw,24px)!important;line-height:1!important}
 .home-v2 .home-stats .tile-copy strong{font-family:'Teko',Impact,sans-serif!important;font-weight:700!important;letter-spacing:.015em!important;font-size:clamp(28px,7vw,39px)!important;line-height:.9!important}
+
+/* v0.9.95: event-specific typographic wordmarks when a verified image is unavailable. */
+.live-event-wordmark{display:flex;align-items:center;justify-content:center;min-height:92px;max-width:100%;margin:4px auto 8px;padding:8px 10px;text-align:center;overflow-wrap:anywhere}
+.live-event-wordmark span{display:block;font:900 clamp(24px,7.5vw,44px)/.98 'Bebas Neue',Impact,sans-serif;letter-spacing:.015em;text-shadow:0 3px 2px #000,0 0 18px #0009}
+.live-event-wordmark--summer span{font-family:'Bangers',Impact,sans-serif;color:#ffca53;text-shadow:2px 3px #c42c45,0 0 15px #f84a4a}
+.live-event-wordmark--rumble span{font-family:'Black Ops One',Impact,sans-serif;color:#f5e7ce;letter-spacing:-.06em;text-shadow:2px 3px #b22b2b,0 0 12px #b22b2b}
+.live-event-wordmark--collide span{font-family:'Russo One',Impact,sans-serif;color:#f6f6f6;letter-spacing:-.06em;text-shadow:2px 3px #167eb9,0 0 13px #0ba4c6}
+.live-event-wordmark--champions span{font-family:'Cinzel Decorative',Georgia,serif;font-size:clamp(19px,5.5vw,33px);color:#f5d278;text-shadow:0 2px #6b440a,0 0 13px #d7a83b}
+.live-event-wordmark--wargames span{font-family:'Black Ops One',Impact,sans-serif;color:#eee;letter-spacing:-.06em;text-shadow:3px 3px #b82424,0 0 14px #d11}
+.live-event-wordmark--halloween span{font-family:'Creepster',Impact,sans-serif;color:#f58b2e;text-shadow:2px 3px #48116d,0 0 13px #a63212}
+.live-event-wordmark--deadline span{font-family:'Audiowide',Impact,sans-serif;font-size:clamp(20px,6vw,36px);color:#c2e5f5;text-shadow:0 0 15px #1497d9}
+.live-event-wordmark--clash span{font-family:'Cinzel Decorative',Georgia,serif;font-size:clamp(19px,5.5vw,33px);color:#e5d3b4;text-shadow:0 0 14px #b59550}
+.live-event-wordmark--main-event span{font-family:'Graduate',Impact,sans-serif;font-size:clamp(19px,5.5vw,35px);color:#fff3d6;text-shadow:0 0 12px #cbb169}
