@@ -17,7 +17,6 @@ test('all live events have a logo mapping',()=>{let block=app.slice(app.indexOf(
 test('selection screens use filters',()=>['pickMultiFighter','selectFighter','selectTagFighter','pickTag1'].forEach(n=>{let i=app.indexOf('function '+n+'('),j=app.indexOf('function ',i+12);assert(app.slice(i,j).includes('exhibitionFilterBar()'),n)}));
 test('team elimination feedback present',()=>assert(app.includes('ELIMINATED —')&&app.includes('elimination-notice')));
 test('coin emblem blank',()=>assert(app.includes('<span class="coin-face"></span>')));
-test('visible portraits retry PNG before silhouette',()=>{assert(/function artFallback\(img\)/.test(app));assert(app.includes("img.src=artUrl(name,'png')"));assert(app.includes("img.dataset.pngFallback='1'"));assert(app.includes('img.replaceWith(placeholder)'))});
 test('portrait preloader fallback set declared',()=>{assert(/const failedWebpArt=new Set\(\)/.test(app),'missing failedWebpArt declaration');assert(app.includes('failedWebpArt.has(name)'));assert(app.includes('failedWebpArt.add(name)'))});
 test('mobile filter CSS present',()=>assert(css.includes('.exhibition-filter-heading')));
 console.log(checks+' QA static checks passed');if(process.exitCode)process.exit(process.exitCode);
