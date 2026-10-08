@@ -1805,3 +1805,29 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .live-screen .live-side-choice--safe .live-side-art--contained{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(0,1fr))!important;gap:3px!important;width:100%!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;margin-bottom:10px!important}
 .live-screen .live-side-choice--safe .live-side-art--contained img.live-side-portrait{display:block!important;position:static!important;width:100%!important;max-width:100%!important;height:auto!important;max-height:310px!important;aspect-ratio:3/4!important;object-fit:contain!important;object-position:center top!important;pointer-events:none!important}
 .live-screen .live-side-choice--safe{min-height:0!important;justify-content:flex-start!important}
+
+/* v0.9.143 — five requested card-name font replacements only.
+   Narrow, readable faces prevent cropped names on iPhone roster cards. */
+.card.font-superstar-101 .name,.collection-list-copy strong.font-superstar-101{
+ font-family:'Oswald',Impact,sans-serif!important;font-weight:700!important;letter-spacing:-.035em!important;
+} /* Jake Roberts */
+.card.font-superstar-168 .name,.collection-list-copy strong.font-superstar-168{
+ font-family:'Cinzel',Georgia,serif!important;font-weight:900!important;font-style:normal!important;letter-spacing:-.055em!important;
+} /* King Booker */
+.card.font-superstar-11 .name,.collection-list-copy strong.font-superstar-11{
+ font-family:'Cinzel',Georgia,serif!important;font-weight:800!important;letter-spacing:-.065em!important;
+} /* Charlotte Flair */
+.card.font-superstar-36 .name,.collection-list-copy strong.font-superstar-36{
+ font-family:'Oswald',Impact,sans-serif!important;font-weight:700!important;letter-spacing:-.035em!important;
+} /* Jade Cargill */
+.card.font-superstar-119 .name,.collection-list-copy strong.font-superstar-119{
+ font-family:'Oswald',Impact,sans-serif!important;font-weight:700!important;letter-spacing:-.045em!important;
+} /* Steve Blackman */
+.card.font-superstar-101 .name,.card.font-superstar-168 .name,
+.card.font-superstar-11 .name,.card.font-superstar-36 .name,
+.card.font-superstar-119 .name{
+ font-size:calc(clamp(22px,16.4cqw,72px) * var(--name-size,1) * var(--name-fit,1) * .83)!important;
+ line-height:.91!important;
+ max-width:93%!important;
+ overflow-wrap:normal!important;
+}
