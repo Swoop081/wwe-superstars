@@ -1,5 +1,5 @@
 # WWE Superstars — v1.0 release gate
-Status: NOT READY FOR 1.0. Current candidate: v0.9.106.
+Status: NOT READY FOR 1.0. Current candidate: v0.9.107.
 
 ## Checks completed by source inspection
 - JavaScript syntax compiles.
@@ -9,11 +9,12 @@ Status: NOT READY FOR 1.0. Current candidate: v0.9.106.
 - 13 action IDs unique.
 - App, HTML and version.json synchronized.
 - Singles, tag, 3v3 and 4v4 selection now expose the same filters.
-- Malformed JSON save data no longer prevents boot; original raw save is not deleted.
+- Malformed JSON save data no longer prevents boot; a separate recovery backup is written before onboarding (when local storage permits).
 
 ## Automated checks added
 - tests/qa-static.cjs: 14 assertions covering data, version, selection, and rendering contracts.
-- tests/qa-browser.cjs: Chromium mobile smoke for onboarding, navigation, filters, battle turn, shop, collection, WWE Live and reload.
+- tests/qa-browser.cjs: Chromium mobile smoke for onboarding, navigation, filters, battle turn, shop purchase and duplicate-purchase protection, collection, WWE Live, reload and corrupt-save recovery.
+- tests/qa-gameplay.cjs: match-turn HP invariants and damage sanity checks.
 - .github/workflows/qa.yml: run both on main and pull requests.
 
 ## Must pass before v1.0
