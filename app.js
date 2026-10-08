@@ -181,7 +181,17 @@ const BASE=[
 {name:"Baron Corbin",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"END OF DAYS",tags:["Male","Current Era"]},
 {name:"Big Cass",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"EAST RIVER CROSSING",tags:["Male","Reality Era"]},
 {name:"King Booker",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"BOOK END",tags:["Male","Ruthless Aggression Era"]},
-{name:"Bronson Reed",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"TSUNAMI",tags:["Male","Current Era"]}
+{name:"Bronson Reed",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"TSUNAMI",tags:["Male","Current Era"]},
+{name:"Candice LeRae",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"WICKED STEPSISTER",tags:["Female","Current Era"]},
+{name:"Chad Gable",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"CHAOS THEORY",tags:["Male","Current Era"]},
+{name:"Danhausen",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"VERY NICE VERY EVIL",tags:["Male","Current Era"]},
+{name:"Dragon Lee",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"OPERATION DRAGON",tags:["Male","Current Era"]},
+{name:"Drew McIntyre '09",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"FUTURE SHOCK DDT",tags:["Male","PG Era"]},
+{name:"El Grande Americano",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"DIVING HEADBUTT",tags:["Male","Current Era"]},
+{name:"Ethan Page",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"EGO'S EDGE",tags:["Male","NXT"]},
+{name:"Fallon Henley",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"FAMOUSER",tags:["Female","NXT"]},
+{name:"Demon Bálor",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"COUP DE GRÂCE",tags:["Male","Current Era"]},
+{name:"Grayson Waller",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"ROLLING STUNNER",tags:["Male","Current Era"]}
 ];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
