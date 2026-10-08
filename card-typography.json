@@ -1265,5 +1265,411 @@
     "lineHeight": 100,
     "letterSpacing": 0,
     "layout": "words"
+  },
+  "D'Lo Brown": {
+    "font": "Anton",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "The Rock '98": {
+    "font": "Bangers",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Arianna Grace": {
+    "font": "Cinzel",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Izzi Dame": {
+    "font": "Rye",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "La Catalina": {
+    "font": "Teko",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Austin Theory": {
+    "font": "Oswald",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Angelo Dawkins": {
+    "font": "Orbitron",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Axiom": {
+    "font": "Pirata One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Baron Corbin": {
+    "font": "Rock Salt",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Big Cass": {
+    "font": "Russo One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "King Booker": {
+    "font": "Black Ops One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Bronson Reed": {
+    "font": "Creepster",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Candice LeRae": {
+    "font": "Metal Mania",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Chad Gable": {
+    "font": "Permanent Marker",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Danhausen": {
+    "font": "Bungee",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Dragon Lee": {
+    "font": "Graduate",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Drew McIntyre '09": {
+    "font": "Anton",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "El Grande Americano": {
+    "font": "Bangers",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Ethan Page": {
+    "font": "Cinzel",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Fallon Henley": {
+    "font": "Rye",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Demon Bálor": {
+    "font": "Teko",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Grayson Waller": {
+    "font": "Oswald",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jacy Jayne": {
+    "font": "Orbitron",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "JD McDonagh": {
+    "font": "Pirata One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Je'Von Evans": {
+    "font": "Rock Salt",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Joe Hendry": {
+    "font": "Russo One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Johnny Gargano": {
+    "font": "Black Ops One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Jordynne Grace": {
+    "font": "Creepster",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Karmen Petrovic": {
+    "font": "Metal Mania",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kit Wilson": {
+    "font": "Permanent Marker",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Kiana James": {
+    "font": "Bungee",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lady Shani": {
+    "font": "Graduate",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Laundry Reid": {
+    "font": "Anton",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lash Legend": {
+    "font": "Bangers",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lexis King": {
+    "font": "Cinzel",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lizzy Rain": {
+    "font": "Rye",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Lyra Valkyria '26": {
+    "font": "Teko",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Matt Cardona": {
+    "font": "Oswald",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Maxxine Dupri": {
+    "font": "Orbitron",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Michin": {
+    "font": "Pirata One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Montez Ford": {
+    "font": "Rock Salt",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Myles Borne": {
+    "font": "Russo One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Naraku": {
+    "font": "Black Ops One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Nathan Frazer": {
+    "font": "Creepster",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Nattie": {
+    "font": "Metal Mania",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Omos": {
+    "font": "Permanent Marker",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Otis": {
+    "font": "Bungee",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Paige NXT": {
+    "font": "Graduate",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Dean Ambrose": {
+    "font": "Anton",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Ricky Saints": {
+    "font": "Bangers",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Roman Reigns (Shield)": {
+    "font": "Cinzel",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Royce Keys": {
+    "font": "Rye",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Seth Rollins (Shield)": {
+    "font": "Teko",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Dean Ambrose (Shield)": {
+    "font": "Oswald",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Tatum Paxley": {
+    "font": "Orbitron",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Thea Hail": {
+    "font": "Pirata One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Tony D'Angelo": {
+    "font": "Rock Salt",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
+  },
+  "Wade Barrett": {
+    "font": "Russo One",
+    "size": 100,
+    "lineHeight": 100,
+    "letterSpacing": 0,
+    "layout": "words"
   }
 }
