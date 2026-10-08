@@ -6,6 +6,7 @@ const reports=[];
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
   fs.mkdirSync('qa-screenshots',{recursive:true});
+  const failures=[];
   const screens=[{label:'iphone',width:390,height:844},{label:'android',width:360,height:800}];
   for(const screen of screens){
    const page=await browser.newPage({viewport:{width:screen.width,height:screen.height},isMobile:true,hasTouch:true,deviceScaleFactor:2});
@@ -21,6 +22,7 @@ const reports=[];
     ['live',()=>page.evaluate(()=>wweLive())]
    ];
    for(const [name,open] of views){
+    try{
     await open();await page.waitForTimeout(120);
     await page.screenshot({path:'qa-screenshots/'+screen.label+'-'+name+'.png',fullPage:true,animations:'disabled'});
     const audit=await page.evaluate(()=>{
@@ -35,11 +37,14 @@ const reports=[];
     reports.push({device:screen.label,screen:name,...audit});
     assert(audit.documentWidth<=audit.viewport+3,screen.label+' '+name+' horizontal document overflow: '+JSON.stringify(audit));
     console.log('VISUAL',screen.label,name,JSON.stringify(audit));
+    }catch(e){failures.push(screen.label+' '+name+': '+(e.stack||e.message));console.error('VISUAL FAIL',screen.label,name,e.message)}
    }
-   assert.deepEqual(errors,[],screen.label+' page errors');
+   if(errors.length)failures.push(screen.label+' page errors: '+errors.join('; '));
    await page.close();
   }
   fs.writeFileSync('qa-screenshots/layout-report.json',JSON.stringify(reports,null,2));
+  fs.writeFileSync('qa-screenshots/failures.json',JSON.stringify(failures,null,2));
+  assert.deepEqual(failures,[],'mobile visual QA failures');
   console.log('PASS mobile screenshot capture and structural checks');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
