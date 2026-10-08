@@ -46,13 +46,25 @@
   const names=shuffled(RANDOM_NAMES);
   while(chosen.length<7){const pick=shuffled(pool).slice(0,4);if(pick.length<4)throw Error('Not enough superstars to create opponent factions');chosen.push({name:names[(chosen.length-5+names.length)%names.length],members:pick,random:true})}
   const factions=shuffled(chosen.slice(0,5)).concat(chosen.slice(5,7));
-  // Five factions match all four player levels. Two get one level lower in each
-  // title division. For tags, alternate which member is lowered across the two.
-  for(const division of ['world','intercontinental','tag']){
-   const weaker=shuffled([0,1,2,3,4,5,6]).slice(0,2);
-   factions.forEach((f,i)=>{f.levels=f.levels||{};if(division==='tag'){f.levels.tag=[levels.tag[0],levels.tag[1]];if(weaker.includes(i))f.levels.tag[weaker.indexOf(i)%2]=Math.max(1,f.levels.tag[weaker.indexOf(i)%2]-1)}
-    else f.levels[division]=Math.max(1,levels[division]-(weaker.includes(i)?1:0))});
-  }
+  // Exactly two lower-ranked CPU individuals per championship, distributed
+  // over six distinct factions. A tag penalty applies to ONE partner only.
+  const assignment=shuffled([0,1,2,3,4,5,6]);
+  const worldWeak=new Set(assignment.slice(0,2));
+  const icWeak=new Set(assignment.slice(2,4));
+  const tagWeak=assignment.slice(4,6);
+  factions.forEach((f,i)=>{
+   f.levels={
+    world:Math.max(1,levels.world-(worldWeak.has(i)?1:0)),
+    intercontinental:Math.max(1,levels.intercontinental-(icWeak.has(i)?1:0)),
+    tag:[...levels.tag]
+   };
+   const tagIndex=tagWeak.indexOf(i);
+   if(tagIndex!==-1){
+    // Choose either partner independently; never downgrade both partners.
+    const partner=Math.floor(Math.random()*2);
+    f.levels.tag[partner]=Math.max(1,f.levels.tag[partner]-1);
+   }
+  });
   return factions;
  }
  const freshDivision=()=>({streak:0,stage:'ladder',champion:false,nextDefence:null});
