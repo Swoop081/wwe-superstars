@@ -21,10 +21,24 @@ function pick(name){
  selection();
 }
 function clear(){picks=[null,null,null,null];selection()}
-function begin(){
+async function begin(){
+ const startButton=document.querySelector('.fw-actions button:last-child');
+ if(startButton){startButton.disabled=true;startButton.textContent='STARTING…'}
+ try{
+  if(!rules()||typeof rules().generateOpponents!=='function'){
+   await new Promise((resolve,reject)=>{
+    const el=document.createElement('script');
+    el.src='faction-warfare.js?retry='+Date.now();
+    el.onload=resolve;
+    el.onerror=()=>reject(Error('Could not download Faction Warfare rules'));
+    document.body.appendChild(el);
+   });
+  }
+ }catch(loadError){console.error('Faction Warfare rules reload failed',loadError)}
+ if(startButton){startButton.disabled=false;startButton.textContent='START SEASON'}
  if(picks.length!==4||picks.some(n=>!n)||new Set(picks).size!==4){showStartError('Choose four different superstars before starting.');return}
  try{
-  if(!rules()||typeof rules().generateOpponents!=='function')throw Error('Faction rules are not ready. Please reopen the game.');
+  if(!rules()||typeof rules().generateOpponents!=='function')throw Error('Faction rules could not load. Check your connection and reopen the latest game.');
   const roles={world:picks[0],intercontinental:picks[1],tag:picks.slice(2)};
   const levels={world:level(picks[0]),intercontinental:level(picks[1]),tag:picks.slice(2).map(n=>level(n))};
   const opponents=rules().generateOpponents(BASE.map(w=>w.name),picks,levels);
