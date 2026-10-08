@@ -37,12 +37,19 @@ jobs:
           cat /tmp/wwe-qa-server.log
           exit 1
       - name: Run mobile browser smoke test
-        run: |
-          node tests/qa-browser.cjs
-          node tests/qa-gameplay.cjs
-          node tests/qa-match-stress.cjs
-          node tests/qa-assets.cjs
-          node tests/qa-mobile-visual.cjs
+        run: node tests/qa-browser.cjs
+      - name: Run gameplay invariant test
+        if: success() || failure()
+        run: node tests/qa-gameplay.cjs
+      - name: Run match stress test
+        if: success() || failure()
+        run: node tests/qa-match-stress.cjs
+      - name: Audit all superstar portraits
+        if: success() || failure()
+        run: node tests/qa-assets.cjs
+      - name: Capture mobile visual screenshots
+        if: success() || failure()
+        run: node tests/qa-mobile-visual.cjs
       - name: Upload mobile QA screenshots
         if: always()
         uses: actions/upload-artifact@v4
