@@ -23,7 +23,16 @@ const reports=[];
    ];
    for(const [name,open] of views){
     try{
-    await open();await page.waitForTimeout(120);
+    await open();
+    await page.evaluate(async()=>{
+      await document.fonts.ready;
+      const images=[...document.querySelectorAll('.screen img')];
+      await Promise.all(images.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{
+        img.addEventListener('load',resolve,{once:true});
+        img.addEventListener('error',resolve,{once:true});
+        setTimeout(resolve,5000);
+      })));
+    });
     await page.screenshot({path:'qa-screenshots/'+screen.label+'-'+name+'.png',fullPage:true,animations:'disabled'});
     const audit=await page.evaluate(()=>{
      const screen=document.querySelector('.screen'),r=screen?.getBoundingClientRect();
@@ -34,6 +43,7 @@ const reports=[];
     assert(audit.hasScreen,screen.label+' '+name+' screen missing');
     assert(Number.isFinite(audit.width)&&audit.width>0,screen.label+' '+name+' invalid screen width');
     assert(audit.buttons>0,screen.label+' '+name+' has no visible buttons');
+    assert.deepEqual(audit.brokenImages,[],screen.label+' '+name+' broken visible images');
     reports.push({device:screen.label,screen:name,...audit});
     assert(audit.documentWidth<=audit.viewport+3,screen.label+' '+name+' horizontal document overflow: '+JSON.stringify(audit));
     console.log('VISUAL',screen.label,name,JSON.stringify(audit));
