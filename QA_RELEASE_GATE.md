@@ -45,3 +45,8 @@ No claim of 'bug-free' or v1.0-ready until the above are verified.
 - Balance simulations: 1,000 optimized matches produced approximately 50.7% player wins using the actual finish() callback; 1,000 random-card matches produced approximately 30.1% player wins. No balance changes requested.
 - Added tests/qa-match-stress.cjs (300-match browser stress regression), corrected shop smoke selector and added HTTP server readiness check to CI. These new CI tests still need a confirmed passing workflow run.
 - User approved existing balance. Do not alter combat difficulty solely to force random selection to 50% wins.
+
+## Mobile QA instrumentation — 2026-10-08
+- Added tests/qa-mobile-visual.cjs to capture 12 screenshots across 390px iPhone and 360px Android viewports: home, collection, shop, exhibition, battle and WWE Live. Structural assertions and uncaught JS error checks are included. CI uploads captures as mobile-qa-screenshots artifact, including when the browser test step fails.
+- Confirmed eight core portrait paths (Roman Reigns, Cody Rhodes, Rhea Ripley, CM Punk, IYO SKY, Seth Rollins, Becky Lynch, Randy Orton) exist in GitHub; connector cannot decode binary WebP content, so existence is inferred from binary decode response rather than image integrity. Full 239-asset HTTP HEAD audit remains unverified.
+- Tried to retrieve push CI status; available workflow lookup returned no runs, so browser, asset and mobile screenshot tests remain unverified. No v1.0 release approval.
