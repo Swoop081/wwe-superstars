@@ -1847,3 +1847,6 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 
 /* v0.9.163: compact level-up reward continuation, overriding oversized global reward buttons */
 .reward.upgrade-screen .upgrade-continue.btn{box-sizing:border-box!important;display:block!important;width:100%!important;max-width:none!important;height:42px!important;min-height:42px!important;max-height:42px!important;padding:0 12px!important;margin:8px 0 0!important;font-size:15px!important;line-height:40px!important;letter-spacing:1px!important;border-radius:5px!important;flex:0 0 auto!important}
+
+/* v0.9.164: compact finish screen claim reward button */
+.finish .btn{box-sizing:border-box!important;display:block!important;width:100%!important;max-width:none!important;height:42px!important;min-height:42px!important;max-height:42px!important;padding:0 12px!important;margin:8px 0 0!important;font-size:15px!important;line-height:40px!important;letter-spacing:1px!important;border-radius:5px!important}
