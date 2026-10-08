@@ -1758,3 +1758,32 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   line-height:.9!important;
   text-transform:uppercase!important;
 }
+
+/* v0.9.116: keep exhibition roster filters above decorative screen shaders. */
+.exhibition-screen .exhibition-filter-heading,
+.exhibition-screen .exhibition-filter-count{
+  position:relative!important;
+  z-index:10!important;
+  isolation:isolate!important;
+  opacity:1!important;
+  filter:none!important;
+  color:#f5f5f5!important;
+}
+.exhibition-screen .exhibition-filter-heading{
+  background:#101216!important;
+  border:1px solid #454a52!important;
+  border-radius:8px!important;
+  padding:10px!important;
+}
+.exhibition-screen .exhibition-filter-title,
+.exhibition-screen .exhibition-filter-heading .exhibition-filters label{
+  color:#f5f5f5!important;
+  opacity:1!important;
+  text-shadow:0 1px 2px #000!important;
+}
+.exhibition-screen .exhibition-filter-heading .exhibition-filters select{
+  background-color:#252a32!important;
+  color:#fff!important;
+  border-color:#7a8290!important;
+  opacity:1!important;
+}
