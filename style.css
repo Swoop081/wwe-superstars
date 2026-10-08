@@ -1795,3 +1795,8 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .live-screen .live-side-art img,.live-screen .live-side-art picture,.live-screen .live-side-art picture img{display:block!important;box-sizing:border-box!important;width:100%!important;max-width:100%!important;height:auto!important;max-height:min(46vh,310px)!important;min-height:0!important;aspect-ratio:3/4!important;object-fit:contain!important;object-position:center top!important;pointer-events:none!important}
 .live-screen .live-side-choice>b{overflow-wrap:anywhere!important;font-size:clamp(14px,3.7vw,22px)!important}
 .live-screen .live-side-choice>span{display:block!important;white-space:normal!important;line-height:1.2!important}
+
+/* v0.9.120: portrait-free WWE Live side selection prevents iOS artwork takeover. */
+.live-screen .live-side-choice--safe{display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;min-height:130px!important;padding:18px 9px!important;overflow:hidden!important}
+.live-screen .live-side-choice--safe .live-side-choice-name{display:block!important;font:800 clamp(17px,4.5vw,26px)/1.12 Oswald,Impact,sans-serif!important;color:#fff!important;overflow-wrap:anywhere!important;white-space:normal!important;text-align:center!important}
+.live-screen .live-side-choice--safe span{margin-top:14px!important;font:700 12px/1.2 Oswald,Impact,sans-serif!important;letter-spacing:.7px!important;color:#e7e7e7!important}
