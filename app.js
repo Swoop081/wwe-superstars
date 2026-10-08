@@ -1077,7 +1077,13 @@ function liveProgress(){let key=dailyKey()+'-'+liveToday().name;if(!save.livePro
 const LIVE_EVENT_LOGOS={
 'BACKLASH 2026':'https://commons.wikimedia.org/wiki/Special:FilePath/Backlash_2026.png',
 'WRESTLEMANIA 42':'https://commons.wikimedia.org/wiki/Special:FilePath/Djxug13-98d10349-5c16-4c75-806c-aef3a811753e.png',
-'CROWN JEWEL 2025':'https://commons.wikimedia.org/wiki/Special:FilePath/Crown_Jewel_2025_logo.png'
+'CROWN JEWEL 2025':'https://commons.wikimedia.org/wiki/Special:FilePath/Crown_Jewel_2025_logo.png',
+'SATURDAY NIGHT\'S MAIN EVENT XLV':'https://commons.wikimedia.org/wiki/Special:FilePath/Saturday_Nights_Main_Event_Logo_2006.png',
+'SATURDAY NIGHT\'S MAIN EVENT XLIV':'https://commons.wikimedia.org/wiki/Special:FilePath/Saturday_Nights_Main_Event_Logo_2006.png',
+'SATURDAY NIGHT\'S MAIN EVENT XLI':'https://commons.wikimedia.org/wiki/Special:FilePath/Saturday_Nights_Main_Event_Logo_2006.png',
+'NXT HEATWAVE 2026':'https://commons.wikimedia.org/wiki/Special:FilePath/WWE_NXT_2024_Logo.svg',
+'WRESTLEMANIA 42 — NIGHT 1':'https://commons.wikimedia.org/wiki/Special:FilePath/Djxug13-98d10349-5c16-4c75-806c-aef3a811753e.png',
+'WRESTLEMANIA 42 — NIGHT 2':'https://commons.wikimedia.org/wiki/Special:FilePath/Djxug13-98d10349-5c16-4c75-806c-aef3a811753e.png'
 };
 function liveEventHeading(e){let url=LIVE_EVENT_LOGOS[e.name];return url?'<div class="live-event-logo"><img src="'+url+'" alt="'+e.name+'" loading="eager" onerror="this.parentNode.classList.add(\'logo-failed\')"><span>'+e.name+'</span></div>':'<div class="title">'+e.name+'</div>'}
 function liveSides(m){return Array.isArray(m[0])?[m[0],m[1]]:[[m[0]],[m[1]]]}
