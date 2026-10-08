@@ -1315,6 +1315,7 @@ let finisherMediaCache=null,finisherMediaPromise=null;
 function loadFinisherMedia(){if(finisherMediaCache)return Promise.resolve(finisherMediaCache);if(finisherMediaPromise)return finisherMediaPromise;finisherMediaPromise=fetch(FINISHER_MEDIA_URL,{cache:'force-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>(finisherMediaCache=x,finisherMediaPromise=null,x));return finisherMediaPromise}
 // Keep URLs deduplicated without retaining 80 decoded image objects in memory.
 const artPreloads=new Map();
+const failedWebpArt=new Set();
 function preloadArt(...ws){return Promise.all(ws.flat().filter(Boolean).map(w=>{
   const name=typeof w==='string'?w:w.name,url=artUrl(name);
   if(artPreloads.has(url))return artPreloads.get(url);
