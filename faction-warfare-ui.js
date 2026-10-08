@@ -21,8 +21,20 @@ function pick(name){
  selection();
 }
 function clear(){picks=[null,null,null,null];selection()}
-async function begin(){
- const startButton=document.querySelector('.fw-actions button:last-child');
+function begin(){
+ if(picks.length!==4||picks.some(n=>!n)||new Set(picks).size!==4){showStartError('Choose four different superstars before starting.');return}
+ nameFaction();
+}
+function nameFaction(){
+ shell('<div class="fw-page fw-name-page"><button class="btn fw-back" onclick="factionBackToSelection()">← BACK</button><div class="fw-kicker">FACTION WARFARE</div><h1>NAME YOUR FACTION</h1><p>Choose a name for your four-superstar faction.</p><div class="fw-picked">'+picks.map((n,i)=>'<div class="fw-slot"><div class="fw-slot-card">'+card(BASE.find(w=>w.name===n),level(n),"","lazy")+'</div><small>'+['WORLD','INTERCONTINENTAL','TAG','TAG'][i]+'</small></div>').join('')+'</div><label class="fw-name-label" for="fw-faction-name">FACTION NAME</label><input id="fw-faction-name" class="fw-name-input" type="text" maxlength="32" autocomplete="off" placeholder="Enter your faction name" oninput="factionNameChanged()"><div class="fw-actions"><button class="btn" onclick="factionBackToSelection()">BACK</button><button id="fw-confirm-season" class="btn" onclick="factionConfirmSeason()" disabled>START SEASON</button></div><div id="fw-start-error" class="fw-start-error" role="alert" hidden></div></div>','fw-screen');
+}
+function factionNameChanged(){const el=document.getElementById('fw-faction-name'),btn=document.getElementById('fw-confirm-season');if(el&&btn)btn.disabled=!el.value.trim()}
+function factionBackToSelection(){selection()}
+async function confirmSeason(){
+ const factionName=document.getElementById('fw-faction-name')?.value.trim().replace(/\\s+/g,' ');
+ if(!factionName){showStartError('Enter a faction name to continue.');return}
+
+ const startButton=document.getElementById('fw-confirm-season');
  if(startButton){startButton.disabled=true;startButton.textContent='STARTING…'}
  try{
   if(!rules()||typeof rules().generateOpponents!=='function'){
@@ -43,6 +55,7 @@ async function begin(){
   const levels={world:level(picks[0]),intercontinental:level(picks[1]),tag:picks.slice(2).map(n=>level(n))};
   const opponents=rules().generateOpponents(BASE.map(w=>w.name),picks,levels);
   const season=rules().createSeason([...picks],roles,opponents);
+  season.name=factionName;
   save.factionWarfare=season;
   persist();
   dashboard();
@@ -97,7 +110,7 @@ function dashboard(){
 const s=save.factionWarfare;if(!s)return selection();if(s.status==='completed')return completed();
 const labels={world:'WORLD CHAMPIONSHIP',intercontinental:'INTERCONTINENTAL CHAMPIONSHIP',tag:'TAG TEAM CHAMPIONSHIPS'};
 const names=k=>k==='tag'?s.roles.tag.join(' & '):s.roles[k];
-shell('<div class="fw-page"><button class="btn fw-back" onclick="home()">← HOME</button><div class="fw-kicker">FACTION WARFARE · WEEK '+s.week+'</div><h1>CHAMPIONSHIP CONTROL</h1><p>'+esc(s.members.join(' · '))+'</p><div class="fw-opponent-heading">SEASON OPPONENTS · '+(s.opponents?.length||0)+' FACTIONS</div><div class="fw-opponent-list"><div class="fw-opponent fw-player-faction"><strong>YOUR FACTION</strong><small>'+esc(s.members.join(' · '))+'</small></div>'+(s.opponents||[]).map(f=>'<div class="fw-opponent"><strong>'+esc(f.name)+'</strong><small>'+esc(f.members.join(' · '))+'</small></div>').join('')+'</div><div class="fw-divisions">'+rules().DIVISIONS.map(k=>{const d=s.divisions[k];const stage=d.champion?'CHAMPION · DEFENCE WEEK '+d.nextDefence:d.stage==='ladder'?'LADDER '+d.streak+'/3':d.stage==='contender'?'NUMBER ONE CONTENDER MATCH':'CHAMPIONSHIP MATCH';const active=rules().available(s).some(x=>x.division===k);return '<div class="fw-division fw-division-'+k+'"><div class="fw-belt-area">'+belt(k)+'</div><div class="fw-division-info"><h2>'+labels[k]+'</h2><p>'+esc(names(k))+'</p><strong>'+stage+'</strong>'+(active?'<button class="btn fw-play" onclick="factionLaunch(\''+k+'\')">PLAY MATCH</button>':'')+'</div></div>'}).join('')+'</div><div class="fw-status">'+(s.status==='final-ready'||s.status==='final-retry'?'<button class="btn fw-final-button" onclick="factionFinalMatch()">ENTER WARGAMES · 4 VS 4</button>': 'Choose a division to continue. Mandatory defences take priority.')+'</div><p class="fw-note">WIN: 2 RANDOM CARDS · LOSS: 1 RANDOM CARD · WARGAMES: LEVEL 3 CARDS FOR SURVIVORS</p></div>','fw-screen');
+shell('<div class="fw-page"><button class="btn fw-back" onclick="home()">← HOME</button><div class="fw-kicker">FACTION WARFARE · WEEK '+s.week+'</div><h1>CHAMPIONSHIP CONTROL</h1><p>'+esc(s.members.join(' · '))+'</p><div class="fw-opponent-heading">SEASON OPPONENTS · '+(s.opponents?.length||0)+' FACTIONS</div><div class="fw-opponent-list"><div class="fw-opponent fw-player-faction"><strong>'+esc(s.name||'YOUR FACTION')+'</strong><small>'+esc(s.members.join(' · '))+'</small></div>'+(s.opponents||[]).map(f=>'<div class="fw-opponent"><strong>'+esc(f.name)+'</strong><small>'+esc(f.members.join(' · '))+'</small></div>').join('')+'</div><div class="fw-divisions">'+rules().DIVISIONS.map(k=>{const d=s.divisions[k];const stage=d.champion?'CHAMPION · DEFENCE WEEK '+d.nextDefence:d.stage==='ladder'?'LADDER '+d.streak+'/3':d.stage==='contender'?'NUMBER ONE CONTENDER MATCH':'CHAMPIONSHIP MATCH';const active=rules().available(s).some(x=>x.division===k);return '<div class="fw-division fw-division-'+k+'"><div class="fw-belt-area">'+belt(k)+'</div><div class="fw-division-info"><h2>'+labels[k]+'</h2><p>'+esc(names(k))+'</p><strong>'+stage+'</strong>'+(active?'<button class="btn fw-play" onclick="factionLaunch(\''+k+'\')">PLAY MATCH</button>':'')+'</div></div>'}).join('')+'</div><div class="fw-status">'+(s.status==='final-ready'||s.status==='final-retry'?'<button class="btn fw-final-button" onclick="factionFinalMatch()">ENTER WARGAMES · 4 VS 4</button>': 'Choose a division to continue. Mandatory defences take priority.')+'</div><p class="fw-note">WIN: 2 RANDOM CARDS · LOSS: 1 RANDOM CARD · WARGAMES: LEVEL 3 CARDS FOR SURVIVORS</p></div>','fw-screen');
 }
-g.factionNewSeason=newSeason;g.factionLaunch=launch;g.factionFinalMatch=finalMatch;g.factionFinalRewards=finalRewards;g.factionWarfareMenu=menu;g.factionPick=pick;g.factionRemoveSlot=removeSlot;g.factionClear=clear;g.factionStart=begin;g.factionDashboard=dashboard;
+g.factionNewSeason=newSeason;g.factionLaunch=launch;g.factionFinalMatch=finalMatch;g.factionFinalRewards=finalRewards;g.factionWarfareMenu=menu;g.factionPick=pick;g.factionRemoveSlot=removeSlot;g.factionClear=clear;g.factionStart=begin;g.factionNameChanged=factionNameChanged;g.factionBackToSelection=factionBackToSelection;g.factionConfirmSeason=confirmSeason;g.factionDashboard=dashboard;
 })(window);
