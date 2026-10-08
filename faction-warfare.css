@@ -79,3 +79,8 @@
 .fw-opponent{min-width:0;padding:7px;background:#151b28;border:1px solid #343d50}
 .fw-opponent strong{display:block;color:#e6bd58;font:700 13px Oswald,Impact,sans-serif}
 .fw-opponent small{display:block;color:#bac1d1;font:11px/1.35 Arial,sans-serif;overflow-wrap:anywhere}
+
+/* Selected faction cards are removable controls, without changing slot order. */
+.fw-page button.fw-slot{appearance:none;-webkit-appearance:none;border:1px solid #49536a;border-radius:0;color:inherit;font:inherit;cursor:pointer;width:100%;min-width:0;display:flex;flex-direction:column;justify-content:space-between;align-items:stretch;background:#192235}
+.fw-page button.fw-slot:disabled{cursor:default;opacity:1}
+.fw-page button.fw-slot:focus-visible{outline:2px solid #e8bd58;outline-offset:2px}
