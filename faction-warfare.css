@@ -189,3 +189,13 @@
 
 /* v0.9.149: persistent season lock and live faction progression notice. */
 .fw-season-lock{margin:10px 0 18px!important;padding:10px 12px;border-left:3px solid #d5ad5e;background:#171d2b;color:#e7d3a8!important;font-size:12px!important;line-height:1.5!important}
+
+/* v0.9.151: selectable factions and four-card roster view. */
+button.fw-opponent{display:block;width:100%;text-align:left;font:inherit;cursor:pointer;border-radius:0;appearance:none;-webkit-appearance:none}
+button.fw-opponent:focus-visible{outline:2px solid #e6bd58;outline-offset:2px}
+.fw-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+.fw-detail-card{min-width:0;overflow:hidden;background:#141b2a;border:1px solid #3b455b;padding:6px}
+.fw-detail-card .card{max-width:100%;margin:0 auto}
+.fw-detail-stats{display:flex;flex-direction:column;gap:4px;text-align:center;padding:10px 2px 5px;color:#fff;font-family:Oswald,Impact,sans-serif}
+.fw-detail-stats strong{font-size:clamp(13px,3.5vw,19px);line-height:1.15;overflow-wrap:anywhere}
+.fw-detail-stats span{color:#e6bd58;font-size:clamp(13px,3.2vw,18px)}
