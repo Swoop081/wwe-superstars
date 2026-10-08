@@ -720,6 +720,9 @@ const correctionTier=new Map();
 for(const [tier,names] of Object.entries(RANKING_CORRECTIONS))
  for(const name of names)correctionTier.set(name,tier);
 const tierPriority={'Main Event':5,'Upper Midcard':4,'Midcard':3,'Lower Midcard':2,'Opener':1};
+for(const n of ['Drew McIntyre','Bayley','Asuka','Bobby Lashley','Kevin Owens','Sheamus','Mankind','Dusty Rhodes','Vader','Jeff Hardy','Toni Storm'])correctionTier.set(n,'Main Event');
+for(const n of ['Trick Williams','Oba Femi','Penta','Ricky Saints','Wade Barrett','Jordynne Grace','Johnny Gargano','Carmelo Hayes','Tazz','William Regal','Raven','Michelle McCool','Jushin Thunder Liger'])correctionTier.set(n,'Upper Midcard');
+
 const CAREER_PRIORITY={
  'Drew McIntyre':980,'Bayley':970,'Asuka':960,'Bobby Lashley':950,
  'Kevin Owens':940,'Sheamus':930,'Mankind':920,'Dusty Rhodes':910,
