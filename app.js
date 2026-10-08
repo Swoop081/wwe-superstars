@@ -1,4 +1,4 @@
-const APP_VERSION='0.9.63';
+const APP_VERSION='0.9.64';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -1058,7 +1058,7 @@ const LIVE_EVENTS=[
 {name:'SUMMERSLAM 2026 — NIGHT 2',date:'AUGUST 2, 2026',matches:[['Baron Corbin','Trick Williams'],['Chad Gable','Penta'],['Kevin Owens','Sami Zayn'],['Finn Bálor','Gunther'],[['Chelsea Green','Tiffany Stratton'],['Jade Cargill','Lash Legend']],['Danhausen','Dominik Mysterio'],['Roman Reigns','Seth Rollins']]},
 {name:"SATURDAY NIGHT'S MAIN EVENT XLV",date:'JULY 18, 2026',matches:[[['Fallon Henley','Lainey Reid'],['Paige','Brie Bella']],['Danhausen','JD McDonagh'],["Lyra Valkyria '26",'Bayley'],[['CM Punk','Cody Rhodes'],['Gunther','Sami Zayn']]]},
 {name:'NXT GREAT AMERICAN BASH',date:'JUNE 28, 2026',matches:[["Tony D'Angelo",'Naraku'],['Tatum Paxley','Arianna Grace'],['Kendal Grey','Lola Vice']]},
-{name:'NIGHT OF CHAMPIONS 2026',date:'JUNE 27, 2026',matches:[['Oba Femi','Jey Uso'],['IYO SKY','Liv Morgan'],['Trick Williams','Ricky Saints'],['Tiffany Stratton','Jade Cargill']]},
+{name:'NIGHT OF CHAMPIONS 2026',date:'JUNE 27, 2026',matches:[['Oba Femi','Jey Uso'],['IYO SKY','Liv Morgan'],['Trick Williams','Ricky Saints'],['Tiffany Stratton','Jade Cargill'],['Seth Rollins','Bron Breakker'],['Cody Rhodes','Sami Zayn']]},
 {name:'CLASH IN ITALY',date:'MAY 31, 2026',matches:[['Cody Rhodes','Gunther'],['Rhea Ripley','Jade Cargill'],['Brock Lesnar','Oba Femi'],['Sol Ruca','Becky Lynch']]},
 {name:"SATURDAY NIGHT'S MAIN EVENT XLIV",date:'MAY 23, 2026',matches:[['Penta','Ethan Page']]},
 {name:'BACKLASH 2026',date:'MAY 9, 2026',matches:[['Bron Breakker','Seth Rollins'],['Trick Williams','Sami Zayn'],['IYO SKY','Asuka'],['Roman Reigns','Jacob Fatu']]},
