@@ -1621,3 +1621,10 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .live-event-wordmark--deadline span{font-family:'Audiowide',Impact,sans-serif;font-size:clamp(20px,6vw,36px);color:#c2e5f5;text-shadow:0 0 15px #1497d9}
 .live-event-wordmark--clash span{font-family:'Cinzel Decorative',Georgia,serif;font-size:clamp(19px,5.5vw,33px);color:#e5d3b4;text-shadow:0 0 14px #b59550}
 .live-event-wordmark--main-event span{font-family:'Graduate',Impact,sans-serif;font-size:clamp(19px,5.5vw,35px);color:#fff3d6;text-shadow:0 0 12px #cbb169}
+
+/* v0.9.101: legible team controls and visible elimination announcements */
+.tag-benches .tag-bench button{display:block!important;width:100%!important;min-height:44px!important;margin:4px 0!important;padding:7px 5px!important;border-radius:7px!important;background:#242936!important;border:1px solid #626c80!important;color:#fff!important;font:700 clamp(11px,3.15vw,16px)/1.18 'Oswald',Impact,sans-serif!important;text-align:center!important;white-space:normal!important;overflow-wrap:anywhere!important;text-shadow:0 1px 2px #000!important}
+.tag-benches .tag-bench button:disabled{background:#30323a!important;color:#e5e7ed!important;opacity:1!important;border-color:#545865!important}
+.tag-benches .tag-bench button:disabled:first-of-type{background:#515763!important;color:#fff!important;border-color:#adb4c1!important}
+.tag-benches .tag-bench.cpu>div{color:#f2f3f7;font:700 clamp(11px,3vw,15px)/1.25 'Oswald',Impact,sans-serif;overflow-wrap:anywhere;margin:5px 0}
+.elimination-notice{margin:10px 0;padding:12px 10px;border:2px solid #e5b447;background:#2c170a;color:#ffe6a3;text-align:center;font:900 clamp(16px,4.5vw,24px)/1.2 'Oswald',Impact,sans-serif;letter-spacing:.025em;text-shadow:0 2px 2px #000}
