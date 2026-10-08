@@ -1075,6 +1075,7 @@ const LIVE_EVENTS=[
 function liveToday(){let epoch=new Date(2026,9,8),now=new Date(),day=Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-epoch)/86400000);return LIVE_EVENTS[((day%LIVE_EVENTS.length)+LIVE_EVENTS.length)%LIVE_EVENTS.length]}
 function liveProgress(){let key=dailyKey()+'-'+liveToday().name;if(!save.liveProgress||save.liveProgress.key!==key){save.liveProgress={key,completed:[]};persist()}return save.liveProgress}
 const LIVE_EVENT_LOGOS={
+'ROYAL RUMBLE 2026':'https://www.wrestlingattitude.com/wp-content/uploads/2026/01/Royal_Rumble_Riyadh_Logo_2026.jpg',
 'SUMMERSLAM 2026 — NIGHT 1':'https://assets.khelnow.com/news/uploads/2024/05/WWE-SummerSlam-2026.png',
 'SUMMERSLAM 2026 — NIGHT 2':'https://assets.khelnow.com/news/uploads/2024/05/WWE-SummerSlam-2026.png',
 'NXT HALLOWEEN HAVOC 2025':'https://www.wwe.com/f/styles/og_image/public/2025/10/NXT_Halloween_Havoc_Logo_2025.png',
