@@ -1,4 +1,4 @@
-const APP_VERSION='0.9.58';
+const APP_VERSION='0.9.59';
 const BASE=[
 {name:'Roman Reigns',cha:97,str:94,stk:88,tec:72,agi:68,iq:91,finisher:'SPEAR'},{name:'Cody Rhodes',cha:97,str:68,stk:94,tec:88,agi:72,iq:91,finisher:'CROSS RHODES'},{name:'Rhea Ripley',cha:91,str:94,stk:88,tec:72,agi:68,iq:97,finisher:'RIPTIDE'},{name:'CM Punk',cha:91,str:68,stk:88,tec:94,agi:72,iq:97,finisher:'GO TO SLEEP'},{name:'IYO SKY',cha:88,str:68,stk:72,tec:91,agi:94,iq:97,finisher:'OVER THE MOONSAULT'},{name:'Seth Rollins',cha:97,str:68,stk:88,tec:91,agi:94,iq:72,finisher:'CURB STOMP'},{name:'Becky Lynch',cha:97,str:68,stk:91,tec:94,agi:72,iq:88,finisher:'MANHANDLE SLAM'},{name:'Randy Orton',cha:88,str:72,stk:91,tec:94,agi:68,iq:97,finisher:'RKO'},{name:'Bianca Belair',cha:91,str:94,stk:88,tec:68,agi:97,iq:72,finisher:'K.O.D.'},{name:'Gunther',cha:72,str:94,stk:97,tec:88,agi:68,iq:91,finisher:'POWERBOMB'},{name:'Sami Zayn',cha:97,str:68,stk:72,tec:88,agi:91,iq:94,finisher:'HELLUVA KICK'},{name:'Charlotte Flair',cha:94,str:72,stk:88,tec:97,agi:91,iq:68,finisher:'FIGURE EIGHT'},
 {name:'Tiffany Stratton',cha:94,str:68,stk:72,tec:88,agi:97,iq:91,finisher:'PRETTIEST MOONSAULT EVER',tags:['Female','SmackDown','Current Era']},
@@ -1053,7 +1053,7 @@ function home(){ensureEconomy();let g=dailyFeatured(),gp=dailyProgress(),rn=save
 const LIVE_EVENTS=[
 {name:'WORLDS COLLIDE: CHICAGO',date:'SEPTEMBER 30, 2026',matches:[['La Parka','Mr. Iguana'],['Axiom',"Je'Von Evans"],['La Catalina','Roxanne Perez'],['Penta','Rey Fenix'],['El Grande Americano','Omos'],[['CM Punk','Rey Mysterio'],['Dominik Mysterio','JD McDonagh']]]},
 {name:"SUNDAY NIGHT'S MAIN EVENT",date:'SEPTEMBER 6, 2026',matches:[['Dominik Mysterio','Joe Hendry'],['Trick Williams','Baron Corbin'],['Oba Femi','Bron Breakker'],[['Jade Cargill','Michin'],['Charlotte Flair','Alexa Bliss']],['Randy Orton','Cody Rhodes']]},
-{name:'NXT HEATWAVE 2026',date:'AUGUST 30, 2026',matches:[['Kelani Jordan','Kendal Grey']]},
+{name:'NXT HEATWAVE 2026',date:'AUGUST 30, 2026',matches:[['Jaida Parker','Nattie'],['Kelani Jordan','Kendal Grey'],["Tony D'Angelo",'Grayson Waller']]},
 {name:'SUMMERSLAM 2026',date:'AUGUST 1–2, 2026',matches:[['Liv Morgan','IYO SKY'],['CM Punk','Cody Rhodes'],['Baron Corbin','Trick Williams'],['Chad Gable','Penta'],['Roman Reigns','Seth Rollins']]},
 {name:"SATURDAY NIGHT'S MAIN EVENT XLV",date:'JULY 18, 2026',matches:[['Lyra Valkyria','Bayley']]},
 {name:'NXT GREAT AMERICAN BASH',date:'JUNE 28, 2026',matches:[['Kendal Grey','Lola Vice']]},
