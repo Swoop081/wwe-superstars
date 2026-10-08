@@ -186,3 +186,6 @@
 .fw-name-input::placeholder{color:#9198a8}
 .fw-name-page .fw-actions{margin-top:18px}
 .fw-player-faction strong{overflow-wrap:anywhere}
+
+/* v0.9.149: persistent season lock and live faction progression notice. */
+.fw-season-lock{margin:10px 0 18px!important;padding:10px 12px;border-left:3px solid #d5ad5e;background:#171d2b;color:#e7d3a8!important;font-size:12px!important;line-height:1.5!important}
