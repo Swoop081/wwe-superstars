@@ -1492,3 +1492,12 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   word-break:normal!important;
   text-wrap:nowrap!important;
 }
+
+/* v0.9.82: WWE Live side selection shows full portrait card art side by side. */
+.live-screen .live-side-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:24px;align-items:stretch}
+.live-screen .live-side-choice{appearance:none;display:flex;flex-direction:column;align-items:center;min-width:0;width:100%;padding:9px 7px 13px;border:1px solid #575961;border-radius:10px;background:linear-gradient(150deg,#24252b,#101115);color:#fff;text-align:center;cursor:pointer}
+.live-screen .live-side-art{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));width:100%;gap:3px;align-items:start}
+.live-screen .live-side-art picture,.live-screen .live-side-art img{display:block;width:100%!important;height:auto!important;max-height:none!important;min-height:0!important;object-fit:contain!important;object-position:center!important;border-radius:3px}
+.live-screen .live-side-art img{aspect-ratio:3/4;object-fit:contain!important}
+.live-screen .live-side-choice>b{display:block;min-width:0;width:100%;margin-top:8px;font:700 clamp(17px,4vw,26px)/1.02 'Oswald',Impact,sans-serif;text-transform:uppercase;overflow-wrap:break-word}
+.live-screen .live-side-choice>span{display:block;margin-top:auto;padding-top:10px;font:700 clamp(10px,2.6vw,14px)/1.1 'Oswald',sans-serif;letter-spacing:.5px}
