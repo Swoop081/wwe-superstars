@@ -1682,3 +1682,19 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   line-height:.86!important;
 }
 .card:not(.card-back)>.corner b{margin-top:1cqw!important}
+
+/* v0.9.109: battle portraits use the same large name scale as roster portraits.
+   Override legacy battle-specific sizing and fixed-height restrictions. */
+.battle .versus .card:not(.card-back)>.name{
+  font-size:calc(clamp(22px,16.4cqw,72px) * var(--name-size,1) * var(--name-fit,1))!important;
+  min-height:0!important;
+  max-height:none!important;
+  height:auto!important;
+  left:3.5%!important;
+  right:3.5%!important;
+  bottom:3.5%!important;
+  width:93%!important;
+  max-width:93%!important;
+  padding:0!important;
+  line-height:var(--name-leading,.92)!important;
+}
