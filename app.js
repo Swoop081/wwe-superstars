@@ -720,8 +720,18 @@ const correctionTier=new Map();
 for(const [tier,names] of Object.entries(RANKING_CORRECTIONS))
  for(const name of names)correctionTier.set(name,tier);
 const tierPriority={'Main Event':5,'Upper Midcard':4,'Midcard':3,'Lower Midcard':2,'Opener':1};
+const CAREER_PRIORITY={
+ 'Drew McIntyre':980,'Bayley':970,'Asuka':960,'Bobby Lashley':950,
+ 'Kevin Owens':940,'Sheamus':930,'Mankind':920,'Dusty Rhodes':910,
+ 'Vader':900,'Jeff Hardy':890,'Toni Storm':880,
+ 'Trick Williams':980,'Oba Femi':970,'Penta':960,'Ricky Saints':950,
+ 'Wade Barrett':940,'Jordynne Grace':930,'Johnny Gargano':920,
+ 'Carmelo Hayes':910,'Tazz':900,'William Regal':890,
+ 'Raven':880,'Michelle McCool':870,'Jushin Thunder Liger':860
+};
+
 const ranked=[...BASE].sort((a,b)=>{
- const score=w=>{const t=correctionTier.get(w.name)||(TITLE_LEGENDS.includes(w.name)?'Main Event':OTHER_CHAMPIONS.includes(w.name)?'Upper Midcard':CARD_POSITION[w.name]?.[0]||'Midcard');return tierPriority[t]*10000+(ranking.get(w.name)??((CARD_POSITION[w.name]?.[1]??690)*10))/100};
+ const score=w=>{const t=correctionTier.get(w.name)||(TITLE_LEGENDS.includes(w.name)?'Main Event':OTHER_CHAMPIONS.includes(w.name)?'Upper Midcard':CARD_POSITION[w.name]?.[0]||'Midcard');return tierPriority[t]*10000+(CAREER_PRIORITY[w.name]??((ranking.get(w.name)??((CARD_POSITION[w.name]?.[1]??690)*10))/100))};
  return score(b)-score(a)||a.name.localeCompare(b.name);
 });
 const tierCounts=TIER_NAMES.map((_,i)=>Math.floor(BASE.length/5)+(i<BASE.length%5?1:0));
