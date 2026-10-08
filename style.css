@@ -1746,3 +1746,6 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   overflow-wrap:normal!important;
   word-break:normal!important;
 }
+
+/* v0.9.113: reduce Superstar Road home title by 20% from v0.9.112. */
+.home-v2 .home-road .tile-copy strong{font-size:clamp(56px,14.4vw,81.6px)!important}
