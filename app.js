@@ -211,7 +211,17 @@ const BASE=[
 {name:"Maxxine Dupri",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"REVERSE CATERPILLAR",tags:["Female","Current Era"]},
 {name:"Michin",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"EAT DEFEAT",tags:["Female","Current Era"]},
 {name:"Montez Ford",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"FROM THE HEAVENS",tags:["Male","Current Era"]},
-{name:"Myles Borne",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"BORNE AGAIN",tags:["Male","NXT"]}
+{name:"Myles Borne",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"BORNE AGAIN",tags:["Male","NXT"]},
+{name:"Naraku",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"POWERBOMB",tags:["Male","Current Era"]},
+{name:"Nathan Frazer",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"PHOENIX SPLASH",tags:["Male","NXT"]},
+{name:"Nattie",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"SHARPSHOOTER",tags:["Female","Current Era"]},
+{name:"Omos",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"TWO-HANDED CHOKESLAM",tags:["Male","Current Era"]},
+{name:"Otis",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"CATERPILLAR",tags:["Male","Current Era"]},
+{name:"Paige NXT",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"PAIGE TURNER",tags:["Female","NXT"]},
+{name:"Dean Ambrose",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"DIRTY DEEDS",tags:["Male","Reality Era"]},
+{name:"Ricky Saints",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"ROSHAMBO",tags:["Male","NXT"]},
+{name:"Roman Reigns (Shield)",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"SPEAR",tags:["Male","Reality Era","The Shield"]},
+{name:"Royce Keys",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"POWERBOMB",tags:["Male","Current Era"]}
 ];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
