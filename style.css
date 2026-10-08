@@ -1501,3 +1501,23 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .live-screen .live-side-art img{aspect-ratio:3/4;object-fit:contain!important}
 .live-screen .live-side-choice>b{display:block;min-width:0;width:100%;margin-top:8px;font:700 clamp(17px,4vw,26px)/1.02 'Oswald',Impact,sans-serif;text-transform:uppercase;overflow-wrap:break-word}
 .live-screen .live-side-choice>span{display:block;margin-top:auto;padding-top:10px;font:700 clamp(10px,2.6vw,14px)/1.1 'Oswald',sans-serif;letter-spacing:.5px}
+
+/* v0.9.84: duplicate reward card names fit the card, including wide display fonts. */
+.duplicate-upgrade .upgrade-card .card{container-type:inline-size!important}
+.duplicate-upgrade .upgrade-card .card .name{
+  font-size:calc(clamp(11px,7.1cqw,25px) * var(--name-size,1) * var(--name-fit,1))!important;
+  line-height:var(--name-leading,.94)!important;
+  letter-spacing:var(--name-tracking,0em)!important;
+  width:calc(100% - 12px)!important;
+  max-width:calc(100% - 12px)!important;
+  left:6px!important;
+  right:auto!important;
+  bottom:5px!important;
+  margin:0!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  text-wrap:nowrap!important;
+}
