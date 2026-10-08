@@ -171,7 +171,17 @@ const BASE=[
 {name:"Ivory",cha:91,str:78,stk:90,tec:92,agi:84,iq:90,finisher:"POISON IVORY",tags:["Female","Attitude Era","Legend","Hall of Fame","Right to Censor"]},
 {name:"Michelle McCool",cha:94,str:82,stk:92,tec:94,agi:86,iq:91,finisher:"FAITH BREAKER",tags:["Female","Ruthless Aggression Era","PG Era","Legend","LayCool"]},
 {name:"Sasha Banks",cha:99,str:76,stk:92,tec:98,agi:94,iq:96,finisher:"BANK STATEMENT",tags:["Female","Reality Era","Current Era","Legend","Four Horsewomen"]},
-{name:"Carmella",cha:98,str:72,stk:88,tec:90,agi:92,iq:94,finisher:"CODE OF SILENCE",tags:["Female","Reality Era","Current Era","Legend"]}
+{name:"Carmella",cha:98,str:72,stk:88,tec:90,agi:92,iq:94,finisher:"CODE OF SILENCE",tags:["Female","Reality Era","Current Era","Legend"]},
+{name:"Arianna Grace",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"GRACEFUL DDT",tags:["Female","NXT"]},
+{name:"Izzi Dame",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"SITOUT POWERBOMB",tags:["Female","NXT"]},
+{name:"La Catalina",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"DIVING CROSSBODY",tags:["Female","Current Era"]},
+{name:"Austin Theory",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"A-TOWN DOWN",tags:["Male","Current Era"]},
+{name:"Angelo Dawkins",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"SKY HIGH",tags:["Male","Current Era"]},
+{name:"Axiom",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"GOLDEN RATIO",tags:["Male","NXT"]},
+{name:"Baron Corbin",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"END OF DAYS",tags:["Male","Current Era"]},
+{name:"Big Cass",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"EAST RIVER CROSSING",tags:["Male","Reality Era"]},
+{name:"King Booker",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"BOOK END",tags:["Male","Ruthless Aggression Era"]},
+{name:"Bronson Reed",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"TSUNAMI",tags:["Male","Current Era"]}
 ];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
