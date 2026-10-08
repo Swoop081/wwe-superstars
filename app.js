@@ -1088,7 +1088,7 @@ function startLiveSide(i,side){let e=liveToday(),progress=liveProgress(),m=e.mat
 function multiSync(b){for(let side of ['p','c']){let a=b.teams[side][0];if(side==='p'){b.p=a.w;b.pl=a.l;b.php=a.hp;b.pmax=a.max}else{b.cpu=a.w;b.cl=a.l;b.chp=a.hp;b.cmax=a.max}}}
 function multiStore(b){b.teams.p[0].hp=b.php;b.teams.c[0].hp=b.chp}
 function multiSwap(b,side,index){let t=b.teams[side];if(index<=0||index>=t.length||t[index].hp<=0)return false;[t[0],t[index]]=[t[index],t[0]];multiSync(b);if(side==='p'){b.pBoost=null;reloadTagActions(b,'p')}else{b.cBoost=null;reloadTagActions(b,'c')}return true}
-function multiChooseTag(index){let b=state.b;if(!b?.multi||b.ended||b.php<=0)return;multiStore(b);if(multiSwap(b,'p',index))battle()}
+function multiChooseTag(index){let b=state.b;if(!b?.multi||b.ended||b.php<=0)return;multiStore(b);if(multiSwap(b,'p',index)){b.pLog='<strong>TAG</strong><span>Fresh superstar enters the match</span>';battle()}}
 function claimLiveReward(){let b=state.b,p=liveProgress();if(!b?.live||b.liveKey!==p.key||p.completed.includes(b.liveIndex))return wweLive();let w=b.p,old=level(w.name),neu=old+1;save.roster[w.name]=neu;ensureRecord(w.name);p.completed.push(b.liveIndex);persist();return duplicateUpgrade(w,old,neu,'wweLive()','WWE LIVE · '+liveToday().name)}
 function collectionSortValue(){return localStorage.getItem('wweCollectionSort')||'level'}
 function collectionViewValue(){return localStorage.getItem('wweCollectionView')||'gallery'}
@@ -1282,7 +1282,7 @@ function attack(pk){
  let pName=pa?pa.name:KEYS.find(x=>x[0]===pk)[1],cName=ca?ca.name:KEYS.find(x=>x[0]===ck)[1];
  let pEffect=pTagged?'INCOMING MOVE NEGATED · TAGGED '+b.p.name.toUpperCase():pa?actionLogEffect(pr,pd,pReflect,cancelled):`${pd} DAMAGE`,cEffect=cTagged?'INCOMING MOVE NEGATED · TAGGED '+b.cpu.name.toUpperCase():ca?actionLogEffect(cr,cd,cReflect,cancelled):`${cd} DAMAGE`;
  b.pLog=`<strong>${pa?'<i>'+actionIcon(pk)+'</i> ':''}${pName.toUpperCase()}</strong><span>${pEffect}</span>`;b.cLog=`<strong>${ca?'<i>'+actionIcon(ck)+'</i> ':''}${cName.toUpperCase()}</strong><span>${cEffect}</span>`;
- if(b.multi){multiStore(b);for(let side of ['p','c']){let t=b.teams[side];if(t[0].hp<=0){t[0].hp=0;let next=t.findIndex((x,i)=>i>0&&x.hp>0);if(next>=0)multiSwap(b,side,next)}else if((side==='p'?pTagged:cTagged)){let next=t.findIndex((x,i)=>i>0&&x.hp>0);if(next>=0)multiSwap(b,side,next)}}let pAlive=b.teams.p.some(x=>x.hp>0),cAlive=b.teams.c.some(x=>x.hp>0);if(!pAlive||!cAlive){b.ended=true;return setTimeout(()=>finish(pAlive&&!cAlive),350)}battle();return}
+ if(b.multi){multiStore(b);for(let side of ['p','c']){let t=b.teams[side];if(t[0].hp<=0){t[0].hp=0;let next=t.findIndex((x,i)=>i>0&&x.hp>0);if(next>=0)multiSwap(b,side,next)}else if((side==='p'?pTagged:cTagged)){let next=t.findIndex((x,i)=>i>0&&x.hp>0);if(next>=0)multiSwap(b,side,next)}}if(b.teams.c[0].hp>0&&b.teams.c[0].hp/b.teams.c[0].max<.32){let next=b.teams.c.findIndex((x,i)=>i>0&&x.hp>x.max*.45);if(next>=0)multiSwap(b,'c',next)}let pAlive=b.teams.p.some(x=>x.hp>0),cAlive=b.teams.c.some(x=>x.hp>0);if(!pAlive||!cAlive){b.ended=true;return setTimeout(()=>finish(pAlive&&!cAlive),350)}battle();return}
  if(nextPhp<=0||nextChp<=0){b.ended=true;let win=nextPhp<=0&&nextChp<=0?nextChp<nextPhp:nextChp<=0;return setTimeout(()=>finish(win),350)}
  if((b.road||b.gauntlet)&&b.node.mod.id==='random'){b.hand=[];b.cpuHand=[];b.used=[];b.cpuUsed=[]}
  battle();
