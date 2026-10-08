@@ -1738,3 +1738,11 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   overflow-wrap:normal!important;
   word-break:normal!important;
 }
+
+/* v0.9.112: double Superstar Road home-tile title size. */
+.home-v2 .home-road .tile-copy strong{
+  font-size:clamp(70px,18vw,102px)!important;
+  line-height:.79!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+}
