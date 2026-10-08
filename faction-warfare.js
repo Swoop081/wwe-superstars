@@ -81,7 +81,7 @@
   const match=available(season).find(x=>x.division===division);
   if(!match)throw Error('Division unavailable while a defence is due');
   const d=season.divisions[division],kind=match.kind;
-  if(kind==='defence'){if(won)d.nextDefence=season.week+4;else Object.assign(d,freshDivision())}
+  if(kind==='defence'){if(won)d.nextDefence=season.week+4;else Object.assign(d,{stage:'contender',streak:3,champion:false,nextDefence:null})}
   else if(kind==='ladder'){d.streak=won?Math.min(3,d.streak+1):Math.max(0,d.streak-1);if(d.streak===3)d.stage='contender'}
   else if(kind==='contender'){if(won)d.stage='title';else{d.stage='ladder';d.streak=3}}
   else if(kind==='title'){if(won){d.stage='champion';d.champion=true;d.nextDefence=season.week+4}else{d.stage='contender';d.streak=3}}
