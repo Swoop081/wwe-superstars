@@ -6,6 +6,14 @@ const assert=require('node:assert/strict');
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const origin='http://127.0.0.1:8765/';
  await page.goto(origin,{waitUntil:'domcontentloaded'});
+ const dataAudit=await page.evaluate(()=>{
+   const problems=BASE.flatMap(w=>KEYS.filter(([k])=>!Number.isFinite(w[k])||w[k]<65||w[k]>100).map(([k])=>w.name+': '+k+'='+w[k]));
+   const actionProblems=[];const stats=statsAt(BASE[0],1),b={php:550,chp:550,pmax:550,cmax:550};
+   for(const ac of ACTIONS){const n=baseActionNumbers(ac.id,'p',b,stats);for(const [k,v] of Object.entries(n))if(typeof v==='number'&&!Number.isFinite(v))actionProblems.push(ac.id+': '+k)}
+   return {problems,actionProblems};
+ });
+ assert.deepEqual(dataAudit.problems,[],'normalized wrestler stats must stay within 65–100');
+ assert.deepEqual(dataAudit.actionProblems,[],'action card values must be finite');
  await page.getByText('OPEN WELCOME PACK').click();
  for(let i=0;i<4;i++)await page.getByText('REVEAL NEXT').click();
  await page.getByText('ENTER WWE SUPERSTARS').click();
