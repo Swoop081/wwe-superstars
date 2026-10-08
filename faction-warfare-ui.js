@@ -10,7 +10,7 @@ function owned(){return BASE.filter(w=>level(w.name)>0).sort((a,b)=>level(b.name
 function menu(){const season=save.factionWarfare;if(season&&season.status!=='completed')return dashboard();picks=[null,null,null,null];selection()}
 function selection(){
 const all=owned();const chosen=new Set(picks);
-shell('<div class="fw-page"><button class="btn fw-back" onclick="home()">← HOME</button><div class="fw-kicker">WWE SUPERSTARS</div><h1>FACTION WARFARE</h1><p>Choose four unique superstars. All championship divisions are intergender.</p><h2>YOUR FACTION ('+picks.filter(Boolean).length+'/4)</h2><div class="fw-picked">'+[0,1,2,3].map(i=>'<button type="button" class="fw-slot" onclick="factionRemoveSlot('+i+')" '+(picks[i]?'title="Remove '+esc(picks[i])+'"':'disabled')+'>'+(picks[i]?'<div class="fw-slot-card">'+card(BASE.find(w=>w.name===picks[i]),level(picks[i]),"","lazy")+'</div>':'<span class="fw-empty">EMPTY</span>')+'<small>'+['WORLD','INTERCONTINENTAL','TAG','TAG'][i]+'</small></button>').join('')+'</div><p>Selection order assigns championship roles.</p><div class="fw-actions"><button class="btn" onclick="factionClear()">CLEAR</button><button class="btn" '+(picks.filter(Boolean).length!==4?'disabled':'')+' onclick="factionStart()">START SEASON</button></div><div class="fw-roster">'+all.map(w=>'<button class="fw-wrestler '+(chosen.has(w.name)?'selected':'')+'" onclick="factionPick('+JSON.stringify(w.name).replace(/"/g,'&quot;')+')">'+'<span class="fw-roster-card">'+card(w,level(w.name),"","lazy")+'</span></button>').join('')+'</div></div>','fw-screen');
+shell('<div class="fw-page"><button class="btn fw-back" onclick="home()">← HOME</button><div class="fw-kicker">WWE SUPERSTARS</div><h1>FACTION WARFARE</h1><p>Choose four unique superstars. All championship divisions are intergender.</p><h2>YOUR FACTION ('+picks.filter(Boolean).length+'/4)</h2><div class="fw-picked">'+[0,1,2,3].map(i=>'<button type="button" class="fw-slot" onclick="factionRemoveSlot('+i+')" '+(picks[i]?'title="Remove '+esc(picks[i])+'"':'disabled')+'>'+(picks[i]?'<div class="fw-slot-card">'+card(BASE.find(w=>w.name===picks[i]),level(picks[i]),"","lazy")+'</div>':'<span class="fw-empty">EMPTY</span>')+'<small>'+['WORLD','INTERCONTINENTAL','TAG','TAG'][i]+'</small></button>').join('')+'</div><p>Selection order assigns championship roles.</p><div class="fw-actions"><button class="btn" onclick="factionClear()">CLEAR</button><button class="btn" '+(picks.filter(Boolean).length!==4?'disabled':'')+' onclick="factionStart()">START SEASON</button></div><div id="fw-start-error" class="fw-start-error" role="alert" hidden></div><div class="fw-roster">'+all.map(w=>'<button class="fw-wrestler '+(chosen.has(w.name)?'selected':'')+'" onclick="factionPick('+JSON.stringify(w.name).replace(/"/g,'&quot;')+')">'+'<span class="fw-roster-card">'+card(w,level(w.name),"","lazy")+'</span></button>').join('')+'</div></div>','fw-screen');
 }
 function removeSlot(index){if(index<0||index>3)return;picks[index]=null;selection()}
 function pick(name){
@@ -21,7 +21,24 @@ function pick(name){
  selection();
 }
 function clear(){picks=[null,null,null,null];selection()}
-function begin(){if(picks.some(n=>!n))return;const roles={world:picks[0],intercontinental:picks[1],tag:picks.slice(2)};const levels={world:level(picks[0]),intercontinental:level(picks[1]),tag:picks.slice(2).map(level)};const opponents=rules().generateOpponents(BASE.map(w=>w.name),picks,levels);save.factionWarfare=rules().createSeason(picks,roles,opponents);persist();dashboard()}
+function begin(){
+ if(picks.length!==4||picks.some(n=>!n)||new Set(picks).size!==4){showStartError('Choose four different superstars before starting.');return}
+ try{
+  if(!rules()||typeof rules().generateOpponents!=='function')throw Error('Faction rules are not ready. Please reopen the game.');
+  const roles={world:picks[0],intercontinental:picks[1],tag:picks.slice(2)};
+  const levels={world:level(picks[0]),intercontinental:level(picks[1]),tag:picks.slice(2).map(n=>level(n))};
+  const opponents=rules().generateOpponents(BASE.map(w=>w.name),picks,levels);
+  const season=rules().createSeason([...picks],roles,opponents);
+  save.factionWarfare=season;
+  persist();
+  dashboard();
+ }catch(error){console.error('Faction Warfare season start failed',error);showStartError('Unable to start season: '+(error?.message||String(error)))}
+}
+function showStartError(message){
+ const el=document.getElementById('fw-start-error');
+ if(el){el.textContent=message;el.hidden=false;el.scrollIntoView({block:'nearest',behavior:'smooth'})}
+ else alert(message);
+}
 function launch(division){
  const season=save.factionWarfare,match=rules().available(season).find(x=>x.division===division);
  if(!match)return dashboard();
