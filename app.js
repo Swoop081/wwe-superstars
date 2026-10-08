@@ -201,7 +201,17 @@ const BASE=[
 {name:"Karmen Petrovic",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"SPINNING HEEL KICK",tags:["Female","NXT"]},
 {name:"Kit Wilson",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"TWISTED NECKBREAKER",tags:["Male","Current Era"]},
 {name:"Kiana James",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"401K",tags:["Female","Current Era"]},
-{name:"Lady Shani",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"SHANI DRIVER",tags:["Female","Current Era"]}
+{name:"Lady Shani",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"SHANI DRIVER",tags:["Female","Current Era"]},
+{name:"Laundry Reid",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"RUNNING KNEE",tags:["Female","NXT"]},
+{name:"Lash Legend",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"LASH EXTENSION",tags:["Female","Current Era"]},
+{name:"Lexis King",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"CORONATION",tags:["Male","NXT"]},
+{name:"Lizzy Rain",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"RAIN DROP",tags:["Female","NXT"]},
+{name:"Lyra Valkyria '26",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"NIGHTWISH",tags:["Female","Current Era"]},
+{name:"Matt Cardona",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"RADIO SILENCE",tags:["Male","Current Era"]},
+{name:"Maxxine Dupri",cha:94,str:70,stk:86,tec:90,agi:92,iq:88,finisher:"REVERSE CATERPILLAR",tags:["Female","Current Era"]},
+{name:"Michin",cha:88,str:94,stk:96,tec:78,agi:70,iq:84,finisher:"EAT DEFEAT",tags:["Female","Current Era"]},
+{name:"Montez Ford",cha:92,str:78,stk:88,tec:96,agi:86,iq:90,finisher:"FROM THE HEAVENS",tags:["Male","Current Era"]},
+{name:"Myles Borne",cha:90,str:82,stk:92,tec:86,agi:98,iq:76,finisher:"BORNE AGAIN",tags:["Male","NXT"]}
 ];
 
 // Canonical Superstar metadata used by Superstar Road eligibility rules.
