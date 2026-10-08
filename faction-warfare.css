@@ -179,3 +179,10 @@
 /* v0.9.147: player faction leads the eight-faction season grid. */
 .fw-opponent.fw-player-faction{border:1px solid #d5ad5e!important;background:linear-gradient(130deg,#392d19,#1a2031)!important}
 .fw-opponent.fw-player-faction strong{color:#f4cf7a!important}
+
+/* v0.9.148: faction naming between selection and season launch. */
+.fw-name-label{display:block;margin:28px 0 9px;color:#e6bd58;font:700 18px Oswald,Impact,sans-serif;letter-spacing:1px}
+.fw-name-input{box-sizing:border-box;display:block;width:100%;min-height:56px;padding:12px 14px;border:2px solid #bd9956;border-radius:4px;background:#171d2b;color:white;font:600 20px Arial,sans-serif;outline-offset:3px}
+.fw-name-input::placeholder{color:#9198a8}
+.fw-name-page .fw-actions{margin-top:18px}
+.fw-player-faction strong{overflow-wrap:anywhere}
