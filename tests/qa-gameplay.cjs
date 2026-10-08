@@ -12,7 +12,7 @@ const assert=require('node:assert/strict');
    persist();
    let rounds=0,damage=0;
    const checks=[];
-   for(const n of ['Roman Reigns']){
+   for(const n of ['Roman Reigns','Cody Rhodes','Rhea Ripley','CM Punk','Seth Rollins','Becky Lynch','Randy Orton','IYO SKY']){
      begin(n);
      const b=state.b;
      for(let t=0;t<35&&!b.ended;t++){
@@ -27,7 +27,7 @@ const assert=require('node:assert/strict');
    }
    return {rounds,damage,checks};
  });
- assert(results.rounds>=5,'should simulate turns');
+ assert(results.rounds>=8,'should simulate at least one turn per match');
  assert(results.damage>0,'combat should cause damage');
  assert.deepEqual(errors,[],'uncaught errors during gameplay');
  console.log('PASS gameplay invariant simulation',JSON.stringify(results));
