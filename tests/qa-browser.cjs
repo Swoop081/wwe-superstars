@@ -39,7 +39,7 @@ const assert=require('node:assert/strict');
  await page.evaluate(()=>collection());
  assert(await page.locator('.collection-gallery').count(),'collection should render');
  await page.evaluate(()=>shop());
- assert(await page.locator('.shop-screen').count(),'shop should render');
+ assert(await page.locator('.shop-grid').count(),'shop should render');
  const shopResult=await page.evaluate(()=>{
    save.coins=10;const offer=dailyShopOffers()[0],before=level(offer.w.name),balance=save.coins;
    buyShopOffer(offer.id,0);
