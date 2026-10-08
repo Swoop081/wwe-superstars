@@ -32,4 +32,5 @@ jobs:
         run: |
           node tests/qa-browser.cjs
           node tests/qa-gameplay.cjs
+          node tests/qa-match-stress.cjs
           node tests/qa-assets.cjs
