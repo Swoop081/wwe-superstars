@@ -32,3 +32,9 @@ Status: NOT READY FOR 1.0. Current candidate: v0.9.107.
 - Test release caching and version update with an actual deployed build.
 
 No claim of 'bug-free' or v1.0-ready until the above are verified.
+
+## QA execution update — 2026-10-08
+- Re-evaluated source-level JavaScript syntax, version synchronization, unique roster names, gender/era tags, all eight normalized stat ranges (65–100), finishers, WWE Live references and selection filter wiring: passed.
+- Corrected static test to validate normalized eight-stat records instead of raw six-stat records. Previously the test incorrectly inspected the raw BASE declaration.
+- Browser/asset/gameplay GitHub Actions runs have not been verified as passing; the available connector exposes only PR-filtered workflow runs, which returned none for the latest commit. CI status remains unknown, not green.
+- Release gate remains blocked pending observable mobile Chromium results, missing artwork check, multi-team stress tests and device QA.
