@@ -42,3 +42,11 @@ jobs:
           node tests/qa-gameplay.cjs
           node tests/qa-match-stress.cjs
           node tests/qa-assets.cjs
+          node tests/qa-mobile-visual.cjs
+      - name: Upload mobile QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-qa-screenshots
+          path: qa-screenshots/
+          if-no-files-found: ignore
