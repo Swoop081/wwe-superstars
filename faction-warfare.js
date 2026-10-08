@@ -82,9 +82,9 @@
   if(!match)throw Error('Division unavailable while a defence is due');
   const d=season.divisions[division],kind=match.kind;
   if(kind==='defence'){if(won)d.nextDefence=season.week+4;else Object.assign(d,freshDivision())}
-  else if(kind==='ladder'){d.streak=won?d.streak+1:0;if(d.streak===3)d.stage='contender'}
-  else if(kind==='contender'){if(won)d.stage='title';else Object.assign(d,freshDivision())}
-  else if(kind==='title'){if(won){d.stage='champion';d.champion=true;d.nextDefence=season.week+4}else Object.assign(d,freshDivision())}
+  else if(kind==='ladder'){d.streak=won?Math.min(3,d.streak+1):Math.max(0,d.streak-1);if(d.streak===3)d.stage='contender'}
+  else if(kind==='contender'){if(won)d.stage='title';else{d.stage='ladder';d.streak=3}}
+  else if(kind==='title'){if(won){d.stage='champion';d.champion=true;d.nextDefence=season.week+4}else{d.stage='contender';d.streak=3}}
   else throw Error('Unsupported match stage');
   season.history.push({week:season.week,division,kind,won:!!won});
   season.week++;
