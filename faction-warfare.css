@@ -141,3 +141,30 @@
 .home-v2 .home-page:nth-child(3) .home-faction .tile-copy strong{
  font-size:clamp(32px,9vw,56px)!important;
 }
+
+/* v0.9.140: center Faction Warfare title across the hero artwork. */
+.home-v2 .home-page:nth-child(3) .home-faction .tile-copy{
+ inset:0!important;
+ width:100%!important;
+ height:100%!important;
+ display:flex!important;
+ flex-direction:column!important;
+ justify-content:center!important;
+ align-items:center!important;
+ text-align:center!important;
+ padding:12px!important;
+ box-sizing:border-box!important;
+}
+.home-v2 .home-page:nth-child(3) .home-faction .tile-copy strong{
+ text-align:center!important;
+ margin:5px auto!important;
+}
+.home-v2 .home-page:nth-child(3) .home-faction .tile-copy small,
+.home-v2 .home-page:nth-child(3) .home-faction .tile-copy em{
+ text-align:center!important;
+}
+.home-v2 .home-page:nth-child(3) .home-faction .tile-shade{
+ inset:0!important;
+ height:100%!important;
+ background:linear-gradient(90deg,rgba(0,0,0,.34),rgba(0,0,0,.50),rgba(0,0,0,.34))!important;
+}
