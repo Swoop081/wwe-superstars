@@ -1478,3 +1478,17 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .home-v2 .home-page:nth-child(2) .home-tile-large .tile-copy strong{font-size:clamp(25px,6.2vw,39px)!important;line-height:.96!important}
 .home-v2 .home-page:nth-child(2) .home-tile-large .tile-copy small{font-size:clamp(8px,2vw,11px)!important;letter-spacing:1px!important}
 .home-v2 .home-page:nth-child(2) .home-tile-large .tile-copy em{font-size:clamp(8px,2vw,11px)!important;line-height:1.15!important}
+
+/* v0.9.80: match-card name sizing follows actual card width, not phone viewport.
+   A long word (e.g. MYSTERIO) must fit inside its own card without crossing the VS gutter. */
+.battle .versus .card{container-type:inline-size!important}
+.battle .versus .card .name{
+  font-size:calc(clamp(10px,7cqw,23px) * var(--name-size,1) * var(--name-fit,1))!important;
+  max-width:calc(100% - 10px)!important;
+  min-width:0!important;
+  line-height:var(--name-leading,.95)!important;
+  white-space:normal!important;
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  text-wrap:nowrap!important;
+}
