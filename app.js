@@ -724,7 +724,7 @@ BASE.forEach(w=>w.tags=[...new Set([...(w.tags||[]),...(SUPERSTAR_TAGS[w.name]||
 function hasTag(w,t){return (w.tags||[]).includes(t)}
 function roadEligibleTags(){let owned=BASE.filter(w=>level(w.name));let candidates=[...new Set(BASE.flatMap(w=>w.tags||[]))].filter(t=>owned.some(w=>hasTag(w,t)));return candidates.filter(t=>owned.filter(w=>hasTag(w,t)).length>=2)}
 const KEYS=[['str','Power'],['stk','Striking'],['tec','Technique'],['agi','Aerial'],['sub','Submission'],['cha','Charisma'],['star','Star Power'],['fnr','Finisher']];let save=JSON.parse(localStorage.getItem('wweSuperstarsSave')||'null'),state={};const app=document.querySelector('#app');
-function coinIcon(c='coin-icon'){return '<span class="'+c+'" aria-label="coin"><span class="coin-face">2</span></span>'}
+function coinIcon(c='coin-icon'){return '<span class="'+c+'" aria-label="coin"><span class="coin-face">₴</span></span>'}
 function persist(){localStorage.setItem('wweSuperstarsSave',JSON.stringify(save))}
 async function checkForUpdate(){
  try{
