@@ -721,7 +721,7 @@ for(const [tier,names] of Object.entries(RANKING_CORRECTIONS))
  for(const name of names)correctionTier.set(name,tier);
 const tierPriority={'Main Event':5,'Upper Midcard':4,'Midcard':3,'Lower Midcard':2,'Opener':1};
 const ranked=[...BASE].sort((a,b)=>{
- const score=w=>{const t=correctionTier.get(w.name);return t?tierPriority[t]*10000+(ranking.get(w.name)??((CARD_POSITION[w.name]?.[1]??690)*10))/100:ranking.get(w.name)??((CARD_POSITION[w.name]?.[1]??690)*10)};
+ const score=w=>{const t=correctionTier.get(w.name)||(TITLE_LEGENDS.includes(w.name)?'Main Event':OTHER_CHAMPIONS.includes(w.name)?'Upper Midcard':CARD_POSITION[w.name]?.[0]||'Midcard');return tierPriority[t]*10000+(ranking.get(w.name)??((CARD_POSITION[w.name]?.[1]??690)*10))/100};
  return score(b)-score(a)||a.name.localeCompare(b.name);
 });
 const tierCounts=TIER_NAMES.map((_,i)=>Math.floor(BASE.length/5)+(i<BASE.length%5?1:0));
