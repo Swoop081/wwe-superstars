@@ -6,7 +6,7 @@ const belts={world:'https://commons.wikimedia.org/wiki/Special:FilePath/Undisput
 const belt=(k)=>'<img class="fw-belt" loading="lazy" alt="'+({world:'Undisputed WWE Championship',intercontinental:'Intercontinental Championship',tag:'Tag Team Championship symbol'}[k])+'" src="'+belts[k]+'">';
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let picks=[];
-function owned(){return BASE.filter(w=>level(w.name)>0)}
+function owned(){return BASE.filter(w=>level(w.name)>0).sort((a,b)=>level(b.name)-level(a.name)||hpOf(b,level(b.name))-hpOf(a,level(a.name))||a.name.localeCompare(b.name))}
 function menu(){const season=save.factionWarfare;if(season&&season.status!=='completed')return dashboard();picks=[];selection()}
 function selection(){
 const all=owned();const chosen=new Set(picks);
