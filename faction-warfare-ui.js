@@ -9,6 +9,7 @@ let picks=[null,null,null,null];
 function owned(){return BASE.filter(w=>level(w.name)>0).sort((a,b)=>level(b.name)-level(a.name)||hpOf(b,level(b.name))-hpOf(a,level(a.name))||a.name.localeCompare(b.name))}
 function menu(){const season=save.factionWarfare;if(season&&season.status!=='completed')return dashboard();picks=[null,null,null,null];selection()}
 function selection(){
+if(save.factionWarfare&&save.factionWarfare.status!=='completed')return dashboard();
 const all=owned();const chosen=new Set(picks);
 shell('<div class="fw-page"><button class="btn fw-back" onclick="home()">← HOME</button><div class="fw-kicker">WWE SUPERSTARS</div><h1>FACTION WARFARE</h1><p>Choose four unique superstars. All championship divisions are intergender.</p><h2>YOUR FACTION ('+picks.filter(Boolean).length+'/4)</h2><div class="fw-picked">'+[0,1,2,3].map(i=>'<button type="button" class="fw-slot" onclick="factionRemoveSlot('+i+')" '+(picks[i]?'title="Remove '+esc(picks[i])+'"':'disabled')+'>'+(picks[i]?'<div class="fw-slot-card">'+card(BASE.find(w=>w.name===picks[i]),level(picks[i]),"","lazy")+'</div>':'<span class="fw-empty">EMPTY</span>')+'<small>'+['WORLD','INTERCONTINENTAL','TAG','TAG'][i]+'</small></button>').join('')+'</div><p>Selection order assigns championship roles.</p><div class="fw-actions"><button class="btn" onclick="factionClear()">CLEAR</button><button class="btn" '+(picks.filter(Boolean).length!==4?'disabled':'')+' onclick="factionStart()">START SEASON</button></div><div id="fw-start-error" class="fw-start-error" role="alert" hidden></div><div class="fw-roster">'+all.map(w=>'<button class="fw-wrestler '+(chosen.has(w.name)?'selected':'')+'" onclick="factionPick('+JSON.stringify(w.name).replace(/"/g,'&quot;')+')">'+'<span class="fw-roster-card">'+card(w,level(w.name),"","lazy")+'</span></button>').join('')+'</div></div>','fw-screen');
 }
@@ -22,15 +23,18 @@ function pick(name){
 }
 function clear(){picks=[null,null,null,null];selection()}
 function begin(){
+ if(save.factionWarfare&&save.factionWarfare.status!=='completed'){dashboard();return}
  if(picks.length!==4||picks.some(n=>!n)||new Set(picks).size!==4){showStartError('Choose four different superstars before starting.');return}
  nameFaction();
 }
 function nameFaction(){
+ if(save.factionWarfare&&save.factionWarfare.status!=='completed')return dashboard();
  shell('<div class="fw-page fw-name-page"><button class="btn fw-back" onclick="factionBackToSelection()">← BACK</button><div class="fw-kicker">FACTION WARFARE</div><h1>NAME YOUR FACTION</h1><p>Choose a name for your four-superstar faction.</p><div class="fw-picked">'+picks.map((n,i)=>'<div class="fw-slot"><div class="fw-slot-card">'+card(BASE.find(w=>w.name===n),level(n),"","lazy")+'</div><small>'+['WORLD','INTERCONTINENTAL','TAG','TAG'][i]+'</small></div>').join('')+'</div><label class="fw-name-label" for="fw-faction-name">FACTION NAME</label><input id="fw-faction-name" class="fw-name-input" type="text" maxlength="32" autocomplete="off" placeholder="Enter your faction name" oninput="factionNameChanged()"><div class="fw-actions"><button class="btn" onclick="factionBackToSelection()">BACK</button><button id="fw-confirm-season" class="btn" onclick="factionConfirmSeason()" disabled>START SEASON</button></div><div id="fw-start-error" class="fw-start-error" role="alert" hidden></div></div>','fw-screen');
 }
 function factionNameChanged(){const el=document.getElementById('fw-faction-name'),btn=document.getElementById('fw-confirm-season');if(el&&btn)btn.disabled=!el.value.trim()}
 function factionBackToSelection(){selection()}
 async function confirmSeason(){
+ if(save.factionWarfare&&save.factionWarfare.status!=='completed'){dashboard();return}
  const factionName=document.getElementById('fw-faction-name')?.value.trim().replace(/\s+/g,' ');
  if(!factionName){showStartError('Enter a faction name to continue.');return}
 
@@ -105,7 +109,7 @@ function finalRewards(){
  shell('<div class="fw-page"><h1>WARGAMES GRAND PRIZE</h1><p>'+esc(name)+' · LEVEL '+neu+'</p><button class="btn" onclick="'+next+'">CONTINUE</button></div>','fw-screen');
 }
 function completed(){shell('<div class="fw-page fw-champions"><div class="fw-kicker">FACTION WARFARE · SEASON COMPLETE</div><h1>WARGAMES CHAMPIONS</h1><p>Your faction conquered all three championships and won WarGames.</p><button class="btn" onclick="factionNewSeason()">START NEW SEASON</button><button class="btn" onclick="home()">HOME</button></div>','fw-screen')}
-function newSeason(){save.factionWarfare=null;persist();picks=[null,null,null,null];selection()}
+function newSeason(){if(save.factionWarfare&&save.factionWarfare.status!=='completed'){dashboard();return}save.factionWarfare=null;persist();picks=[null,null,null,null];selection()}
 function dashboard(){
 const s=save.factionWarfare;if(!s)return selection();if(s.status==='completed')return completed();
 const labels={world:'WORLD CHAMPIONSHIP',intercontinental:'INTERCONTINENTAL CHAMPIONSHIP',tag:'TAG TEAM CHAMPIONSHIPS'};
