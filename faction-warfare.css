@@ -168,3 +168,10 @@
  height:100%!important;
  background:linear-gradient(90deg,rgba(0,0,0,.34),rgba(0,0,0,.50),rgba(0,0,0,.34))!important;
 }
+
+/* v0.9.144: keep season controls tappable on iOS and show startup failures. */
+.fw-page .fw-actions{position:relative!important;z-index:5!important;pointer-events:auto!important}
+.fw-page .fw-actions button{position:relative!important;z-index:6!important;pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important}
+.fw-page .fw-actions button:disabled{pointer-events:none!important;cursor:default!important}
+.fw-start-error{margin:8px 0 12px;padding:10px 12px;background:#381b1b;border:1px solid #cf6565;color:#fff;font:600 13px/1.4 Arial,sans-serif}
+.fw-start-error[hidden]{display:none!important}
