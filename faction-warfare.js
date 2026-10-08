@@ -25,7 +25,7 @@
  ['The Street Profits','Bobby Lashley','MVP','Montez Ford','Angelo Dawkins'],
  ['The Steiner Dynasty','Big Poppa Pump','Scott Steiner','Rick Steiner','Bron Breakker'],
  ['The Dark Order','Sting','Raven','Gangrel','Vader'],
- ['The Women's Revolution','Becky Lynch','Charlotte Flair','Sasha Banks','Bayley'],
+ ["The Women's Revolution",'Becky Lynch','Charlotte Flair','Sasha Banks','Bayley'],
  ['Damage CTRL','IYO SKY','Bayley','Asuka','Kairi Sane'],
  ['The Bella Empire','Nikki Bella','Brie Bella','Maryse','Michelle McCool'],
  ['The NXT Generation','Trick Williams','Carmelo Hayes','Bron Breakker','Oba Femi'],
