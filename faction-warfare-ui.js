@@ -38,7 +38,7 @@ function finalMatch(){
 }
 function finalRewards(){
  const names=state.factionSurvivorRewards||[];
- if(!names.length)return dashboard();
+ if(!names.length){state.factionSurvivorRewards=null;return completed()}
  const name=names.shift(),w=BASE.find(x=>x.name===name);
  if(!w)return finalRewards();
  const old=level(name),neu=Math.max(old,3);
@@ -47,11 +47,13 @@ function finalRewards(){
  if(old)return duplicateUpgrade(w,old,neu,next,'WARGAMES SURVIVOR · LEVEL 3');
  shell('<div class="fw-page"><h1>WARGAMES GRAND PRIZE</h1><p>'+esc(name)+' · LEVEL '+neu+'</p><button class="btn" onclick="'+next+'">CONTINUE</button></div>','fw-screen');
 }
+function completed(){shell('<div class="fw-page"><h1>WARGAMES CHAMPIONS</h1><p>Your faction conquered all three championships and won WarGames.</p><button class="btn" onclick="factionNewSeason()">START NEW SEASON</button><button class="btn" onclick="home()">HOME</button></div>','fw-screen')}
+function newSeason(){save.factionWarfare=null;persist();picks=[];selection()}
 function dashboard(){
-const s=save.factionWarfare;if(!s)return selection();
+const s=save.factionWarfare;if(!s)return selection();if(s.status==='completed')return completed();
 const labels={world:'WORLD CHAMPIONSHIP',intercontinental:'INTERCONTINENTAL CHAMPIONSHIP',tag:'TAG TEAM CHAMPIONSHIPS'};
 const names=k=>k==='tag'?s.roles.tag.join(' & '):s.roles[k];
 shell('<div class="fw-page"><button class="btn fw-back" onclick="home()">← HOME</button><div class="fw-kicker">FACTION WARFARE · WEEK '+s.week+'</div><h1>CHAMPIONSHIP CONTROL</h1><p>'+esc(s.members.join(' · '))+'</p><div class="fw-divisions">'+rules().DIVISIONS.map(k=>{const d=s.divisions[k];const stage=d.champion?'CHAMPION · DEFENCE WEEK '+d.nextDefence:d.stage==='ladder'?'LADDER '+d.streak+'/3':d.stage==='contender'?'NUMBER ONE CONTENDER MATCH':'CHAMPIONSHIP MATCH';const active=rules().available(s).some(x=>x.division===k);return '<div class="fw-division"><h2>'+labels[k]+'</h2><p>'+esc(names(k))+'</p><strong>'+stage+'</strong>'+(active?'<button class="btn fw-play" onclick="factionLaunch(\''+k+'\')">PLAY MATCH</button>':'')+'</div>'}).join('')+'</div><div class="fw-status">'+(s.status==='final-ready'||s.status==='final-retry'?'WARGAMES FINAL UNLOCKED': 'Choose a division to continue. Mandatory defences take priority.')+'</div><p class="fw-note">Match launch and rewards will be enabled when combat integration is complete. Season progress is saved automatically.</p></div>','fw-screen');
 }
-g.factionLaunch=launch;g.factionFinalMatch=finalMatch;g.factionFinalRewards=finalRewards;g.factionWarfareMenu=menu;g.factionPick=pick;g.factionClear=clear;g.factionStart=begin;g.factionDashboard=dashboard;
+g.factionNewSeason=newSeason;g.factionLaunch=launch;g.factionFinalMatch=finalMatch;g.factionFinalRewards=finalRewards;g.factionWarfareMenu=menu;g.factionPick=pick;g.factionClear=clear;g.factionStart=begin;g.factionDashboard=dashboard;
 })(window);
