@@ -1068,7 +1068,7 @@ const LIVE_EVENTS=[
 {name:'NXT DEADLINE 2025',date:'DECEMBER 6, 2025',matches:[['Oba Femi','Ricky Saints'],['Izzi Dame','Tatum Paxley']]},
 {name:'SURVIVOR SERIES: WARGAMES 2025',date:'NOVEMBER 29, 2025',matches:[['Dominik Mysterio','John Cena'],['Stephanie Vaquer','Nikki Bella']]},
 {name:"SATURDAY NIGHT'S MAIN EVENT XLI",date:'NOVEMBER 1, 2025',matches:[['Cody Rhodes','Drew McIntyre'],['Jade Cargill','Tiffany Stratton'],['CM Punk','Jey Uso']]},
-{name:'NXT HALLOWEEN HAVOC 2025',date:'OCTOBER 25, 2025',matches:[['Blake Monroe','Zaria'],['Tatum Paxley','Jacy Jayne'],['Ricky Saints','Trick Williams']]},
+{name:'NXT HALLOWEEN HAVOC 2025',date:'OCTOBER 25, 2025',matches:[['Tatum Paxley','Jacy Jayne'],['Ricky Saints','Trick Williams']]},
 {name:'CROWN JEWEL 2025',date:'OCTOBER 11, 2025',matches:[['Stephanie Vaquer','Tiffany Stratton'],['John Cena','AJ Styles'],['Seth Rollins','Cody Rhodes']]}];
 function liveToday(){let epoch=new Date(2026,9,8),now=new Date(),day=Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-epoch)/86400000);return LIVE_EVENTS[((day%LIVE_EVENTS.length)+LIVE_EVENTS.length)%LIVE_EVENTS.length]}
 function liveProgress(){let key=dailyKey()+'-'+liveToday().name;if(!save.liveProgress||save.liveProgress.key!==key){save.liveProgress={key,completed:[]};persist()}return save.liveProgress}
