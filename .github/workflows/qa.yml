@@ -1,0 +1,17 @@
+name: Pre-release QA
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  static-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify JavaScript syntax
+        run: node --check app.js
+      - name: Run pre-release QA
+        run: node tests/qa-static.cjs
