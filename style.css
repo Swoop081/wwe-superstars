@@ -1415,3 +1415,16 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .live-screen .live-partners{font:700 12px Oswald,sans-serif;text-align:center;padding:8px;color:#b7bfd1}
 .live-screen .live-match .btn{width:100%;margin-top:12px}
 .live-screen .live-match .btn:disabled{opacity:.55;background:#353535;color:#bbb}
+
+
+/* v0.9.49 WWE Live portrait sizing: artImage outputs a picture wrapper. */
+.live-screen .live-matchup{grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr)!important}
+.live-screen .live-matchup>div{min-width:0!important;max-width:100%!important;overflow:hidden!important}
+.live-screen .live-matchup .live-portrait,
+.live-screen .live-matchup picture,
+.live-screen .live-matchup picture img,
+.live-screen .live-matchup img.live-portrait{display:block!important;width:100%!important;max-width:100%!important;height:120px!important;max-height:120px!important;min-height:0!important;object-fit:cover!important;object-position:center 15%!important;overflow:hidden!important;border-radius:5px!important}
+.live-screen .live-matchup b{font-size:clamp(14px,4vw,19px)!important;line-height:1.15!important;overflow-wrap:anywhere!important}
+.live-screen .live-match{padding:10px!important}
+.live-screen .live-heading{padding:10px 8px 14px!important}
+.live-screen .live-heading .title{font-size:clamp(29px,8vw,48px)!important}
