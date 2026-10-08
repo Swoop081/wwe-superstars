@@ -5,3 +5,21 @@
 .home-v2 .home-page:nth-child(3) .home-faction .tile-copy strong{font-size:clamp(32px,9vw,65px)}
 .home-v2 .home-page-rail{display:flex!important;gap:4px!important}
 .home-v2 .home-page-rail .home-nav-page{flex:1!important;min-width:0!important;font-size:clamp(9px,2.5vw,13px)!important;padding-inline:2px!important}
+
+.fw-screen{background:radial-gradient(ellipse at top,#30261a,#10131e 42%,#07090e);overflow-x:hidden}
+.fw-division{display:grid;grid-template-columns:38% 1fr;align-items:center;gap:10px;min-height:150px;background:linear-gradient(115deg,#171a23,#292331,#11141d);border-color:#ad8642;box-shadow:0 8px 22px #0008}
+.fw-division-info{min-width:0}
+.fw-division-info h2{font-size:clamp(16px,4vw,24px);line-height:1.12;margin:0 0 8px;color:#e8c67e}
+.fw-division-info p{color:white;font-weight:bold}
+.fw-division-info strong{font-size:12px;color:#bfc6d4}
+.fw-belt-area{display:flex;align-items:center;justify-content:center;min-width:0;min-height:120px;background:radial-gradient(ellipse,#5b47254d,transparent 70%)}
+.fw-belt{width:100%;max-height:135px;object-fit:contain;filter:drop-shadow(0 6px 5px #000a)}
+.fw-play,.fw-final-button{width:100%;margin-top:9px;min-height:40px;background:#d7b66b!important;color:#17120a!important;font-weight:900!important}
+.fw-roster-card,.fw-slot-card{display:block;width:100%;pointer-events:none;overflow:hidden}
+.fw-roster-card .card,.fw-slot-card .card{max-width:100%!important;width:100%!important}
+.fw-wrestler{padding:4px;overflow:hidden}
+.fw-slot{padding:3px;overflow:hidden}
+.fw-slot small{margin-top:5px}
+.fw-empty{display:block;padding:35px 0;color:#8c96aa}
+.fw-champions{text-align:center;padding-top:10vh}
+@media(min-width:600px){.fw-roster{grid-template-columns:repeat(4,minmax(0,1fr))}.fw-division{grid-template-columns:220px 1fr}}
