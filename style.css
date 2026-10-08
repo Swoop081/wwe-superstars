@@ -1581,3 +1581,10 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .card.font-superstar-213 .name{font-family:"Grenze Gotisch",Impact,sans-serif!important;font-style:italic!important;}
 .card.font-superstar-214 .name{font-family:"Audiowide",Impact,sans-serif!important;letter-spacing:-.045em!important;}
 .card.font-superstar-215 .name{font-family:"Poller One",Impact,sans-serif!important;}
+
+/* v0.9.87: restore the small spinning coin in the Shop home tile. */
+.home-v2 .home-shop .shop-feature-coin{position:absolute;top:10px;right:10px;z-index:4;display:grid;place-items:center;width:31px;height:31px;pointer-events:none;filter:drop-shadow(0 2px 5px #000a)}
+.home-v2 .home-shop .shop-feature-coin-face{display:inline-flex!important;align-items:center;justify-content:center;width:28px!important;height:28px!important;min-width:28px!important;min-height:28px!important;transform-origin:center;animation:shop-feature-coin-spin 3.5s linear infinite;backface-visibility:visible}
+.home-v2 .home-shop .shop-feature-coin-face .coin-face{font-size:14px!important}
+@keyframes shop-feature-coin-spin{0%{transform:rotateY(0deg)}100%{transform:rotateY(360deg)}}
+@media(prefers-reduced-motion:reduce){.home-v2 .home-shop .shop-feature-coin-face{animation:none}}
