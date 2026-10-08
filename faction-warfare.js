@@ -21,7 +21,14 @@
  ['The Authority','Triple H','Randy Orton','Batista','Ric Flair'],
  ['The Phenoms','The Undertaker','Kane','Mankind','Vader'],
  ['The Scottish Alliance','Drew McIntyre','Sheamus','Rowdy Roddy Piper','British Bulldog'],
- ['The Hart Foundation','Bret Hart','British Bulldog','Owen Hart','Jim Neidhart'],
+ ['The Hart Foundation','Bret Hart','British Bulldog','Dynamite Kid','Jim Neidhart'],
+ ['The Street Profits','Bobby Lashley','MVP','Montez Ford','Angelo Dawkins'],
+ ['The Steiner Dynasty','Big Poppa Pump','Scott Steiner','Rick Steiner','Bron Breakker'],
+ ['The Dark Order','Sting','Raven','Gangrel','Vader'],
+ ['The Women's Revolution','Becky Lynch','Charlotte Flair','Sasha Banks','Bayley'],
+ ['Damage CTRL','IYO SKY','Bayley','Asuka','Kairi Sane'],
+ ['The Bella Empire','Nikki Bella','Brie Bella','Maryse','Michelle McCool'],
+ ['The NXT Generation','Trick Williams','Carmelo Hayes','Bron Breakker','Oba Femi'],
  ['The OG Bloodline','Roman Reigns','Rikishi','Jimmy Uso','Jey Uso'],
  ['The Islanders','Umaga','Solo Sikoa','Rikishi','Kama Mustafa']
  ];
