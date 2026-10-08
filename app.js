@@ -750,7 +750,11 @@ function ensureEconomy(){
 }
 function awardMatchCoin(){ensureEconomy();save.coinMatches=(save.coinMatches||0)+1;if(save.coinMatches%50===0){save.coins++;state.coinEarned=true}}
 function seededShopRandom(seed){let x=seed>>>0;return()=>{x=(Math.imul(x,1664525)+1013904223)>>>0;return x/4294967296}}
-function dailyShopOffers(){ensureEconomy();let key=dailyKey(),refresh=save.shopPurchases.refresh||0,seed=[...(key+'-'+refresh)].reduce((n,c)=>Math.imul(n^c.charCodeAt(0),16777619)>>>0,2166136261),rand=seededShopRandom(seed),pool=[...BASE];for(let i=pool.length-1;i>0;i--){let j=Math.floor(rand()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}return pool.slice(0,9).map((w,i)=>({w,copies:i<5?1:i<8?2:3,cost:i<5?1:i<8?2:3,id:key+'-'+refresh+'-'+i})).sort((a,b)=>b.copies-a.copies||a.w.name.localeCompare(b.w.name))}
+function dailyShopOffers(){ensureEconomy();let key=dailyKey(),refresh=save.shopPurchases.refresh||0,slot=key+'-'+refresh,stored=save.shopPurchases.offers;
+ if(save.shopPurchases.offerSlot===slot&&Array.isArray(stored)&&stored.length===9&&stored.every(o=>BASE.some(w=>w.name===o.name))){return stored.map(o=>({w:BASE.find(w=>w.name===o.name),copies:o.copies,cost:o.cost,id:o.id}))}
+ let seed=[...slot].reduce((n,c)=>Math.imul(n^c.charCodeAt(0),16777619)>>>0,2166136261),rand=seededShopRandom(seed),pool=[...BASE];for(let i=pool.length-1;i>0;i--){let j=Math.floor(rand()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+ let offers=pool.slice(0,9).map((w,i)=>({w,copies:i<5?1:i<8?2:3,cost:i<5?1:i<8?2:3,id:slot+'-'+i})).sort((a,b)=>b.copies-a.copies||a.w.name.localeCompare(b.w.name));
+ save.shopPurchases.offerSlot=slot;save.shopPurchases.offers=offers.map(o=>({name:o.w.name,copies:o.copies,cost:o.cost,id:o.id}));persist();return offers}
 function shopResetRemaining(){let n=new Date(),next=new Date(n.getFullYear(),n.getMonth(),n.getDate()+1),s=Math.max(0,Math.ceil((next-n)/1000)),h=String(Math.floor(s/3600)).padStart(2,'0'),m=String(Math.floor(s%3600/60)).padStart(2,'0'),sec=String(s%60).padStart(2,'0');return h+':'+m+':'+sec}
 let shopClockTimer=null;
 function startShopClock(){if(shopClockTimer)clearInterval(shopClockTimer);let tick=()=>{let el=document.querySelector('#shopResetClock');if(!el){clearInterval(shopClockTimer);shopClockTimer=null;return}if(save.shopPurchases?.date!==dailyKey()){clearInterval(shopClockTimer);shopClockTimer=null;return shop()}el.textContent=shopResetRemaining()};tick();shopClockTimer=setInterval(tick,1000)}
