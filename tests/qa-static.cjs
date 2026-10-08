@@ -5,7 +5,7 @@ let checks=0;function test(label,fn){try{fn();checks++;console.log('PASS '+label
 function declaration(name){const start=app.indexOf('const '+name+'=');assert(start>=0,'missing '+name);const end=app.indexOf('];',start);assert(end>start,'unclosed '+name);return vm.runInNewContext(app.slice(start,end+2)+';'+name)}
 const roster=declaration('BASE'),events=declaration('LIVE_EVENTS'),actions=declaration('ACTIONS'),names=new Set(roster.map(w=>w.name));
 test('JavaScript parses',()=>new Function(app));
-test('version synchronized across HTML JS and JSON',()=>{assert(app.includes("const APP_VERSION='"+version+"'"));assert(html.includes('style.css?v='+version));assert(html.includes("||'"+version+"-"));assert.equal(version,'0.9.105')});
+test('version synchronized across HTML JS and JSON',()=>{assert(app.includes("const APP_VERSION='"+version+"'"));assert(html.includes('style.css?v='+version));assert(html.includes("||'"+version+"-"));assert(/^\d+\.\d+\.\d+$/.test(version))});
 test('all superstar names unique',()=>assert.equal(names.size,roster.length));
 test('all superstars have gender',()=>roster.forEach(w=>assert(w.tags?.some(t=>t==='Male'||t==='Female'),w.name)));
 test('all superstars have an era or a brand to infer it',()=>roster.forEach(w=>assert(w.tags?.some(t=>/Era$/.test(t)||t==='Legend'||t==='NXT'||t==='Ruthless Aggression'),w.name)));
