@@ -212,3 +212,7 @@ button.fw-opponent:focus-visible{outline:2px solid #e6bd58;outline-offset:2px}
 .fw-faction-details .fw-detail-stats{padding:7px 2px 5px!important}
 .fw-faction-details .fw-detail-stats strong{font-size:clamp(15px,4.3vw,23px)!important}
 .fw-faction-details .fw-detail-stats span{font-size:clamp(14px,3.8vw,20px)!important}
+
+/* v0.9.165: show faction hero portraits at full colour without dark overlay */
+.home-v2 .home-page:nth-child(3) .home-faction .home-tile-art{filter:none!important;opacity:1!important}
+.home-v2 .home-page:nth-child(3) .home-faction .tile-shade{background:none!important;opacity:0!important;pointer-events:none!important}
