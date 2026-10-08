@@ -199,3 +199,16 @@ button.fw-opponent:focus-visible{outline:2px solid #e6bd58;outline-offset:2px}
 .fw-detail-stats{display:flex;flex-direction:column;gap:4px;text-align:center;padding:10px 2px 5px;color:#fff;font-family:Oswald,Impact,sans-serif}
 .fw-detail-stats strong{font-size:clamp(13px,3.5vw,19px);line-height:1.15;overflow-wrap:anywhere}
 .fw-detail-stats span{color:#e6bd58;font-size:clamp(13px,3.2vw,18px)}
+
+/* v0.9.152: full-width faction inspection with container-relative card typography. */
+.fw-screen .fw-page.fw-faction-details{box-sizing:border-box!important;width:100%!important;max-width:100%!important;padding:12px 8px 32px!important;margin:0!important}
+.fw-faction-details .fw-back{margin:0 0 8px!important}
+.fw-faction-details .fw-kicker{margin-top:12px!important}
+.fw-faction-details h1{overflow-wrap:anywhere}
+.fw-faction-details .fw-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;width:100%!important;margin-top:12px!important}
+.fw-faction-details .fw-detail-card{box-sizing:border-box!important;width:100%!important;min-width:0!important;padding:3px!important}
+.fw-faction-details .fw-detail-card .card{box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;container-type:inline-size!important}
+.fw-faction-details .fw-detail-card .card .name{font-size:calc(clamp(17px,13cqw,54px) * var(--name-size,1) * var(--name-fit,1))!important;max-width:96%!important;line-height:var(--name-leading,.93)!important;overflow-wrap:normal!important}
+.fw-faction-details .fw-detail-stats{padding:7px 2px 5px!important}
+.fw-faction-details .fw-detail-stats strong{font-size:clamp(15px,4.3vw,23px)!important}
+.fw-faction-details .fw-detail-stats span{font-size:clamp(14px,3.8vw,20px)!important}
