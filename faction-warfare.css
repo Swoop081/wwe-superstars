@@ -175,3 +175,7 @@
 .fw-page .fw-actions button:disabled{pointer-events:none!important;cursor:default!important}
 .fw-start-error{margin:8px 0 12px;padding:10px 12px;background:#381b1b;border:1px solid #cf6565;color:#fff;font:600 13px/1.4 Arial,sans-serif}
 .fw-start-error[hidden]{display:none!important}
+
+/* v0.9.147: player faction leads the eight-faction season grid. */
+.fw-opponent.fw-player-faction{border:1px solid #d5ad5e!important;background:linear-gradient(130deg,#392d19,#1a2031)!important}
+.fw-opponent.fw-player-faction strong{color:#f4cf7a!important}
