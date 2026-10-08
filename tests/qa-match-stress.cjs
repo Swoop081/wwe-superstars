@@ -9,6 +9,10 @@ const assert=require('node:assert/strict');
  const result=await page.evaluate(()=>{
    save={roster:Object.fromEntries(BASE.map(w=>[w.name,1])),wins:0,losses:0,records:{},coins:5,coinMatches:0,shopPurchases:{date:dailyKey(),bought:[]}};
    const output={singles:0,teams:{2:0,3:0,4:0},rounds:0,tagSwaps:0,failures:[]};
+   // Each simulated match resolves synchronously; suppress only delayed finish
+   // presentation so callbacks cannot settle a later match's state.
+   const originalTimeout=window.setTimeout;
+   window.setTimeout=(fn,delay,...args)=>delay===350&&typeof fn==='function'?0:originalTimeout(fn,delay,...args);
    const verify=b=>{
      for(const side of ['p','c']){
        const hp=side==='p'?b.php:b.chp,max=side==='p'?b.pmax:b.cmax;
@@ -35,6 +39,7 @@ const assert=require('node:assert/strict');
        if(!b.ended)output.failures.push(size+'v'+size+' match '+i+' did not finish');else output.teams[size]++;
      }
    }
+   window.setTimeout=originalTimeout;
    return output;
  });
  assert.deepEqual(result.failures,[]);
