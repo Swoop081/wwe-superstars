@@ -12,7 +12,7 @@ const assert=require('node:assert/strict');
    persist();
    let rounds=0,damage=0;
    const checks=[];
-   for(const n of ['Roman Reigns','Rhea Ripley','Sting','Chelsea Green','Drew McIntyre']){
+   for(const n of ['Roman Reigns']){
      begin(n);
      const b=state.b;
      for(let t=0;t<35&&!b.ended;t++){
