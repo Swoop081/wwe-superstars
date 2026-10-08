@@ -770,18 +770,11 @@ const STAT_PER_LEVEL=10;function statsAt(w,lvl){let add=Math.max(0,lvl-1)*STAT_P
 function artFile(name,format='webp'){const slug=name==='King of Kings'?'triple-h-king-of-kings':name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');return slug+'.'+format}
 function artUrl(name,format='webp'){return 'assets/superstars/'+artFile(name,format)+'?v='+APP_VERSION}
 function artFallback(img){
-  const name=img.dataset.artName;
-  if(name&&!img.dataset.pngFallback){
-    img.dataset.pngFallback='1';
-    failedWebpArt.add(name);
-    img.src=artUrl(name,'png');
-    return;
-  }
   img.onerror=null;
   const placeholder=document.createElement('div');
   placeholder.className='sil';
   placeholder.setAttribute('role','img');
-  placeholder.setAttribute('aria-label',img.alt||name||'Superstar portrait');
+  placeholder.setAttribute('aria-label',img.alt||img.dataset.artName);
   img.replaceWith(placeholder);
 }
 function artImage(name,c='',loading='eager'){
