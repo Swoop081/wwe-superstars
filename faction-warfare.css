@@ -23,3 +23,11 @@
 .fw-empty{display:block;padding:35px 0;color:#8c96aa}
 .fw-champions{text-align:center;padding-top:10vh}
 @media(min-width:600px){.fw-roster{grid-template-columns:repeat(4,minmax(0,1fr))}.fw-division{grid-template-columns:220px 1fr}}
+
+/* Three-page carousel: keep each slide exactly one viewport wide. */
+.home-v2 .home-pages-track{width:300%!important;align-items:stretch!important}
+.home-v2 .home-pages-track>.home-page{width:33.333333%!important;min-width:33.333333%!important;max-width:33.333333%!important;flex:0 0 33.333333%!important}
+.home-v2 .home-page-faction{position:relative;z-index:2;pointer-events:auto!important}
+.home-v2 .home-page-faction .home-page-grid{position:relative;z-index:3;pointer-events:auto!important}
+.home-v2 .home-page-faction .home-faction{position:relative;z-index:4;pointer-events:auto!important;cursor:pointer;touch-action:manipulation}
+.home-v2 .home-page-faction .home-faction .tile-copy,.home-v2 .home-page-faction .home-faction .tile-shade{pointer-events:none!important}
