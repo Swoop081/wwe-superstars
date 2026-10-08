@@ -1389,3 +1389,13 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 .home-v2 .home-page-grid .home-tile-large{grid-column:1/-1!important;min-height:0!important}
 .home-v2 .home-page-rail{flex:0 0 auto!important;position:relative!important;bottom:auto!important;padding:8px 4px max(8px,env(safe-area-inset-bottom))!important}
 @media(max-height:780px){.home-v2 .home-logo.home-collage-logo{flex-basis:82px!important}}
+
+/* v0.9.47: independent pager, no legacy collage positioning */
+.home-v2 .home-pages-track{width:100%!important;display:flex!important;flex-wrap:nowrap!important;align-items:stretch!important}
+.home-v2 .home-page{width:100%!important;min-width:100%!important;max-width:100%!important;flex:0 0 100%!important}
+.home-v2 .home-page-grid{width:100%!important;height:100%!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;min-height:0!important}
+.home-v2 .home-page:first-child .home-page-grid{grid-template-rows:minmax(0,1.8fr) minmax(0,1fr)!important}
+.home-v2 .home-page:nth-child(2) .home-page-grid{grid-template-rows:minmax(0,1.25fr) minmax(0,1.25fr) minmax(0,.9fr)!important}
+.home-v2 .home-page-grid .home-tile{position:relative!important;grid-column:auto!important;grid-row:auto!important;width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important}
+.home-v2 .home-page-grid .home-tile-large{grid-column:1 / -1!important}
+.home-v2 .home-page-grid .home-tile .tile-copy{max-width:100%!important}
