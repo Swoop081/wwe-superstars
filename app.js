@@ -1081,6 +1081,10 @@ const LIVE_EVENT_LOGOS={
 'SATURDAY NIGHT\'S MAIN EVENT XLV':'https://commons.wikimedia.org/wiki/Special:FilePath/Saturday_Nights_Main_Event_Logo_2006.png',
 'SATURDAY NIGHT\'S MAIN EVENT XLIV':'https://commons.wikimedia.org/wiki/Special:FilePath/Saturday_Nights_Main_Event_Logo_2006.png',
 'SATURDAY NIGHT\'S MAIN EVENT XLI':'https://commons.wikimedia.org/wiki/Special:FilePath/Saturday_Nights_Main_Event_Logo_2006.png',
+'NXT GREAT AMERICAN BASH':'https://commons.wikimedia.org/wiki/Special:FilePath/NXT_The_Great_American_Bash_logo_2022.png',
+'NXT VENGEANCE DAY 2026':'https://commons.wikimedia.org/wiki/Special:FilePath/Nxt_vengeance_day_2022_logo.jpg',
+'ELIMINATION CHAMBER 2026':'https://commons.wikimedia.org/wiki/Special:FilePath/WWE_Elimination_Chamber_logo%2C_2015_-_present.png',
+'ROYAL RUMBLE 2026':'https://commons.wikimedia.org/wiki/Special:FilePath/WWE_Greatest_Royal_Rumble_Logo.png',
 'NXT HEATWAVE 2026':'https://commons.wikimedia.org/wiki/Special:FilePath/WWE_NXT_2024_Logo.svg',
 'WRESTLEMANIA 42 — NIGHT 1':'https://commons.wikimedia.org/wiki/Special:FilePath/Djxug13-98d10349-5c16-4c75-806c-aef3a811753e.png',
 'WRESTLEMANIA 42 — NIGHT 2':'https://commons.wikimedia.org/wiki/Special:FilePath/Djxug13-98d10349-5c16-4c75-806c-aef3a811753e.png'
