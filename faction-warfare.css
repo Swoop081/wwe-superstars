@@ -1,8 +1,8 @@
 .home-faction{background:linear-gradient(140deg,#352412,#0c1428 70%)!important;min-height:145px}.fw-screen{background:#07090e;color:#f6f6f6;min-height:100dvh}.fw-page{padding:22px 16px 90px;max-width:780px;margin:auto;font-family:Oswald,Impact,sans-serif}.fw-page h1{font-size:clamp(27px,7vw,44px);line-height:1.05;color:#e6bd58;margin:14px 0}.fw-page h2{font-size:18px;margin:10px 0}.fw-page p{color:#bfc4cf;font-family:Arial,sans-serif;font-size:13px;line-height:1.5}.fw-kicker{color:#c9a85c;letter-spacing:2px;font-size:12px;margin-top:20px}.fw-back{margin-bottom:8px}.fw-picked{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.fw-slot{background:#182033;border:1px solid #596079;min-height:85px;padding:9px 4px;text-align:center;font-size:12px;overflow-wrap:anywhere}.fw-slot small{display:block;color:#e6bd58;margin-top:12px;font-size:10px}.fw-actions{display:flex;gap:10px;margin:15px 0}.fw-actions .btn{flex:1}.fw-roster{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.fw-wrestler{background:#171d2b;color:white;border:1px solid #40485b;border-radius:3px;padding:12px 8px;text-align:left;font:600 14px Oswald,Impact,sans-serif}.fw-wrestler small{display:block;color:#aeb9ca}.fw-wrestler.selected{border-color:#e6bd58;background:#453519}.fw-divisions{display:grid;gap:12px}.fw-division{background:#171e2d;border:1px solid #394459;padding:16px}.fw-division h2{color:#e6bd58}.fw-division strong{display:block;margin:10px 0}.fw-ready{color:#72d49c}.fw-status{margin-top:20px;color:#e6bd58;font-size:18px}.fw-note{margin-top:24px}
 
 .home-v2 .home-page:nth-child(3) .home-page-grid{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:1fr!important;height:100%!important}
-.home-v2 .home-page:nth-child(3) .home-faction{grid-column:1!important;grid-row:1!important;min-height:0!important}
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy strong{font-size:clamp(32px,9vw,65px)}
+.home-v2 .home-page:nth-child(2) .home-faction{grid-column:1!important;grid-row:1!important;min-height:0!important}
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy strong{font-size:clamp(32px,9vw,65px)}
 .home-v2 .home-page-rail{display:flex!important;gap:4px!important}
 .home-v2 .home-page-rail .home-nav-page{flex:1!important;min-width:0!important;font-size:clamp(9px,2.5vw,13px)!important;padding-inline:2px!important}
 
@@ -93,7 +93,7 @@
  gap:8px!important;
  height:100%!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction{
+.home-v2 .home-page:nth-child(2) .home-faction{
  grid-column:1!important;grid-row:1 / 3!important;
  width:100%!important;height:100%!important;min-height:0!important;
  position:relative!important;overflow:hidden!important;
@@ -108,20 +108,20 @@
  object-fit:cover;object-position:center 20%;
  filter:saturate(.95) contrast(1.06);
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy{
  position:absolute!important;z-index:3!important;bottom:0!important;
  padding:0 6px 10px 9px!important;pointer-events:none!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy strong{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy strong{
  font-size:clamp(24px,6vw,39px)!important;line-height:.86!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy small{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy small{
  font-size:clamp(7px,1.7vw,10px)!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy em{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy em{
  font-size:clamp(7px,1.8vw,10px)!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-shade{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-shade{
  position:absolute!important;z-index:2!important;bottom:0!important;
  height:48%!important;background:linear-gradient(0deg,#020612f5,transparent)!important;
 }
@@ -138,12 +138,12 @@
  height:100%!important;
  max-height:100%!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy strong{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy strong{
  font-size:clamp(32px,9vw,56px)!important;
 }
 
 /* v0.9.140: center Faction Warfare title across the hero artwork. */
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy{
  inset:0!important;
  width:100%!important;
  height:100%!important;
@@ -155,15 +155,15 @@
  padding:12px!important;
  box-sizing:border-box!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy strong{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy strong{
  text-align:center!important;
  margin:5px auto!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy small,
-.home-v2 .home-page:nth-child(3) .home-faction .tile-copy em{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy small,
+.home-v2 .home-page:nth-child(2) .home-faction .tile-copy em{
  text-align:center!important;
 }
-.home-v2 .home-page:nth-child(3) .home-faction .tile-shade{
+.home-v2 .home-page:nth-child(2) .home-faction .tile-shade{
  inset:0!important;
  height:100%!important;
  background:linear-gradient(90deg,rgba(0,0,0,.34),rgba(0,0,0,.50),rgba(0,0,0,.34))!important;
@@ -214,8 +214,8 @@ button.fw-opponent:focus-visible{outline:2px solid #e6bd58;outline-offset:2px}
 .fw-faction-details .fw-detail-stats span{font-size:clamp(14px,3.8vw,20px)!important}
 
 /* v0.9.165: show faction hero portraits at full colour without dark overlay */
-.home-v2 .home-page:nth-child(3) .home-faction .home-tile-art{filter:none!important;opacity:1!important}
-.home-v2 .home-page:nth-child(3) .home-faction .tile-shade{background:none!important;opacity:0!important;pointer-events:none!important}
+.home-v2 .home-page:nth-child(2) .home-faction .home-tile-art{filter:none!important;opacity:1!important}
+.home-v2 .home-page:nth-child(2) .home-faction .tile-shade{background:none!important;opacity:0!important;pointer-events:none!important}
 
 /* v0.9.176: compact WarGames final roster, two columns on phones */
 .fw-wargames-final{box-sizing:border-box;width:100%;max-width:720px;margin:0 auto;padding:20px 14px 38px!important}
