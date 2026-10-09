@@ -240,3 +240,10 @@ button.fw-opponent:focus-visible{outline:2px solid #e6bd58;outline-offset:2px}
 .fw-wargames-final .fw-final-member .card .corner small{display:block!important;font-size:clamp(12px,9cqw,23px)!important;line-height:1!important}
 .fw-wargames-final .fw-final-member .card .corner b{display:block!important;font-size:clamp(15px,11cqw,29px)!important;line-height:1!important}
 .fw-wargames-final .fw-final-member .card .name{font-size:calc(clamp(19px,13cqw,46px) * var(--name-size,1) * var(--name-fit,1))!important;line-height:var(--name-leading,.93)!important;max-width:96%!important}
+
+/* v0.9.179: use the same compact 38px button sizing as other Faction Warfare screens */
+.fw-wargames-final .fw-final-actions{gap:8px!important;margin:0 0 18px!important;align-items:center!important}
+.fw-wargames-final .fw-final-actions .btn{box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;height:38px!important;min-height:38px!important;max-height:38px!important;padding:0 10px!important;margin:0!important;border-radius:3px!important;font:700 15px/1 Oswald,Impact,sans-serif!important;letter-spacing:.04em!important;white-space:nowrap!important;box-shadow:none!important}
+.fw-wargames-final .fw-final-actions .fw-final-button{flex:1 1 auto!important;width:auto!important;min-width:0!important;max-width:none!important}
+.fw-wargames-final .fw-final-actions .fw-back{flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:none!important}
+@media(max-width:390px){.fw-wargames-final .fw-final-actions .btn{font-size:13px!important;padding:0 7px!important}}
