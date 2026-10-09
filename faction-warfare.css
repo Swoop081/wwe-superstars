@@ -232,3 +232,11 @@ button.fw-opponent:focus-visible{outline:2px solid #e6bd58;outline-offset:2px}
 .fw-wargames-final .fw-final-actions{display:flex!important;align-items:stretch!important;gap:10px!important;margin:0 0 22px!important;width:100%!important}
 .fw-wargames-final .fw-final-actions .fw-final-button{flex:1 1 auto!important;min-width:0!important;width:auto!important;max-width:none!important;margin:0!important;min-height:54px!important;padding:8px 10px!important;font-size:clamp(14px,3.6vw,20px)!important}
 .fw-wargames-final .fw-final-actions .fw-back{flex:0 0 auto!important;width:auto!important;min-height:54px!important;margin:0!important;padding:8px 14px!important;font-size:clamp(13px,3.5vw,18px)!important}
+
+/* v0.9.178: consistent card typography and independent corner label/value rows */
+.fw-wargames-final .fw-final-member .card .corner{top:5px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:1px!important;min-width:0!important;padding:0!important;line-height:1!important}
+.fw-wargames-final .fw-final-member .card .hpcorner{align-items:flex-end!important;right:6px!important}
+.fw-wargames-final .fw-final-member .card .levelcorner{left:6px!important}
+.fw-wargames-final .fw-final-member .card .corner small{display:block!important;font-size:clamp(12px,9cqw,23px)!important;line-height:1!important}
+.fw-wargames-final .fw-final-member .card .corner b{display:block!important;font-size:clamp(15px,11cqw,29px)!important;line-height:1!important}
+.fw-wargames-final .fw-final-member .card .name{font-size:calc(clamp(19px,13cqw,46px) * var(--name-size,1) * var(--name-fit,1))!important;line-height:var(--name-leading,.93)!important;max-width:96%!important}
