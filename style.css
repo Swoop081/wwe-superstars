@@ -1854,3 +1854,14 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 /* v0.9.172: actual finish-screen reward action, not the nonexistent .finish wrapper */
 .finish-screen .finish-action{width:100%;max-width:440px;min-height:0!important;margin:8px auto 0}
 .finish-screen .finish-action .btn{box-sizing:border-box!important;display:block!important;width:100%!important;max-width:440px!important;height:44px!important;min-height:44px!important;max-height:44px!important;padding:0 12px!important;margin:0 auto!important;font-size:15px!important;line-height:42px!important;letter-spacing:1px!important;border-radius:5px!important;flex:none!important}
+
+/* v0.9.182: Faction Warfare second page; Live & Collection third page */
+.home-v2 .home-page:nth-child(2).home-page-faction .home-page-grid{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:1fr!important;height:100%!important}
+.home-v2 .home-page:nth-child(2).home-page-faction .home-faction{grid-column:1!important;grid-row:1!important;width:100%!important;height:100%!important;min-height:0!important}
+.home-v2 .home-page:nth-child(3).home-page-live .home-page-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:minmax(0,2fr) minmax(0,1fr) minmax(0,1fr)!important;gap:10px!important;height:100%!important}
+.home-v2 .home-page:nth-child(3).home-page-live .home-live{grid-column:1/-1!important;grid-row:1!important;width:100%!important;min-height:0!important}
+.home-v2 .home-page:nth-child(3).home-page-live .home-gauntlet{grid-column:1!important;grid-row:2!important;min-height:0!important}
+.home-v2 .home-page:nth-child(3).home-page-live .home-collection{grid-column:2!important;grid-row:2!important;min-height:0!important}
+.home-v2 .home-page:nth-child(3).home-page-live .home-stats{grid-column:1/-1!important;grid-row:3!important;min-height:0!important}
+.home-v2 .home-page:nth-child(3).home-page-live .home-live .tile-copy strong{font-size:clamp(40px,10vw,64px)!important}
+.home-v2 .home-page:nth-child(3).home-page-live .home-gauntlet .tile-copy strong{font-size:clamp(18px,4.7vw,28px)!important}
