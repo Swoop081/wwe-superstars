@@ -99,7 +99,7 @@
   if(season.rewarded)throw Error('Rewards already claimed');
   season.status='completed';season.rewarded=true;
   season.history.push({week:season.week,kind:'wargames',won:true,survivors:[...survivors]});
-  return {randomRewards:2,survivorRewards:[...survivors]};
+  return {randomRewards:0,survivorRewards:[...survivors]};
  }
  global.FactionWarfareRules=Object.freeze({DIVISIONS,FACTION_TEMPLATES,generateOpponents,createSeason,due,available,allTitles,applyResult,finishFinal});
 })(typeof window!=='undefined'?window:globalThis);
