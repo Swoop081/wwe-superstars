@@ -216,3 +216,13 @@ button.fw-opponent:focus-visible{outline:2px solid #e6bd58;outline-offset:2px}
 /* v0.9.165: show faction hero portraits at full colour without dark overlay */
 .home-v2 .home-page:nth-child(3) .home-faction .home-tile-art{filter:none!important;opacity:1!important}
 .home-v2 .home-page:nth-child(3) .home-faction .tile-shade{background:none!important;opacity:0!important;pointer-events:none!important}
+
+/* v0.9.176: compact WarGames final roster, two columns on phones */
+.fw-wargames-final{box-sizing:border-box;width:100%;max-width:720px;margin:0 auto;padding:20px 14px 38px!important}
+.fw-wargames-final .fw-final-roster{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;width:100%;margin:14px 0 18px}
+.fw-wargames-final .fw-final-member{min-width:0;overflow:hidden}
+.fw-wargames-final .fw-final-member .card{box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:100%!important;container-type:inline-size!important}
+.fw-wargames-final .fw-final-member .card .name{font-size:calc(clamp(15px,11cqw,38px) * var(--name-size,1) * var(--name-fit,1))!important;line-height:.92!important;max-width:97%!important}
+.fw-wargames-final .fw-final-member .card .lvl,.fw-wargames-final .fw-final-member .card .hp{font-size:clamp(12px,4cqw,22px)!important}
+.fw-wargames-final .fw-final-button{width:100%!important;max-width:none!important;margin:14px 0!important}
+@media(min-width:650px){.fw-wargames-final .fw-final-roster{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
