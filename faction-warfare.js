@@ -95,11 +95,11 @@
   if(!['final-ready','final-retry'].includes(season.status))throw Error('Final not available');
   if(!Array.isArray(survivors)||new Set(survivors).size!==survivors.length||survivors.some(x=>!season.members.includes(x)))throw Error('Invalid survivors');
   if(won&&!survivors.length)throw Error('Victory requires a survivor');
-  if(!won){season.status='final-retry';return {randomRewards:1,level3:[]}}
+  if(!won){season.status='final-retry';return {randomRewards:1,survivorRewards:[]}}
   if(season.rewarded)throw Error('Rewards already claimed');
   season.status='completed';season.rewarded=true;
   season.history.push({week:season.week,kind:'wargames',won:true,survivors:[...survivors]});
-  return {randomRewards:2,level3:[...survivors]};
+  return {randomRewards:2,survivorRewards:[...survivors]};
  }
  global.FactionWarfareRules=Object.freeze({DIVISIONS,FACTION_TEMPLATES,generateOpponents,createSeason,due,available,allTitles,applyResult,finishFinal});
 })(typeof window!=='undefined'?window:globalThis);
