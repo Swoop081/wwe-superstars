@@ -1894,3 +1894,5 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
   object-position:center top!important;
   filter:saturate(.92) contrast(1.04) brightness(.96)!important;
 }
+
+.card.font-superstar-186 .name{font-family:'Teko',Impact,sans-serif!important;letter-spacing:-.035em!important;line-height:.85!important}
