@@ -1909,3 +1909,7 @@ body{background:radial-gradient(circle at 50% -12%,#292b2f 0,#0b0c0e 28%,#050505
 /* v0.9.220: double LVL/HP labels and values in My Superstars gallery only. */
 .collection-gallery .card:not(.card-back)>.corner small,
 .collection-gallery .card:not(.card-back)>.corner b{font-size:clamp(20px,18cqw,68px)!important;line-height:.86!important}
+
+/* v0.9.232: Jake name alignment and narrow shop-card name fitting. */
+.card.font-superstar-101 .name{text-align:left!important;left:5%!important;right:3%!important;width:auto!important}
+.shop-card .card.font-superstar-215 .name,.shop-card .card.font-superstar-193 .name{font-size:clamp(8px,7cqw,12px)!important;line-height:.85!important;letter-spacing:-.035em!important;max-width:96%!important;left:2%!important;right:2%!important;overflow-wrap:normal!important;word-break:normal!important}
