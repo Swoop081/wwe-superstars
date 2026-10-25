@@ -285,31 +285,33 @@
     const r = g.results[i], cls = r ? (r.winner === 'a' ? 'won' : r.winner === 'b' ? 'lost' : 'tied') : (i === g.results.length ? 'cur' : '');
     return '<div class="spec ' + cls + '"><span class="ic">' + I[sp.type] + '</span><small>' + E.TYPE_NAME[sp.type] + '</small><span class="sp">' + sp.stats.map(statImg).join('') + '</span></div>';
   }
+  const initials = n => n.replace(/[^A-Za-z]/g, '').slice(0, 2).toUpperCase();
+  const arenaBG = '<div class="arena-bg"><div class="spots"></div><div class="ringfloor"><i></i><i></i><i></i></div><div class="crowd"></div></div>';
+  const backs = (cards, used) => '<div class="backs">' + cards.map((c, i) => '<i class="back ' + (used.includes(c) ? 'used' : '') + '" style="--r:' + ((i - (cards.length - 1) / 2) * 7) + 'deg"><b>WS</b></i>').join('') + '</div>';
+  const plate = (name, sub, pts, me) => '<div class="plate ' + (me ? 'me' : 'foe') + '"><span class="av">' + initials(name) + '</span><span class="pn"><b>' + name + '</b><small>' + sub + '</small></span><span class="ptsb">' + pts + '<small>PTS</small></span></div>';
+  const statTags = hl => '<div class="stags">' + ST.map((s, i) => '<span class="' + (hl.includes(i) ? 'on' : '') + '">' + statImg(i) + s.name.slice(0, 3).toUpperCase() + '</span>').join('') + '</div>';
   function pickPhase() {
     const { g, cfg } = GM, spec = specOf(g), d = g.a.deck;
-    const need = needCount(spec);
-    const sel = GM.sel;
-    const hl = spec.stats;
-    const hand = d.m.concat(d.f);
-    const ok = sel.length === need;
+    const need = needCount(spec), sel = GM.sel, hl = spec.stats, hand = d.m.concat(d.f), ok = sel.length === need;
     let tagTxt = '';
     if (sel.length === 2 && spec.type === 'tag') { const m = E.tagMod(sel[0], sel[1]); tagTxt = m > 1 ? '<span class="chip gold">DIAMOND +10%</span>' : m < 1 ? '<span class="chip red">MISMATCH −5%</span>' : '<span class="chip dim">NO TAG BONUS</span>'; }
     const supsHTML = d.s.map((s, i) => {
-      const used = g.a.supUsed.includes(s), helps = hl.some(x => SUP[s.s].stats.includes(x));
-      return supFace(s, { cls: 'sm ' + (used ? 'used ' : '') + (GM.sup === s ? 'on ' : '') + (helps && !used ? 'helps' : ''), click: used ? '' : 'UI.supTog(' + i + ')' });
+      const used = g.a.supUsed.includes(s), helps = hl.some(x => SUP[s.s].stats.includes(x)), D = SUP[s.s];
+      return '<button class="supb ' + (used ? 'used ' : '') + (GM.sup === s ? 'on ' : '') + (helps && !used ? 'helps' : '') + '" ' + (used ? 'disabled' : 'onclick="UI.supTog(' + i + ')"') + '><span class="si">' + I[D.id] + '</span><small>+' + Math.round(D.pct * 100) + '%</small></button>';
     }).join('');
     const foeCards = cfg.deckB.m.concat(cfg.deckB.f);
-    screen('<div class="hud"><span class="rnd">' + (g.extra ? 'EXTRA MATCH' : 'MATCH ' + (g.results.length + 1) + ' / 3') + '</span><span class="who">' + cfg.title + '</span></div>'
-      + '<div class="foe"><div><b>' + cfg.oppName + '</b><small>' + (cfg.oppRec || '') + '</small></div><div class="score"><b>' + g.a.pts + '</b> – <b>' + g.b.pts + '</b></div><div class="foecards">' + foeCards.map((c, i) => '<i class="' + (g.b.used.includes(c) ? 'used' : '') + '"></i>').join('') + '</div></div>'
-      + '<div class="specs">' + (g.extra ? '' : g.specs.map((sp, i) => specLine(sp, i, g)).join('')) + '</div>'
-      + '<div class="matchbanner"><span class="ic">' + I[spec.type] + '</span><div><b>' + (spec.extra ? 'Tie-break' : E.TYPE_NAME[spec.type]) + '</b><small>Pick ' + need + (spec.type === 'divas' ? ' Diva' : spec.extra ? ' card (all stats)' : ' Superstar' + (need > 1 ? 's' : '')) + ' · highest ' + spec.stats.map(i => ST[i].name).join(' + ') + ' wins</small></div></div>'
-      + '<div class="pickrow">' + (sel.length ? sel.map(c => face(c, { cls: 'mini selc', hl, val: vsum(c, spec), click: 'UI.selTog(' + hand.indexOf(c) + ')' })).join('') : '<div class="hint">Choose from your hand below</div>') + tagTxt + '</div>'
-      + '<h3 class="sect">Support <small>(one use each per game)</small></h3><div class="supsrow">' + supsHTML + '</div>'
-      + '<h3 class="sect">Your hand</h3><div class="hand">' + hand.map((c, i) => {
+    const slot = sel.length ? sel.map(c => face(c, { cls: 'slotbig' + (sel.length > 1 ? ' two' : ''), hl, val: vsum(c, spec), click: 'UI.selTog(' + hand.indexOf(c) + ')' })).join('') : '<div class="slotempty"><span class="ic">' + I[spec.type] + '</span><b>' + (spec.extra ? 'TIE-BREAK' : E.TYPE_NAME[spec.type].toUpperCase()) + '</b><small>Tap ' + need + ' card' + (need > 1 ? 's' : '') + ' below</small></div>';
+    screen(arenaBG + '<div class="mscreen">'
+      + '<div class="topline">' + plate(cfg.oppName, cfg.oppRec || cfg.title, g.b.pts, false) + '</div>' + backs(foeCards, g.b.used)
+      + '<div class="mnum"><span>' + (g.extra ? 'EXTRA' : 'MATCH ' + (g.results.length + 1)) + '</span><div class="mdots">' + (g.extra ? '' : g.specs.map((sp, i) => { const r = g.results[i]; return '<i class="' + (r ? (r.winner === 'a' ? 'won' : r.winner === 'b' ? 'lost' : 'tied') : i === g.results.length ? 'cur' : '') + '"></i>'; }).join('')) + '</div></div>'
+      + statTags(hl)
+      + '<div class="slotarea ' + (sel.length > 1 ? 'dbl' : '') + '">' + slot + '</div>' + (tagTxt ? '<div class="tagnote">' + tagTxt + '</div>' : '')
+      + '<div class="meline">' + plate('You', 'Deck rank ' + rankNo(), g.a.pts, true) + '<div class="supcol">' + supsHTML + '</div></div>'
+      + '<div class="tray">' + hand.map((c, i) => {
         const used = g.a.used.includes(c), elig = eligible(spec, c, g);
-        return face(c, { cls: 'mini ' + (used ? 'used ' : !elig ? 'dim ' : '') + (sel.includes(c) ? 'sel' : ''), hl, val: elig ? vsum(c, spec) : null, click: elig ? 'UI.selTog(' + i + ')' : '' });
+        return face(c, { cls: 'tr ' + (used ? 'used ' : !elig ? 'dim ' : '') + (sel.includes(c) ? 'sel' : ''), hl, val: elig ? vsum(c, spec) : null, click: elig ? 'UI.selTog(' + i + ')' : '' });
       }).join('') + '</div>'
-      + '<button class="btn big sticky" ' + (ok ? '' : 'disabled') + ' onclick="UI.play()">Play match</button>');
+      + '<button class="btn big play sticky" ' + (ok ? '' : 'disabled') + ' onclick="UI.play()">PLAY</button></div>');
   }
   const vsum = (c, spec) => spec.stats.reduce((a, i) => a + E.stats(c)[i], 0);
   function selTog(i) {
@@ -334,35 +336,38 @@
     reveal(res);
   }
   function sideBlock(side, res, spec) {
-    const r = res[side], win = res.winner === side;
-    return '<div class="rside ' + side + (win ? ' win' : res.winner ? ' lose' : '') + '"><div class="rcards">' + r.cards.map((c, k) => face(c, { cls: 'mini flip' + (r.parts[k].sig ? ' sigflash' : ''), hl: spec.stats, val: r.parts[k].value | 0 })).join('') + '</div>'
-      + '<div class="rtotal" data-t="' + r.total + '">' + 0 + '</div><div class="rchips">'
+    const r = res[side], win = res.winner === side, name = side === 'a' ? 'You' : GM.cfg.oppName, n = r.cards.length;
+    return '<div class="rrow ' + side + (win ? ' win' : res.winner ? ' lose' : '') + '"><div class="rcards n' + n + '">' + r.cards.map((c, k) => face(c, { cls: 'rc flip' + (r.parts[k].sig ? ' sigflash' : ''), hl: spec.stats, val: r.parts[k].value | 0 })).join('') + '</div>'
+      + '<div class="rscore"><div class="who3"><span class="av">' + initials(name) + '</span><b>' + name + '</b>' + (win ? '<em class="stamp">WINNER</em>' : '') + '</div>'
+      + '<div class="paper"><span class="rtotal" data-t="' + r.total + '">0</span></div><div class="rchips">'
       + r.parts.map((p, k) => p.sig ? '<span class="chip gold">SIGNATURE · ' + C[r.cards[k].c].f + '</span>' : '').join('')
       + (r.tag > 1 ? '<span class="chip gold">DIAMOND +10%</span>' : r.tag < 1 ? '<span class="chip red">MISMATCH −5%</span>' : '')
-      + (r.sup ? '<span class="chip cyan">' + SUP[r.sup.s].name + (r.boost ? ' +' + Math.round(r.boost * 100) + '%' : ' (no effect)') + '</span>' : '') + '</div></div>';
+      + (r.sup ? '<span class="chip cyan">' + SUP[r.sup.s].name + (r.boost ? ' +' + Math.round(r.boost * 100) + '%' : ' (no effect)') + '</span>' : '') + '</div></div></div>';
   }
   function reveal(res) {
     const { g } = GM, spec = res.spec.extra ? E.extraSpec() : res.spec;
     const w = res.winner;
-    screen('<div class="hud"><span class="rnd">' + (spec.extra ? 'EXTRA MATCH' : 'MATCH ' + (res.idx + 1)) + '</span><span class="who">' + E.TYPE_NAME[spec.type] + ' · ' + spec.stats.map(i => ST[i].name).join(' + ') + '</span></div>'
-      + '<div class="banner late ' + (w === 'a' ? 'w' : w === 'b' ? 'l' : 't') + '">' + (w === 'a' ? 'YOU WIN THE MATCH' : w === 'b' ? 'THEY WIN THE MATCH' : 'DRAW — BOTH SCORE') + '</div>'
-      + '<div class="rv"><div class="who2">YOU</div>' + sideBlock('a', res, spec) + '<div class="vsb2">VS</div><div class="who2">' + GM.cfg.oppName + '</div>' + sideBlock('b', res, spec) + '</div>'
-      + '<div class="pills"><span>Score <b>' + g.a.pts + ' – ' + g.b.pts + '</b></span></div>'
-      + '<button class="btn big sticky" onclick="UI.afterMatch()">' + (g.over ? 'Finish' : 'Next match') + '</button>');
+    screen(arenaBG + '<div class="mscreen">'
+      + '<div class="mnum"><span>' + (spec.extra ? 'EXTRA MATCH' : 'MATCH ' + (res.idx + 1)) + '</span><small>' + E.TYPE_NAME[spec.type] + '</small></div>' + statTags(spec.stats)
+      + '<div class="rarena">' + sideBlock('b', res, spec) + '<div class="vsline"><b>VS</b></div>' + sideBlock('a', res, spec) + '</div>'
+      + '<div class="verdict late ' + (w === 'a' ? 'w' : w === 'b' ? 'l' : 't') + '">' + (w === 'a' ? 'YOU WIN THE MATCH' : w === 'b' ? 'THEY WIN THE MATCH' : 'DRAW — BOTH SCORE') + ' · ' + g.a.pts + '–' + g.b.pts + '</div>'
+      + '<button class="btn big play sticky" onclick="UI.afterMatch()">' + (g.over ? 'FINISH' : 'NEXT MATCH') + '</button></div>');
     if (res.a.parts.concat(res.b.parts).some(x => x.sig)) setTimeout(() => sfx('sig'), 500);
     setTimeout(() => sfx(w === 'a' ? 'win' : w === 'b' ? 'lose' : 'flip'), 1150);
-    document.querySelectorAll('.rtotal').forEach(el => { const t = +el.dataset.t, t0 = performance.now() + 450; (function tick(now) {  const k = Math.max(0, Math.min(1, (now - t0) / 700)); el.textContent = fmt(Math.round(t * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); })(t0); });
+    document.querySelectorAll('.rtotal').forEach(el => { const t = +el.dataset.t, t0 = performance.now() + 450; (function tick(now) { const k = Math.max(0, Math.min(1, (now - t0) / 800)); el.textContent = fmt(Math.round(t * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); })(t0); });
   }
   function afterMatch() {
     const { g, cfg } = GM;
     if (!g.over) return pickPhase();
-    const win = g.winner === 'a';
-    S.stats[win ? 'wins' : 'losses']++; if (E.perfect(g)) S.stats.perfect++; persist();
-    const done = () => cfg.onEnd(g);
-    screen('<div class="reveal"><h2 class="big-title">' + (win ? (E.perfect(g) ? 'Perfect Win!' : 'Victory') : 'Defeat') + '</h2><p class="sub">' + g.a.pts + ' – ' + g.b.pts + ' vs ' + cfg.oppName + '</p>'
-      + '<div class="pills">' + g.results.map(r => '<span>' + (r.winner === 'a' ? '✔' : r.winner === 'b' ? '✘' : '=') + '</span>').join('') + '</div>'
-      + '<button class="btn big" onclick="UI.gameDone()">Continue</button></div>');
-    GM.done = done;
+    const win = g.winner === 'a', perf = E.perfect(g);
+    S.stats[win ? 'wins' : 'losses']++; if (perf) S.stats.perfect++; persist();
+    GM.done = () => cfg.onEnd(g);
+    screen('<div class="victory ' + (win ? 'vw' : 'vl') + '"><div class="vband"></div><div class="vtxt"><small>' + (perf ? 'PERFECT' : win ? 'MATCH' : 'MATCH') + '</small><h1>' + (win ? 'VICTORY!' : 'DEFEAT') + '</h1></div>'
+      + '<div class="vscore"><b>' + g.a.pts + '</b><span>' + cfg.oppName + '</span><b class="r">' + g.b.pts + '</b></div>'
+      + '<div class="vpicks">' + E.picksFor(g) + '× CARD PICK' + (E.picksFor(g) > 1 ? 'S' : '') + '</div>'
+      + '<div class="vdots">' + g.results.map(r => '<i class="' + (r.winner === 'a' ? 'w' : r.winner === 'b' ? 'l' : 't') + '"></i>').join('') + '</div>'
+      + '<button class="btn big play" onclick="UI.gameDone()">TAP TO CONTINUE</button></div>');
+    sfx(win ? 'win' : 'lose');
   }
   function gameDone() { const d = GM.done; d(); }
 

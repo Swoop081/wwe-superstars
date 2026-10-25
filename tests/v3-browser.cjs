@@ -21,14 +21,14 @@ const SH = process.env.SHOTS || '/tmp/shots';
   // Plays a 3-match game screen by screen, always choosing the first legal cards.
   async function playGame() {
     for (let g = 0; g < 60; g++) {
-      if (await C('button:has-text("Continue")').count()) { await C('button:has-text("Continue")').first().click(); return true; }
-      if (await C('.hand').count() && await C('.matchbanner').count()) {
-        const need = await page.evaluate(() => { const b = document.querySelector('.matchbanner small').textContent; const m = /Pick (\d)/.exec(b); return m ? +m[1] : 1; });
-        for (let k = 0; k < need; k++) { const el = C('.hand .cf:not(.used):not(.dim):not(.sel)').first(); await el.click(); }
+      if (await C('button:has-text("TAP TO CONTINUE")').count()) { await C('button:has-text("TAP TO CONTINUE")').first().click(); return true; }
+      if (await C('.tray').count() && await C('.slotarea').count()) {
+        const need = await page.evaluate(() => { const e = document.querySelector('.slotempty small'); const m = e && /Tap (\d)/.exec(e.textContent); if (m) return +m[1]; return 0; });
+        for (let k = 0; k < need; k++) { const el = C('.tray .cf:not(.used):not(.dim):not(.sel)').first(); await el.click(); }
         if (g === 1) await page.screenshot({ path: SH + '/v3-selected.png' });
-        await C('button:has-text("Play match")').click(); continue;
+        await C('button:has-text("PLAY")').click(); continue;
       }
-      const nx = C('button:has-text("Next match"), button:has-text("Finish")');
+      const nx = C('button:has-text("NEXT MATCH"), button:has-text("FINISH")');
       if (await nx.count()) { if (g < 6) await page.screenshot({ path: SH + '/v3-reveal.png' }); await nx.first().click(); continue; }
       throw new Error('stuck in game');
     }
@@ -73,7 +73,7 @@ const SH = process.env.SHOTS || '/tmp/shots';
     for (let r = 0; r < 12; r++) {
       if (await C('button:has-text("Collect rewards")').count()) break;
       await C('button:has-text("Play round")').click();
-      if (await C('.matchbanner').count()) await playGame();
+      if (await C('.slotarea').count()) await playGame();
     }
     await C('button:has-text("Collect rewards")').click(); await takePicks();
   });
