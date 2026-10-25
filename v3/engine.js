@@ -21,7 +21,7 @@
     { n: 'Legendary', mult: 6.0, sig: 0.33, col: '#ffd34d' }, { n: 'Survivor', mult: 7.2, sig: 0.36, col: '#ff4d5e' },
     { n: 'WrestleMania', mult: 8.6, sig: 0.4, col: '#7fe7ff' }
   ];
-  const T = { levelMax: 100, levelBoost: 0.30, matchBoost: 0.10, matchMax: 100, proBoost: 0.30, fortBoost: 0.05, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
+  const T = { levelMax: 100, levelBoost: 1.00, matchBoost: 0.10, matchMax: 100, proBoost: 0.30, fortBoost: 0.05, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
   // Support cards: one-use boosts per game. pct is applied to the listed stats for the match they are played in.
   const SUPPORTS = [
     { id: 'chair', name: 'Steel Chair', stats: [0], pct: 0.25, rar: 0 }, { id: 'table', name: 'Table', stats: [2], pct: 0.25, rar: 0 },

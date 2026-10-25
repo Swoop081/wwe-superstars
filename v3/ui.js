@@ -283,7 +283,7 @@
       + '<div class="panel"><h3>' + RAR[c.rar].n + ' · ' + (E.isF(inst) ? 'Women' : 'Men') + (inst.pro ? ' · PRO' + (inst.fort ? ' +' + inst.fort : '') : '') + '</h3>'
       + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.min(100, v / (8.6 * 100) * 100 * 2.2) + '%"></i></span><b>' + v + '</b></div>').join('')
       + '</div><div class="panel"><h3>Signature move</h3><p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance(inst) * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '%.</p></div>'
-      + '<div class="panel"><h3>Progress</h3><p class="edge">Level ' + inst.lvl + ' / 100 (+' + Math.round(inst.lvl * 0.3) + '% stats) · Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
+      + '<div class="panel"><h3>Progress</h3><p class="edge">Level ' + inst.lvl + ' / 100 (+' + Math.round(inst.lvl * E.T.levelBoost * 100 / E.T.levelMax) + '% stats) · Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
       + '<div class="bar"><i style="width:' + inst.lvl + '%"></i></div>'
       + '<button class="btn" onclick="UI.feedScreen(' + inst.u + ')">Level up</button>'
       + (!inst.pro ? '<button class="btn alt" ' + (pro ? '' : 'disabled') + ' onclick="UI.makePro(' + inst.u + ')">Combine two copies → Pro' + (pro ? '' : ' (need a duplicate)') + '</button>'
