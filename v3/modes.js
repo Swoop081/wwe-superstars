@@ -26,10 +26,10 @@
   M.campaign = function () {
     const st = S().camp.stars, total = Object.values(st).reduce((a, b) => a + b, 0);
     const base = CAMP.map * 28;
-    screen(dBack() + title('Campaign', total + ' / 252 stars') + '<div class="seg">' + MAPS.map((m, i) => '<button class="' + (CAMP.map === i ? 'on' : '') + '" onclick="UI.campMap(' + i + ')">' + m + '</button>').join('') + '</div>'
+    screen(dBack() + title('Campaign', total + ' / 252 stars · win = 1★, one match lost = 2★, perfect = 3★') + '<div class="seg">' + MAPS.map((m, i) => '<button class="' + (CAMP.map === i ? 'on' : '') + '" onclick="UI.campMap(' + i + ')">' + m + '</button>').join('') + '</div>'
       + '<div class="stages">' + Array.from({ length: 28 }, (_, k) => { const i = base + k, s = st[i] || 0, boss = (i + 1) % 7 === 0;
         return '<button class="stg' + (boss ? ' boss' : '') + '" onclick="UI.campGo(' + i + ')"><b>' + (boss ? '★' : i + 1) + '</b><span>' + '★'.repeat(s) + '<i>' + '★'.repeat(3 - s) + '</i></span></button>'; }).join('') + '</div>'
-      + '<p class="edge" style="text-align:center">Every stage is open. Win = 1 star, win with 1 match lost = 2, perfect win = 3. New stars earn bonus picks.</p>');
+      + '<p class="edge" style="text-align:center;margin:6px 0 0;font-size:12px">Every stage is open. New stars earn bonus picks.</p>');
   };
   reg('campMap', i => { CAMP.map = i; M.campaign(); });
   reg('campGo', i => {
@@ -156,24 +156,24 @@
       body = '<div class="banner ' + (w ? 'w' : 'l') + '">' + (w ? 'YOU WIN THE RUMBLE' : 'YOU WERE ELIMINATED') + '</div><div class="pills"><span>Final points <b>' + st.pts.a + ' – ' + st.pts.b + '</b></span></div>'
         + (res ? rrResult(res) : '') + '<button class="btn big sticky" onclick="UI.rrEnd()">Collect rewards</button>';
     } else if (RR.phase === 'result') body = rrResult(res) + '<button class="btn big sticky" onclick="UI.rrContinue()">Continue</button>';
-    else if (RR.phase === 'holder') body = '<h3 class="sect">Choose your ring-holder</h3><div class="grid">' + st.a.reserve.map((c, i) => face(c, { cls: 'mini', click: 'UI.rrHolder(' + i + ')' })).join('') + '</div>';
+    else if (RR.phase === 'holder') body = '<h3 class="sect">Choose your ring-holder</h3>' + V.paged('rrh', st.a.reserve.map((c, i) => face(c, { cls: 'mini', click: 'UI.rrHolder(' + i + ')' })), { cols: 5, reserve: 240 });
     else if (RR.phase === 'stat') {
       const h = st.holder, s = E.stats(h);
       body = '<div class="ringhold">' + face(h, { cls: 'mini' }) + '<div><b>You hold the ring</b><small>Drain ×' + st.drain.toFixed(2) + ' · each defence tires your card</small></div></div>'
         + '<h3 class="sect">Name the match type <small>(sacrifices a card from your reserve)</small></h3><div class="tiles4">'
         + s.map((v, i) => '<button class="stile ' + 'win' + '" onclick="UI.rrStat(' + i + ')">' + stat(i) + '<b>' + ST[i].name + '</b><span class="duel"><em class="w">' + Math.round(v * st.drain) + '</em></span></button>').join('') + '</div>';
     } else if (RR.phase === 'sacrifice') {
-      body = '<h3 class="sect">Sacrifice a card <small>to call ' + ST[RR.pStat].name + '</small></h3><div class="grid">' + st.a.reserve.map((c, i) => face(c, { cls: 'mini', click: 'UI.rrSac(' + i + ')' })).join('') + '</div><button class="btn alt" onclick="UI.rrSac(-1)">Sacrifice my weakest</button>';
+      body = '<h3 class="sect">Sacrifice a card <small>to call ' + ST[RR.pStat].name + '</small></h3>' + V.paged('rrs', st.a.reserve.map((c, i) => face(c, { cls: 'mini', click: 'UI.rrSac(' + i + ')' })), { cols: 5, reserve: 320 }) + '<button class="btn alt" onclick="UI.rrSac(-1)">Sacrifice my weakest</button>';
     } else if (RR.phase === 'challenge') {
       const sIdx = RR.aiStat, h = st.holder;
       body = '<div class="ringhold">' + face(h, { cls: 'mini', hl: [sIdx], val: Math.round(E.stats(h)[sIdx] * st.drain) }) + '<div><b>' + RR.oppName + ' holds the ring</b><small>Match type: <b style="color:var(--gold2)">' + ST[sIdx].name + '</b> · drain ×' + st.drain.toFixed(2) + '</small></div></div>'
-        + '<h3 class="sect">Send a challenger</h3><div class="grid">' + st.a.reserve.map((c, i) => face(c, { cls: 'mini', hl: [sIdx], val: E.stats(c)[sIdx], click: 'UI.rrChal(' + i + ')' })).join('') + '</div>';
+        + '<h3 class="sect">Send a challenger</h3>' + V.paged('rrc', st.a.reserve.map((c, i) => face(c, { cls: 'mini', hl: [sIdx], click: 'UI.rrChal(' + i + ')' })), { cols: 5, reserve: 350 });
     }
     screen(dBack() + rrBar() + body);
   }
   function rrResult(r) {
     const you = r.ring === 'a';
-    return '<div class="duel2"><div class="dlbl">' + ST[r.stat].name + (r.sacrifice ? ' · ' + (you ? 'you' : 'they') + ' sacrificed ' + C[r.sacrifice.c].n : '') + '</div><div class="dline">' + face(r.holder, { cls: 'mini', hl: [r.stat], val: r.hv }) + '<b>VS</b>' + face(r.challenger, { cls: 'mini', hl: [r.stat], val: r.cv }) + '</div>'
+    return '<div class="duel2 keep"><div class="dlbl">' + ST[r.stat].name + (r.sacrifice ? ' · ' + (you ? 'you' : 'they') + ' sacrificed ' + C[r.sacrifice.c].n : '') + '</div><div class="dline">' + face(r.holder, { cls: 'mini', hl: [r.stat], val: r.hv }) + '<b>VS</b>' + face(r.challenger, { cls: 'mini', hl: [r.stat], val: r.cv }) + '</div>'
       + '<div class="banner ' + ((r.holderWins === you) ? 'w' : 'l') + '">' + (r.holderWins ? (you ? 'YOU HOLD THE RING (+1)' : 'THEY HOLD THE RING (+1)') : (you ? 'THE RING CHANGES HANDS — YOU LOSE IT' : 'YOU TAKE THE RING!')) + '</div></div>';
   }
   function rrDo(stat, sac, chal) { const st = RR.st, ringSide = st.ring; const r = E.rrRound(st, stat, sac, chal); RR.phase = 'result'; RR.last = r; rrRender(r); }
@@ -275,9 +275,9 @@
     const stI = e.order[e.i], avail = e.mine.filter(c => !e.usedA.includes(c));
     screen(dBack() + '<div class="hud"><span class="rnd">BOUT ' + (e.i + 1) + ' / 10</span><span class="who">YOU ' + e.pts[0] + ' – ' + e.pts[1] + ' ' + e.oppName + '</span></div>'
       + (res ? ecRes(res) : '')
-      + '<div class="matchbanner"><span class="ic">' + I.divas + '</span><div><b>' + ST[stI].name + ' bout</b><small>Highest ' + ST[stI].name + ' wins. Each stat comes up in turn — plan ahead.</small></div></div>'
+      + '<div class="matchbanner"><span class="ic">' + I.divas + '</span><div><b>' + ST[stI].name + ' bout</b><small>Highest ' + ST[stI].name + ' wins</small></div></div>'
       + '<div class="specs4">' + e.order.map((s, k) => '<span class="' + (k < e.i ? 'done' : k === e.i ? 'cur' : '') + '">' + stat(s) + '</span>').join('') + '</div>'
-      + '<h3 class="sect">Choose your wrestler</h3><div class="grid">' + avail.map((c, i) => face(c, { cls: 'mini', hl: [stI], val: E.stats(c)[stI], click: 'UI.ecPlay(' + e.mine.indexOf(c) + ')' })).join('') + '</div>');
+      + '<h3 class="sect">Choose your wrestler</h3>' + V.paged('ec', avail.map(c => face(c, { cls: 'mini', hl: [stI], click: 'UI.ecPlay(' + e.mine.indexOf(c) + ')' })), { cols: 5, reserve: 300 }));
   }
   function ecRes(r) {
     return '<div class="duel2"><div class="dline">' + face(r.a, { cls: 'mini', hl: [r.stat], val: r.av }) + '<b>VS</b>' + face(r.b, { cls: 'mini', hl: [r.stat], val: r.bv }) + '</div><div class="banner ' + (r.w === 'a' ? 'w' : r.w === 'b' ? 'l' : 't') + '">' + (r.w === 'a' ? 'BOUT WON' : r.w === 'b' ? 'BOUT LOST' : 'DRAW') + '</div></div>';
@@ -286,7 +286,7 @@
     const e = EC, stI = e.order[e.i], a = e.mine[k];
     const avail = e.theirs.filter(c => !e.usedB.includes(c)).sort((x, y) => E.stats(y)[stI] * (0.9 + rng() * 0.2) - E.stats(x)[stI] * (0.9 + rng() * 0.2));
     const b = avail[rng() < 0.25 && avail.length > 2 ? 1 : 0] || avail[0];
-    const sg = c => E.stats(c)[stI] * (rng() < E.sigChance(c) && E.sigStats(c).includes(stI) ? 1 + E.T.sigBoost : 1);
+    const sg = c => E.stats(c)[stI] + (rng() < E.sigChance(c) && E.sigStats(c).includes(stI) ? E.baseStats(c)[stI] * E.T.sigBoost : 0);
     const av = Math.round(sg(a)), bv = Math.round(sg(b)), w = av > bv ? 'a' : bv > av ? 'b' : null;
     e.usedA.push(a); e.usedB.push(b); a.mt = (a.mt || 0) + 1; if (w === 'a') e.pts[0]++; else if (w === 'b') e.pts[1]++; else { e.pts[0] += 0.5; e.pts[1] += 0.5; }
     e.i++; V.persist(); ecRender({ a, b, av, bv, w, stat: stI });
@@ -319,9 +319,9 @@
     const k = KR, L = krLineup();
     const stam = c => '<div class="stam"><i style="width:' + k.stam[c.u] + '%"></i></div>';
     screen(dBack() + title('King of the Ring', k.phase === 'qual' ? 'Qualifying · ' + k.n + ' / 15 played · ' + k.rec.w + '–' + k.rec.l : k.phase === 'tour' ? 'Knockout bracket' : 'Finished')
-      + '<div class="grid">' + k.m.concat(k.f).map(c => '<div class="kc' + (L.act.includes(c) ? '' : ' rest') + '">' + face(c, { cls: 'mini' }) + stam(c) + '<small>' + (L.act.includes(c) ? 'Active' : 'Resting') + ' · ' + Math.round(k.stam[c.u]) + '%</small></div>').join('') + '</div>'
-      + '<p class="edge" style="text-align:center">Active cards lose 8 stamina per game, resting cards recover 6. Tired cards lose stats. Lineups are managed automatically.</p>'
-      + (k.phase === 'done' ? '<button class="btn big" onclick="UI.krEnd()">Collect rewards</button>' : '<button class="btn big" onclick="UI.krSim()">' + (k.phase === 'qual' ? 'Simulate next match' : 'Play ' + ['quarter-final', 'semi-final', 'final'][k.tour.round]) + '</button>' + (k.phase === 'qual' ? '<button class="btn alt" onclick="UI.krAll()">Simulate all qualifying</button>' : '')) + (k.log.length ? '<div class="panel log2">' + k.log.slice(-6).reverse().map(l => '<p>' + l + '</p>').join('') + '</div>' : ''));
+      + V.paged('kotr', k.m.concat(k.f).map(c => '<div class="kc' + (L.act.includes(c) ? '' : ' rest') + '">' + face(c, { cls: 'mini' }) + stam(c) + '<small>' + (L.act.includes(c) ? 'Active' : 'Resting') + ' · ' + Math.round(k.stam[c.u]) + '%</small></div>').join('') ? k.m.concat(k.f).map(c => '<div class="kc' + (L.act.includes(c) ? '' : ' rest') + '">' + face(c, { cls: 'mini' }) + stam(c) + '<small>' + (L.act.includes(c) ? 'Active' : 'Resting') + ' · ' + Math.round(k.stam[c.u]) + '%</small></div>') : [], { cols: 4, aspect: 1.8, reserve: 420 })
+      + '<p class="edge" style="text-align:center;font-size:11.5px;margin:2px 0">Active cards lose 8 stamina a game, resting ones recover 6. Lineups are automatic.</p>'
+      + (k.phase === 'done' ? '<button class="btn big" onclick="UI.krEnd()">Collect rewards</button>' : '<button class="btn big" onclick="UI.krSim()">' + (k.phase === 'qual' ? 'Simulate next match' : 'Play ' + ['quarter-final', 'semi-final', 'final'][k.tour.round]) + '</button>' + (k.phase === 'qual' ? '<button class="btn alt" onclick="UI.krAll()">Simulate all qualifying</button>' : '')) + (k.log.length ? '<div class="panel log2">' + k.log.slice(-2).reverse().map(l => '<p>' + l + '</p>').join('') + '</div>' : ''));
   }
   function krStep() {
     const k = KR;
@@ -347,8 +347,8 @@
     const place = table.findIndex(p => p.me) + 1;
     screen(dBack() + title('War · ' + LEAGUES[L.tier] + ' League', 'Match ' + (L.played + 1) + ' of 10 · rank ' + place + ' of 30')
       + (L.played >= 10 ? '<button class="btn big" onclick="UI.warEnd()">Finish season</button>' : opps.map((o, i) => '<button class="opp" onclick="UI.warGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + '</small></span><span class="tag ' + o.label.toLowerCase() + '">+' + [10, 20, 30][i] + '</span></button>').join(''))
-      + '<div class="plist">' + table.slice(0, 8).map((p, i) => '<div class="pl ' + (p.me ? 'me' : '') + '"><b>' + (i + 1) + '. ' + p.name + '</b><span>' + p.tr + '</span></div>').join('') + '</div>' + (place > 8 ? '<div class="plist"><div class="pl me"><b>' + place + '. You</b><span>' + L.tr + '</span></div></div>' : '')
-      + '<p class="edge" style="text-align:center">Top 5 are promoted, bottom 5 are relegated at the end of a 10-match season.</p>');
+      + '<div class="plist">' + table.slice(0, 4).map((p, i) => '<div class="pl ' + (p.me ? 'me' : '') + '"><b>' + (i + 1) + '. ' + p.name + '</b><span>' + p.tr + '</span></div>').join('') + '</div>' + (place > 4 ? '<div class="plist"><div class="pl me"><b>' + place + '. You</b><span>' + L.tr + '</span></div></div>' : '')
+      + '<p class="edge" style="text-align:center;font-size:12px;margin:2px 0">Top 5 promoted, bottom 5 relegated after 10 matches.</p>');
   };
   let WARO = [];
   reg('warGo', i => {
@@ -378,7 +378,7 @@
   }
   function caseRender() {
     const c = CASE, solved = c.guesses.length && c.guesses[c.guesses.length - 1].s.exact === 4, over = solved || c.guesses.length >= 8;
-    screen(dBack() + title('Crack the Case', 'Find the 4-number code (1–6, repeats allowed). Gold = right place, white = right number, wrong place.')
+    screen(dBack() + title('Crack the Case', '4-number code, 1–6. Gold = right place, white = wrong place.')
       + '<div class="guesses">' + c.guesses.map(g => '<div class="gr">' + g.g.map(v => '<span>' + v + '</span>').join('') + '<em>' + '<i class="e"></i>'.repeat(g.s.exact) + '<i class="n"></i>'.repeat(g.s.near) + '</em></div>').join('') + '</div>'
       + (over ? '<div class="banner ' + (solved ? 'w' : 'l') + '">' + (solved ? 'CASE CRACKED' : 'The code was ' + c.code.join(' ')) + '</div><button class="btn big" onclick="UI.caseEnd()">' + (solved ? 'Collect reward' : 'New case') + '</button>'
         : '<div class="gr cur">' + [0, 1, 2, 3].map(i => '<span>' + (c.cur[i] || '·') + '</span>').join('') + '</div><div class="keys">' + [1, 2, 3, 4, 5, 6].map(n => '<button onclick="UI.caseKey(' + n + ')">' + n + '</button>').join('') + '<button onclick="UI.caseKey(0)">⌫</button></div><button class="btn big" ' + (c.cur.length === 4 ? '' : 'disabled') + ' onclick="UI.caseGuess()">Guess (' + (8 - c.guesses.length) + ' left)</button>'));

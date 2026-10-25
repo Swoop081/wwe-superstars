@@ -13,7 +13,7 @@ const SH = process.env.SHOTS || '/tmp/shots';
   await page.addInitScript(() => {
     window.__ov = {};
     const chk = () => { const el = document.getElementById('app'); if (!el) return; const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-      if (h > innerHeight + 2) { const t = ((el.querySelector('h1,h2,.mnum span,.hud .rnd,.topbar') || el).textContent || '').replace(/\s+/g, ' ').trim().slice(0, 34) + ' | ' + (el.className || '') + (el.firstElementChild ? ' ' + el.firstElementChild.className.toString().slice(0, 18) : ''); window.__ov[t] = Math.max(window.__ov[t] || 0, h); } };
+      if (h > innerHeight + 2) { const t = (document.title ? '' : '') + ((el.querySelector('h1,h2,.mnum span,.hud .rnd,.topbar') || el).textContent + ' ' + el.textContent.slice(8, 70) || '').replace(/\s+/g, ' ').trim().slice(0, 34) + ' | ' + (el.className || '') + (el.firstElementChild ? ' ' + el.firstElementChild.className.toString().slice(0, 18) : ''); window.__ov[t] = Math.max(window.__ov[t] || 0, h); } };
     document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('app'); let q = 0; new MutationObserver(() => { chk(); setTimeout(chk, 500); }).observe(el, { childList: true }); });
   });
   page.on('pageerror', e => errors.push(e.message));
@@ -61,6 +61,7 @@ const SH = process.env.SHOTS || '/tmp/shots';
   // Opens every pick on the table until done.
   async function takePicks() {
     for (let g = 0; g < 20; g++) {
+      if (await C('.pickov .btn').count()) { await C('.pickov .btn').first().click(); continue; }
       if (await C('button.pk:not(.open)').count()) { await C('button.pk:not(.open)').first().click(); continue; }
       const done = C('button:has-text("Done")'); if (await done.count()) { await done.first().click(); return; }
       return;
@@ -81,9 +82,9 @@ const SH = process.env.SHOTS || '/tmp/shots';
   await home();
   // Collection / book / detail / level up / deck
   await C('button.tile:has-text("Cards")').click(); await page.screenshot({ path: SH + '/v3-collection.png' });
-  await C('.grid .cf').first().click(); await page.screenshot({ path: SH + '/v3-detail.png' });
+  await C('.cf').first().click(); await page.screenshot({ path: SH + '/v3-detail.png' });
   const lvBefore = await page.evaluate(() => V3.S.cards.map(c => c.lvl).reduce((a, b) => a + b, 0));
-  await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 2; UI.detail(c.u); }); await C(`button:has-text("Level up (uses 1 duplicate)")`).click(); assert((await page.textContent("body")).includes("Level 2"), "level up works");
+  await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 2; UI.detail(c.u); }); await C(`.btnrow button:has-text("Level up")`).click(); assert((await page.textContent("body")).includes("Level 2"), "level up works");
   await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 80; UI.levelUp(c.u, 1); }); assert(await page.evaluate(() => V3.S.cards[0].lvl) > 80, 'levels have no cap'); await page.screenshot({ path: SH + '/v3-bigdetail.png' });
   await home(); await C('button.tile:has-text("Book")').click(); assert((await page.textContent('body')).includes('of 239'), 'book');
   await home(); await C('button.tile:has-text("Deck")').click(); await C('button:has-text("Auto-build")').click(); await page.screenshot({ path: SH + '/v3-deck.png' });
@@ -104,7 +105,7 @@ const SH = process.env.SHOTS || '/tmp/shots';
   await modeTest('pcc', async () => { await C('.grid2 .cf').first().click(); await C('.opp').first().click(); await playGame(); await takePicks(); });
   await modeTest('war', async () => { await C('.opp').first().click(); await playGame(); await takePicks(); });
   await modeTest('kotr', async () => { await C('button:has-text("Simulate all")').click(); for (let g = 0; g < 4; g++) { const b = C('button:has-text("Play "), button:has-text("Collect rewards")'); if (await C('button:has-text("Collect rewards")').count()) break; await C('.btn.big').first().click(); } await C('button:has-text("Collect rewards")').click(); await takePicks(); });
-  await modeTest('ec', async () => { for (let i = 0; i < 10; i++) { await C('.grid .cf').first().click(); } await C('button:has-text("Collect rewards")').click(); await takePicks(); });
+  await modeTest('ec', async () => { for (let i = 0; i < 10; i++) { await C('.pgpage .cf').first().click(); } await C('button:has-text("Collect rewards")').click(); await takePicks(); });
   await modeTest('case', async () => { for (let i = 0; i < 8; i++) { if (await C('.banner').count()) break; for (const k of [1, 2, 3, 4]) await C('.keys button:has-text("' + k + '")').first().click(); await C('button:has-text("Guess")').click(); } await page.screenshot({ path: SH + '/v3-case.png' }); });
   // Ring Domination
   await modeTest('rd', async () => {
@@ -125,10 +126,10 @@ const SH = process.env.SHOTS || '/tmp/shots';
     for (let g = 0; g < 120; g++) {
       if (await C('button:has-text("Collect rewards")').count()) break;
       if (await C('button:has-text("Continue")').count()) { await C('button:has-text("Continue")').click(); continue; }
-      if (await C('h3:has-text("Choose your ring-holder")').count()) { await C('.grid .cf').first().click(); continue; }
+      if (await C('h3:has-text("Choose your ring-holder")').count()) { await C('.pgpage .cf').first().click(); continue; }
       if (await C('h3:has-text("Name the match type")').count()) { await C('.tiles4 .stile').first().click(); continue; }
       if (await C('h3:has-text("Sacrifice a card")').count()) { await C('button:has-text("weakest")').click(); continue; }
-      if (await C('h3:has-text("Send a challenger")').count()) { if (g === 3) await page.screenshot({ path: SH + '/v3-rr.png' }); await C('.grid .cf').first().click(); continue; }
+      if (await C('h3:has-text("Send a challenger")').count()) { if (g === 3) await page.screenshot({ path: SH + '/v3-rr.png' }); await C('.pgpage .cf').first().click(); continue; }
       throw new Error('rr stuck');
     }
     await C('button:has-text("Collect rewards")').click(); await takePicks();

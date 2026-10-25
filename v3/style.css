@@ -493,3 +493,95 @@ svg.sti{display:block;flex:none;width:1em;height:1em}
 .hnav .tile{flex-direction:row;justify-content:center;gap:8px;padding:9px 4px!important;background:#ffffff0f!important;box-shadow:none!important;border-radius:10px!important}
 .hnav .tile .ic{width:24px;height:24px}.hnav .tile b{font-size:19px}
 .hscr{min-height:calc(100dvh - 46px)}.pager .mode.szS b{font-size:17px}
+
+/* ---- v3.13: every screen fits one phone screen. Compact headings, swipe-paged lists, tabs, overlays ---- */
+.dev{position:fixed;right:4px;bottom:4px;z-index:90;opacity:.55;font-size:10px;display:flex;gap:2px}.dev button{font-size:10px;padding:2px 4px}
+#app{padding:10px 14px calc(14px + var(--safe-b,0px))}
+.topbar{margin-bottom:2px}.topbar button{padding:2px 0}
+h2.big-title{font-size:30px!important;margin:0 0 4px!important;padding-right:12px;line-height:1.05}
+h2.big-title::after{height:3px!important;bottom:-2px!important}
+.sub{margin:0 0 8px!important;font-size:13.5px;line-height:1.25}
+.mini-title{margin:0 0 6px;font-family:var(--disp2);font-weight:400;font-style:italic;font-size:26px;letter-spacing:.05em;line-height:1.05;color:#fff;text-shadow:0 2px 0 #a3182a}.mini-title small{display:block;font-size:13px;font-style:normal;letter-spacing:.04em;color:#aab0c8;text-shadow:none;font-family:var(--ui)}
+.seg{margin:4px 0 6px}.seg button{padding:6px 4px}
+.seg.small{margin:0 0 6px}
+.bar{margin:2px 0 8px}
+/* swipe-paged lists */
+.pgwrap{display:flex;flex-direction:column;gap:6px}
+.pgr{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.pgr::-webkit-scrollbar{display:none}
+.pgpage{flex:0 0 100%;scroll-snap-align:start;display:grid;gap:8px;align-content:start;min-width:0}
+.pgpage .cf{width:100%;height:100%;aspect-ratio:auto;max-width:none}
+.pgpage .sf{height:100%;min-width:0}
+.pgpage .bk{width:100%;height:100%;aspect-ratio:auto;border-width:1px;border-radius:5px;position:relative}.pgpage .bk span{font-size:6.5px;line-height:1;padding:8px 1px 1px}
+.pgnav{display:flex;align-items:center;justify-content:center;gap:14px}.pgnav button{width:38px;height:30px;border:0;border-radius:10px;background:#ffffff14;color:var(--gold2);font-size:22px;line-height:1;box-shadow:inset 0 0 0 1px #ffffff22}.pgnav .pgl{font-family:var(--disp2);letter-spacing:.1em;font-size:14px;color:#aab0c8;min-width:120px;text-align:center}
+/* card detail: card + stats side by side, the rest in tabs */
+.dtl{display:grid;grid-template-columns:42% 1fr;gap:10px;align-items:center;margin:2px 0 6px}
+.dcard .cf.big{max-width:none;margin:0;width:100%}
+.dstats h3{margin:0 0 4px;font-family:var(--disp2);font-style:italic;font-weight:400;font-size:19px;letter-spacing:.05em}
+.dstats .srow{display:grid;grid-template-columns:22px 1fr;grid-template-areas:"i n" "i b";column-gap:6px;align-items:center;margin:0 0 5px;line-height:1.05}
+.dstats .srow .sti{grid-area:i;width:22px;height:22px}.dstats .srow .sn{grid-area:n;font-size:11.5px;color:#aab0c8;display:flex;justify-content:space-between}
+.dstats .srow .bar{grid-area:b;height:7px;margin:0;display:block}.dstats .srow .sn b{color:#fff;font-size:13px}
+.dtabs{margin:2px 0 6px}
+.dpanel{padding:10px 12px;min-height:150px;margin:0}.dpanel p{margin:0 0 6px;font-size:14px;line-height:1.3}
+.btnrow{display:flex;gap:8px}.btnrow .btn{margin-top:4px;flex:1;font-size:20px;padding:10px}
+.tagrow{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:center}.tagrow .arrows{margin:0}
+/* deck screen */
+.slots{gap:8px}.slots .cf{width:100%}.slots.two{max-width:none}.slots.two .sf{min-height:0;padding:6px 8px}
+.sect{margin:6px 0 4px!important;font-size:17px!important}
+/* reward picks: reveal as a full-screen overlay so nothing scrolls */
+.pickgrid{margin:6px 0;gap:8px}.pickgrid .pk{width:100%}
+.pickov{position:fixed;inset:0;z-index:80;background:radial-gradient(circle at 50% 35%,#2b1d0acc,#05060bf5 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px}
+.pickov .gotbox{margin:0;max-width:none;width:min(60vw,calc((100dvh - 190px) / 1.43))}.pickov .gotbox::before{width:300px;height:300px;margin:-150px 0 0 -150px}
+.pickov .btn{width:min(100%,380px)}
+.recap{gap:8px;margin:6px 0}
+.dcard .cf.big .sb svg{display:none}.dcard .cf.big .sb span{font-size:12px}
+.slots.two .sf{height:64px;aspect-ratio:auto;flex-direction:row;align-items:center}.slots.two .sf .sico{width:34px;height:34px}
+.hscr{height:calc(100dvh - 24px);min-height:0}
+.railwrap{min-height:0}.page{min-height:150px}
+@media (max-height:760px){.hscr .logo{display:none}.hscr .tip{padding:6px 10px;font-size:12.5px;margin-bottom:6px}.hscr .deckcap{margin-top:6px}}
+
+/* v3.14 fit: reveal + topbar screens */
+.mscreen:not(.mpk){height:calc(100dvh - 24px);min-height:0;overflow:hidden}
+.mscreen:not(.mpk) .rarena{min-height:0}
+.mscreen:not(.mpk) .rcards .cf{width:min(37vw,160px,calc((100dvh - 360px) / 2.95))}
+.mscreen:not(.mpk) .rcards.n2 .cf{width:min(24vw,104px,calc((100dvh - 360px) / 2.95))}
+.mscreen:not(.mpk) .rrow{padding:4px 8px}
+.mscreen:not(.mpk) .rtotal{font-size:38px}
+.mscreen:not(.mpk) .rchips{flex-direction:row;flex-wrap:wrap}
+@media (max-height:760px){.mscreen:not(.mpk) .vsline b{font-size:20px}.mscreen:not(.mpk) .verdict{font-size:20px;padding:2px}}
+
+/* v3.15 fit: mode HUD, duel results, ring-holder */
+.duel2{margin:4px 0;padding:6px}.dline .cf,.duel2 .cf{width:min(27vw,96px)}
+.ringhold{margin:2px 0;gap:10px}.ringhold .cf{width:76px}
+.banner{font-size:22px;padding:4px;margin-bottom:6px}
+.pills{margin:6px 0 4px}
+.foe3{margin-bottom:4px}
+.sect{margin:6px 0 4px}
+.tiles4 .stile{padding:6px 10px}
+
+/* v3.16 fit: Ring Domination board */
+body:has(.board) .board{margin:4px auto;gap:5px;width:min(100%,340px,calc((100dvh - 360px) * .714 + 10px))}
+body:has(.board) .hand{padding:2px 2px 4px}body:has(.board) .hand .cf{width:64px}
+body:has(.board) .arrowhint{display:none}
+body:has(.board) .edge{margin:2px 0;font-size:12px;line-height:1.25;max-height:2.5em;overflow:hidden}
+body:has(.board) .duel2{position:fixed;left:12px;right:12px;top:96px;z-index:40;margin:0;box-shadow:0 10px 40px #000e;background:#10101a}
+body:has(.board) .sect{margin:2px 0}
+body:has(.board) .btn.big{margin-top:4px}
+
+/* v3.17 fit: bout results float over the screen then fade (Elimination Chamber etc.) */
+.duel2:not(.keep){position:fixed;left:12px;right:12px;top:90px;z-index:40;margin:0;background:#10101a;box-shadow:0 10px 40px #000e;animation:duelOut .4s 2.4s forwards}
+@keyframes duelOut{to{opacity:0;visibility:hidden;pointer-events:none}}
+
+/* v3.18 fit: short phones — ladders, opponents, campaign, case, pcc */
+@media (max-height:760px){
+.opp{padding:6px 10px!important;margin:4px 0!important}
+.plist{margin:4px 0;gap:3px}.pl{padding:3px 10px}
+.stages{gap:5px}.stg{padding:4px 2px}.stg b{font-size:18px}
+.gotbox .cf{width:92px}.gotbox{margin:0}
+.guesses{gap:3px}.gr span{height:34px}.keys button{padding:7px 0}
+.ladder{margin:4px 0;gap:3px}.rung{padding:6px 12px}
+.sub{margin:2px 0}.big-title{margin:2px 0}
+.btn.big{padding:10px}
+}
+.log2{padding:4px 10px;margin:4px 0}.log2 p{margin:1px 0;font-size:12px}
+@media (max-height:760px){.tiles4{gap:5px}.tiles4 .stile{padding:4px 8px}.ringhold small{font-size:11px}.foe3 small{font-size:11px}}

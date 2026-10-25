@@ -26,3 +26,6 @@ Wrestler cards have no rarity tiers. Every card starts at **level 1** with base 
 Matches: tap the card(s) a match needs and it plays straight away (choose a support card first if you want one). The result screen shows the score, each match with both sides' cards and totals, and your card-pick reward.
 
 Home: one screen with no page scroll. Play Now sits above a swipeable rail of game-mode tiles (4 pages, tiles in different sizes, page bars top right) and a Deck / Cards / Book menu pinned at the bottom. The rail remembers which page you were on.
+
+## One screen, no scrolling (v3.14+)
+Every screen fits a single iPhone screen (tested at 390×664, 390×700). Where there is too much to show, it is split behind nested controls instead of scrolling down: card lists are swipeable pages (‹ Page 1 / 4 ›), the card detail page uses tabs (Level up / Signature / Tag & ring), match results and bout results float over the screen, and the pick phase uses an overlay. Run `VH=664 FIT=1 node tests/v3-browser.cjs` to audit every screen.
