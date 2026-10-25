@@ -241,12 +241,10 @@
       + '<button class="hsnd hq" onclick="UI.help()" aria-label="How to play">?</button>'
       + '<button class="hsnd' + (S.mute ? ' off' : '') + '" onclick="UI.mute()" aria-label="Sound">' + spk + '</button></div>'
       + LOGO
-      + '<div class="deckcap"><b>' + esc(S.name) + '\'s deck</b><button onclick="UI.deckScreen()">Edit ›</button></div>'
-      + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
-      + (S.stats.wins + S.stats.losses === 0 ? '<div class="tip"><b>New here?</b> These 6 are your starting team. Hit <em>Play Now</em> for a quick best-of-3, or tap <em>?</em> for a quick guide.</div>' : '')
+      + (S.stats.wins + S.stats.losses === 0 ? '<div class="tip"><b>New here?</b> Hit <em>Play Now</em> for a quick best-of-3, check your starting team in <em>My Deck</em>, or tap <em>?</em> for a quick guide.</div>' : '')
       + '<div class="railwrap"><div class="railhead"><b>Game modes</b><span class="pdots">' + PAGES.map((p, k) => '<i class="' + (k === HP ? 'on' : '') + '"></i>').join('') + '</span></div>'
       + '<div class="pager">' + PAGES.map((pg, pi) => '<div class="page' + (pi === 0 ? ' p1' : '') + '">' + (pi === 0 ? '<button class="btn big go goTile" style="--art:url(' + tileArt('wild') + ')" onclick="UI.mode(\'wild\')"><span>Play Now</span></button>' : '') + pg.map(([k, c, r]) => modeBtn(k, c, r, hi++)).join('') + '</div>').join('') + '</div></div>'
-      + '<div class="hnav"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
+      + '<div class="hnav"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>My Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
       + devBar() + '</div>');
     const pg = document.querySelector('.pager');
     if (pg) {
@@ -258,13 +256,19 @@
   }
   /* ---------- wrestler art on the mode buttons: random each visit, one card per button ---------- */
   const TA = {};
-  function tileArt(k) {
+  function tileArt(k, w) {
     if (!TA[k]) {
-      const women = k === 'rrw' || k === 'ec', used = Object.values(TA);
+      const women = w || k === 'rrw' || k === 'ec', used = Object.values(TA);
       const pool = C.filter(c => !c.mv && (!women || c.g === 'F') && !used.includes('../assets/superstars-t/' + c.a + '.webp'));
       TA[k] = '../assets/superstars-t/' + pick(pool.length ? pool : C).a + '.webp';
     }
     return TA[k];
+  }
+
+  // Mode screen header: title over a faded wrestler picture (random per mode, same as the hub tile).
+  function hero(t, sub, key) {
+    const w = /women|chamber|divas/i.test(t + ' ' + (key || ''));
+    return '<div class="mhero" style="--art:url(' + tileArt(key || 'h:' + t, w) + ')"><h2 class="big-title">' + t + '</h2>' + (sub ? '<p class="sub">' + sub + '</p>' : '') + '</div>';
   }
 
   /* ---------- first run: name, how to play, your starting deck ---------- */
@@ -597,7 +601,7 @@
   function wild() {
     const opps = E.opponents(power(), rnd, 3); WILD = opps;
     const star = o => { const all = o.deck.m.concat(o.deck.f).sort((a, b) => E.total(b) - E.total(a)); return all[0] ? thumbURL(C[all[0].c]) : ''; };
-    screen('<div class="fillscr wildscr"><div class="fh">' + back('UI.home()', 'Home') + '<h2 class="big-title">Play Now</h2><p class="sub">Harder opponents pay more picks. A loss always gives 1.</p></div><div class="fillmid oppcol">'
+    screen('<div class="fillscr wildscr"><div class="fh">' + back('UI.home()', 'Home') + hero('Play Now', 'Harder opponents pay more picks. A loss always gives 1.', 'wild') + '</div><div class="fillmid oppcol">'
       + opps.map((o, i) => '<button class="opp bigopp ' + o.label.toLowerCase() + '" style="--art:url(' + (star(o) || '') + ')" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '<small>Win ' + (2 + i) + ' · Perfect ' + (3 + i) + '</small></span></span></button>').join('')
       + '</div><div class="fillbot"><p class="edge" style="text-align:center;margin:0">Your deck rank <b>' + rankNo() + '</b></p></div></div>');
   }
@@ -608,7 +612,7 @@
   }
 
   /* ---------- exports ---------- */
-  const V3 = { paged: pagedCards, E, C, RAR, SUP, ST, I, get S() { return S; }, persist, give, giveSup, byU, getDeck, power, rankNo, face, supFace, art, screen, back, home, awardPicks, startGame, statImg, fmt, pick, rnd, clamp, uid, modes: {}, specOf, autoDeck };
+  const V3 = { hero, tileArt, paged: pagedCards, E, C, RAR, SUP, ST, I, get S() { return S; }, persist, give, giveSup, byU, getDeck, power, rankNo, face, supFace, art, screen, back, home, awardPicks, startGame, statImg, fmt, pick, rnd, clamp, uid, modes: {}, specOf, autoDeck };
   window.V3 = V3;
   window.UI = {
     supDetail, supLevel,

@@ -15,7 +15,7 @@
   const picksFor = g => E.picksFor(g);
   const regs = {};
   function reg(name, fn) { regs[name] = fn; window.UI[name] = fn; }
-  const title = (t, sub) => '<h2 class="big-title">' + t + '</h2>' + (sub ? '<p class="sub">' + sub + '</p>' : '');
+  const title = (t, sub) => V.hero(t, sub);
   const stat = i => V.statImg(i);
 
   /* ================= Campaign: 84 stages, 12 bosses, 3 stars each. Every stage is open. ================= */
@@ -82,7 +82,7 @@
   }
   function rdRender(duel) {
     const st = RD.st, a = st.board.filter(c => c.owner === 'a').length, b = st.board.filter(c => c.owner === 'b').length;
-    screen(dBack() + '<div class="hud"><span class="rnd">RING DOMINATION</span><span class="who">YOU ' + a + ' – ' + b + ' ' + RD.oppName + '</span></div>'
+    screen(dBack() + '<div class="hud arthud" style="--art:url(' + V.tileArt('rd') + ')"><span class="rnd">RING DOMINATION</span><span class="who">YOU ' + a + ' – ' + b + ' ' + RD.oppName + '</span></div>'
       + '<div class="board">' + Array.from({ length: 9 }, (_, i) => rdCell(i)).join('') + '</div>'
       + (duel ? duelHTML(duel) : '<p class="edge" style="text-align:center">' + RD.msg + '</p>')
       + (st.over ? '<button class="btn big" onclick="UI.rdEnd()">' + (st.winner === 'a' ? 'You win — collect rewards' : st.winner === 'b' ? 'You lose — collect rewards' : 'Draw — collect rewards') + '</button>'
@@ -145,7 +145,7 @@
   }
   function rrBar() {
     const st = RR.st;
-    return '<div class="hud"><span class="rnd">' + (RR.g === 'F' ? "WOMEN'S RUMBLE" : 'ROYAL RUMBLE') + '</span><span class="who">Round ' + (st.round + 1) + '</span></div>'
+    return '<div class="hud arthud" style="--art:url(' + V.tileArt(RR.g === 'F' ? 'rrw' : 'rr') + ')"><span class="rnd">' + (RR.g === 'F' ? "WOMEN'S RUMBLE" : 'ROYAL RUMBLE') + '</span><span class="who">Round ' + (st.round + 1) + '</span></div>'
       + '<div class="foe foe3"><div><b>YOU</b><small>' + st.a.reserve.length + ' in reserve · ' + st.a.out.length + ' out</small></div><div class="score">' + st.pts.a + ' – ' + st.pts.b + '</div><div><b>' + RR.oppName + '</b><small>' + st.b.reserve.length + ' in reserve · ' + st.b.out.length + ' out</small></div></div>';
   }
   function rrRender(res) {
@@ -273,7 +273,7 @@
     if (e.i >= 10) { const w = e.pts[0] > e.pts[1] ? 'a' : e.pts[1] > e.pts[0] ? 'b' : null;
       return screen(dBack() + title('Elimination Chamber', e.pts[0] + ' – ' + e.pts[1]) + '<div class="banner ' + (w === 'a' ? 'w' : w ? 'l' : 't') + '">' + (w === 'a' ? 'YOU SURVIVE THE CHAMBER' : w ? 'ELIMINATED' : 'DRAW') + '</div>' + (res ? ecRes(res) : '') + '<button class="btn big" onclick="UI.ecEnd()">Collect rewards</button>'); }
     const stI = e.order[e.i], avail = e.mine.filter(c => !e.usedA.includes(c));
-    screen(dBack() + '<div class="hud"><span class="rnd">BOUT ' + (e.i + 1) + ' / 10</span><span class="who">YOU ' + e.pts[0] + ' – ' + e.pts[1] + ' ' + e.oppName + '</span></div>'
+     screen(dBack() + '<div class="hud arthud" style="--art:url(' + V.tileArt('ec') + ')"><span class="rnd">BOUT ' + (e.i + 1) + ' / 10</span><span class="who">YOU ' + e.pts[0] + ' – ' + e.pts[1] + ' ' + e.oppName + '</span></div>'
       + (res ? ecRes(res) : '')
       + '<div class="matchbanner"><span class="ic">' + I.divas + '</span><div><b>' + ST[stI].name + ' bout</b><small>Highest ' + ST[stI].name + ' wins</small></div></div>'
       + '<div class="specs4">' + e.order.map((s, k) => '<span class="' + (k < e.i ? 'done' : k === e.i ? 'cur' : '') + '">' + stat(s) + '</span>').join('') + '</div>'
