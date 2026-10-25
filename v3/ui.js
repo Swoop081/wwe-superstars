@@ -86,6 +86,19 @@
   /* ---------- card faces ---------- */
   const RSHORT = ['C', 'U', 'R', 'SR', 'UR', 'E', 'L', 'SV', 'WM'];
   const SYMCH = { BL: '◀', BR: '▶', YU: '▲', YD: '▼' };
+  // Each wrestler has their own Google Font (data/fonts.js). We load only the capital letters of that font, on first use.
+  const FONT_TXT = encodeURIComponent("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .'()-&\u00c1\u00c9\u00cd\u00d3\u00da");
+  const fontSeen = new Set();
+  function ensureFont(f, w) {
+    const k = f + w; if (fontSeen.has(k)) return; fontSeen.add(k);
+    try { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=' + f.replace(/ /g, '+') + (w ? ':wght@' + w : '') + '&text=' + FONT_TXT + '&display=swap'; document.head.appendChild(l); } catch (e) {}
+  }
+  function nameEl(c) {
+    const F = (globalThis.CFONTS || {})[c.n];
+    if (!F) return '<div class="nm">' + c.n + '</div>';
+    ensureFont(F[0], F[1]);
+    return '<div class="nm' + (F[3] === 1 ? ' one' : '') + '" style="font-family:\'' + F[0] + '\',Impact,sans-serif;font-weight:' + (F[1] || 400) + ';font-size:' + F[2] + 'cqw">' + c.n + '</div>';
+  }
   // Card = the artwork; a slim stat band sits on the bottom edge. o: {cls, click, hl:[stat idx], val, mini}
   function face(inst, o) {
     o = o || {};
@@ -96,7 +109,7 @@
       + '<div class="lv">' + (inst.pro ? 'P' : 'L') + inst.lvl + '</div>'
       + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
       + (o.val != null ? '<div class="val">' + fmt(o.val) + '</div>' : '')
-      + '<div class="nm">' + c.n + '</div>'
+      + nameEl(c)
       + '<div class="sb">' + st.map((v, i) => '<span class="' + (o.hl && o.hl.includes(i) ? 'hl' : '') + '">' + statImg(i) + '<em>' + 'PTSC'[i] + '</em><b>' + v + '</b></span>').join('') + '</div></div>';
   }
   function supFace(s, o) {
@@ -301,7 +314,7 @@
     }).join('');
     const foeCards = cfg.deckB.m.concat(cfg.deckB.f);
     const slot = sel.length ? sel.map(c => face(c, { cls: 'slotbig' + (sel.length > 1 ? ' two' : ''), hl, val: vsum(c, spec), click: 'UI.selTog(' + hand.indexOf(c) + ')' })).join('') : '<div class="slotempty"><span class="ic">' + I[spec.type] + '</span><b>' + (spec.extra ? 'TIE-BREAK' : E.TYPE_NAME[spec.type].toUpperCase()) + '</b><small>Tap ' + need + ' card' + (need > 1 ? 's' : '') + ' below</small></div>';
-    screen(arenaBG + '<div class="mscreen">'
+    screen(arenaBG + '<div class="mscreen mpk">'
       + '<div class="topline">' + plate(cfg.oppName, cfg.oppRec || cfg.title, g.b.pts, false) + '</div>' + backs(foeCards, g.b.used)
       + '<div class="mnum"><span>' + (g.extra ? 'EXTRA' : 'MATCH ' + (g.results.length + 1)) + '</span><div class="mdots">' + (g.extra ? '' : g.specs.map((sp, i) => { const r = g.results[i]; return '<i class="' + (r ? (r.winner === 'a' ? 'won' : r.winner === 'b' ? 'lost' : 'tied') : i === g.results.length ? 'cur' : '') + '"></i>'; }).join('')) + '</div></div>'
       + statTags(hl)

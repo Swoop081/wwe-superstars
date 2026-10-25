@@ -244,3 +244,43 @@ h2.big-title{font-size:38px;letter-spacing:.06em;text-shadow:0 2px 0 #7a5a00,0 0
 .slotarea{min-height:min(52vw,250px)}.cf.slotbig{width:min(44vw,200px)}.cf.slotbig.two{width:min(34vw,150px)}.slotempty{width:min(44vw,200px)}
 .mscreen .btn.play.sticky{animation:none;position:sticky;bottom:8px}
 .tray .cf{width:min(30vw,132px)}
+
+/* ---- v3.2: borderless cards, rarity-coloured stat band, big per-wrestler names, one-screen match ---- */
+.cf{border:0;background:#101018}
+.cf .sb{height:max(20px,13cqw);border-top:0;background:linear-gradient(color-mix(in srgb,var(--rc) 100%,#fff 18%),color-mix(in srgb,var(--rc) 78%,#000))}
+.cf .sb span{color:#0b0b12;font-weight:800;font-size:max(9px,7.6cqw)}
+.cf .sb span.hl{background:#0b0b12d9;color:#fff;box-shadow:0 0 0 1px #fff3 inset}
+.cf .sb em{color:#0b0b1299}
+.cf .sb span.hl em{color:#ffffffaa}
+.cf .nm{bottom:max(20px,13cqw);padding:26px 3% 5px;background:linear-gradient(transparent,rgba(6,6,10,.55) 35%,rgba(6,6,10,.92));letter-spacing:.03em;line-height:.95;text-shadow:0 2px 0 #000,0 0 10px #000,0 0 3px #000;color:#fff;font-size:12cqw}
+.cf .nm.one{white-space:nowrap}
+.cf.big .sb{height:34px}.cf.big .nm{bottom:34px}
+.cf.sel,.cf.tr.sel{outline:0}
+.cf.tr.sel,.cf.sel{box-shadow:0 0 0 3px var(--gold),0 0 22px #f5c542aa,0 8px 14px #000a}
+.cf.slotbig{box-shadow:0 0 28px #f5c54277,0 12px 22px #000c}
+
+.mscreen.mpk{width:100%;height:calc(100dvh - 24px);min-height:0;overflow:hidden;gap:5px}
+.mpk>*{flex:none}
+.mpk .plate .av{width:38px;height:38px;font-size:18px}
+.mpk .plate .pn b{font-size:21px}.pk .plate .ptsb{font-size:24px;padding:1px 9px}
+.mpk .backs{height:32px;margin-top:-4px}.pk .back{width:24px;height:34px}.pk .back b{font-size:10px}
+.mpk .mnum span{font-size:27px}.pk .mdots i{width:10px;height:10px}
+.mpk .stags span{font-size:15px;padding:0 9px 0 5px}.pk .stags span img{width:17px;height:17px}
+.mpk .slotarea{flex:1 1 0;min-height:0;container-type:size}
+.mpk .cf.slotbig{width:auto;height:min(100cqh,calc(66cqw*1.4333))}
+.mpk .cf.slotbig.two{width:auto;height:min(100cqh,calc(45cqw*1.4333))}
+.mpk .slotempty{width:auto;height:min(100cqh,calc(66cqw*1.4333))}
+.mpk .slotempty b{font-size:24px}.pk .slotempty .ic{width:38px;height:38px}
+.mpk .supb{width:46px;height:46px;border-width:2px}.pk .supb .si{width:19px;height:19px}.pk .supb small{font-size:12px}
+.mpk .meline{gap:6px}
+.mpk .tray{height:clamp(104px,18dvh,150px);padding:11px 4px 0;gap:8px;align-items:stretch}
+.mpk .tray .cf{width:auto;height:100%;aspect-ratio:3/4.3}
+.mpk .tray .cf.sel{transform:translateY(-8px)}
+.mpk .btn.play{margin-top:0;height:52px;padding:0;font-size:28px;position:static}
+.mpk .tagnote{position:absolute;left:0;right:0;top:48%;pointer-events:none}
+
+.mpk .supb{gap:0;padding:0}.mpk .supb .si{width:20px;height:20px;flex:none}.mpk .supb .si svg{width:100%;height:100%}.mpk .supb small{margin-top:1px}
+.mpk .backs{height:30px;margin:0 0 10px}.mpk .back{width:22px;height:30px}.mpk .mnum{position:relative;z-index:1}
+.mpk .cf.slotbig{height:min(100cqh,calc(72cqw*1.4333))}.mpk .slotempty{height:min(100cqh,calc(72cqw*1.4333))}
+.mpk .tray{height:clamp(104px,20dvh,170px)}
+.cf .nm{-webkit-text-stroke:max(2px,.1em) #000;paint-order:stroke fill}
