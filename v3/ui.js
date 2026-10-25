@@ -169,8 +169,9 @@
   function face(inst, o) {
     o = o || {};
     const c = C[inst.c], st = E.stats(inst), dup = inst.d || 0;
-    return '<div class="cf ' + (o.cls || '') + (c.mv ? ' mv' : '') + '" style="--rc:#2b3050"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
+    return '<div class="cf ' + (o.cls || '') + (c.mv ? ' mv' : '') + (o.upg && dup ? ' upg' : '') + '" style="--rc:#2b3050"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
       + '<div class="art">' + art(c) + '</div>'
+      + (o.upg && dup ? '<div class="upgb">▲ LEVEL UP' + (dup > 1 ? ' ×' + dup : '') + '</div>' : '')
       + (dup ? '<div class="gem dup"><span class="f">+' + dup + ' DUP</span><span class="s">+' + dup + '</span></div>' : '')
       + '<div class="lv' + (inst.lvl > 999 ? ' d4' : inst.lvl > 99 ? ' d3' : '') + '">' + inst.lvl + '</div>'
       + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
@@ -331,7 +332,7 @@
   }
 
   /* ---------- collection / book / detail ---------- */
-  let COL = { tab: 'all', sort: 'power' };
+  let COL = { tab: 'all', sort: 'upg' };
   function collection(tab) {
     if (tab) COL.tab = tab;
     const tabs = [['all', 'All'], ['m', 'Men'], ['f', 'Women'], ['s', 'Support']];
@@ -339,12 +340,13 @@
     if (COL.tab === 's') list = S.sups.slice().sort((a, b) => SUP[b.s].pct - SUP[a.s].pct);
     else {
       list = S.cards.filter(c => COL.tab === 'all' || (COL.tab === 'f') === E.isF(c));
-      list.sort(COL.sort === 'power' ? (a, b) => E.total(b) - E.total(a) : COL.sort === 'lvl' ? (a, b) => b.lvl - a.lvl || (b.d || 0) - (a.d || 0) || E.total(b) - E.total(a) : (a, b) => C[a.c].n.localeCompare(C[b.c].n));
+      list.sort(COL.sort === 'upg' ? (a, b) => (b.d || 0) - (a.d || 0) || E.total(b) - E.total(a) : COL.sort === 'power' ? (a, b) => E.total(b) - E.total(a) : COL.sort === 'lvl' ? (a, b) => b.lvl - a.lvl || (b.d || 0) - (a.d || 0) || E.total(b) - E.total(a) : (a, b) => C[a.c].n.localeCompare(C[b.c].n));
     }
+    const nUp = S.cards.filter(c => c.d > 0).length;
     const inDeck = u => S.deck.m.includes(u) || S.deck.f.includes(u) || S.deck.s.includes(u);
-    const items = COL.tab === 's' ? list.map(s => supFace(s, { cls: 'pgs' + (inDeck(s.u) ? ' indeck' : '') })) : list.map(c => face(c, { cls: 'mini' + (inDeck(c.u) ? ' indeck' : ''), click: 'UI.detail(' + c.u + ')' }));
+    const items = COL.tab === 's' ? list.map(s => supFace(s, { cls: 'pgs' + (inDeck(s.u) ? ' indeck' : '') })) : list.map(c => face(c, { cls: 'mini' + (inDeck(c.u) ? ' indeck' : ''), upg: 1, click: 'UI.detail(' + c.u + ')' }));
     screen(back('UI.home()', 'Home') + '<div class="seg">' + tabs.map(t => '<button class="' + (COL.tab === t[0] ? 'on' : '') + '" onclick="UI.collection(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
-      + (COL.tab === 's' ? '' : '<div class="seg small">' + [['power', 'Overall'], ['lvl', 'Level'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
+      + (COL.tab === 's' ? '' : '<div class="seg small">' + [['upg', 'Upgrade' + (nUp ? ' (' + nUp + ')' : '')], ['power', 'Overall'], ['lvl', 'Level'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + (t[0] === 'upg' && nUp ? ' hot' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
       + pagedCards('col' + COL.tab + COL.sort, items, COL.tab === 's' ? { cols: [3, 4], reserve: 170 } : { cols: [3, 4], reserve: 170 }));
   }
   window.COL_SORT = k => { COL.sort = k; collection(); };

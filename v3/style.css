@@ -671,3 +671,9 @@ body:has(.plist) .btn.big{margin-top:clamp(4px,1.5dvh,14px)}
 .mpk .tray .cf{width:min(calc((100% - 16px) / 3),14dvh)}
 .pgpage .sf{width:100%;aspect-ratio:auto}
 @media (max-height:720px){.mpk .backs{display:none}.mpk .suprow{height:clamp(92px,14dvh,110px)}.mpk .tray .cf{width:min(calc((100% - 16px) / 3),13.2dvh)}}
+/* cards you can level up right now */
+.cf.upg{box-shadow:0 0 0 2px #36e27a,0 0 16px #36e27a99,0 6px 12px #000a!important;animation:upgPulse 1.8s ease-in-out infinite}
+@keyframes upgPulse{50%{box-shadow:0 0 0 2px #7dffae,0 0 22px #36e27add,0 6px 12px #000a}}
+.cf .upgb{position:absolute;left:0;right:0;top:0;z-index:5;text-align:center;font-family:var(--disp2,var(--disp));font-style:italic;letter-spacing:.04em;font-size:min(9cqw,13px);line-height:1;padding:1.6cqw 0;background:linear-gradient(90deg,#1fb85a,#5dffa0,#1fb85a);color:#04210f;border-radius:inherit;border-bottom-left-radius:0;border-bottom-right-radius:0;box-shadow:0 2px 6px #0008}
+.cf.upg .gem.dup{display:none}.cf.upg .lv{top:11cqw}
+.seg.small button.hot{color:#7dffae;box-shadow:inset 0 0 0 2px #36e27a88}
