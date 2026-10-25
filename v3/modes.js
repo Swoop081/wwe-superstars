@@ -286,7 +286,7 @@
     const e = EC, stI = e.order[e.i], a = e.mine[k];
     const avail = e.theirs.filter(c => !e.usedB.includes(c)).sort((x, y) => E.stats(y)[stI] * (0.9 + rng() * 0.2) - E.stats(x)[stI] * (0.9 + rng() * 0.2));
     const b = avail[rng() < 0.25 && avail.length > 2 ? 1 : 0] || avail[0];
-    const sg = c => E.stats(c)[stI] + (rng() < E.sigChance(c) && E.sigStats(c).includes(stI) ? E.baseStats(c)[stI] * E.T.sigBoost : 0);
+    const sg = c => E.stats(c)[stI] + E.baseStats(c)[stI] * (E.sigMult(E.sigRoll(c, rng), stI) - 1);
     const av = Math.round(sg(a)), bv = Math.round(sg(b)), w = av > bv ? 'a' : bv > av ? 'b' : null;
     e.usedA.push(a); e.usedB.push(b); a.mt = (a.mt || 0) + 1; if (w === 'a') e.pts[0]++; else if (w === 'b') e.pts[1]++; else { e.pts[0] += 0.5; e.pts[1] += 0.5; }
     e.i++; V.persist(); ecRender({ a, b, av, bv, w, stat: stI });

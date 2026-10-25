@@ -35,3 +35,6 @@ Every screen fits a single iPhone screen (tested at 390×664, 390×700). Where t
 
 ## Support card artwork
 Support cards (Steel Chair, Kendo Stick, Ring Bell...) are now real cards. To give one artwork, add `assets/supports/<id>.webp` (portrait, same shape as wrestler art; ids: chair, table, ladder, mic, kendo, bell, manager, mastermind, belt, spotlight, barricade, legacy). Until the file exists the card shows its icon.
+
+## Signature specials
+Cards start with no signature. A card unlocks one special at each of levels 5, 25, 50, 75, 100 and 200 (6 max). The first is the card's own finisher (its two best stats); the others use other stat pairs (fixed per card). Every unlocked special rolls its own 20% chance each match to add 25% of base to its two stats (stacking if several fire). See `sigAll / sigUnlocked / sigRoll` in engine.js and the Signature tab on the card detail screen.

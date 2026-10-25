@@ -22,7 +22,7 @@
     { n: 'Legendary', mult: 6.0, sig: 0.33, col: '#ffd34d' }, { n: 'Survivor', mult: 7.2, sig: 0.36, col: '#ff4d5e' },
     { n: 'WrestleMania', mult: 8.6, sig: 0.4, col: '#7fe7ff' }
   ];
-  const T = { levelAdd: 20, power: 4.2, sigChance: 0.2, matchBoost: 0.10, matchMax: 100, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
+  const T = { levelAdd: 20, power: 4.2, sigChance: 0.2, matchBoost: 0.10, matchMax: 100, sigBoost: 0.25, diamond: 1.10, mismatch: 0.95, tieExtra: true };
   // Support cards: one-use boosts per game. pct is applied to the listed stats for the match they are played in.
   const SUPPORTS = [
     { id: 'chair', name: 'Steel Chair', stats: [0], pct: 0.25, rar: 0 }, { id: 'table', name: 'Table', stats: [2], pct: 0.25, rar: 0 },
@@ -59,6 +59,23 @@
   // Signature move boosts the card's two best stats.
   function sigStats(inst) { const s = CARDS[inst.c].s; return [0, 1, 2, 3, 4].sort((a, b) => s[b] - s[a]).slice(0, 2); }
   const sigChance = () => T.sigChance;
+  // Signature moves: none at level 1. A card unlocks one more special at each of these levels (up to 6). Every special has its own 20% chance
+  // per match to boost two stats by 30% of base. The first is the card's own finisher on its two best stats; the rest use other stat pairs.
+  const SIG_LEVELS = [5, 25, 50, 75, 100, 200];
+  const PAIR_NAME = { '0,1': 'Knockout Slam', '0,2': 'Power Lock', '0,3': 'Top-Rope Slam', '0,4': 'Crowd Crusher', '1,2': 'Pinpoint Strikes', '1,3': 'Lightning Kicks', '1,4': 'Showstopper Combo', '2,3': 'Counter Roll', '2,4': 'Mind Games', '3,4': 'Showtime Flyer' };
+  const nameHash = s => { let h = 2166136261; for (const ch of s) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+  const sigCache = {};
+  function sigAll(ci) { // all 6 specials of a card: {n, stats, at}
+    if (sigCache[ci]) return sigCache[ci];
+    const c = CARDS[ci], top = sigStats({ c: ci }), key = x => x.join(','), pairs = [];
+    for (let a = 0; a < 5; a++) for (let b = a + 1; b < 5; b++) if (key([a, b]) !== key(top.slice().sort())) pairs.push([a, b]);
+    let x = nameHash(c.n); const rest = []; while (pairs.length && rest.length < 5) { x = Math.imul(x ^ (x >>> 13), 1274126177) >>> 0; rest.push(pairs.splice(x % pairs.length, 1)[0]); }
+    return (sigCache[ci] = [{ n: c.f, stats: top.slice().sort() }].concat(rest.map(p => ({ n: PAIR_NAME[key(p)], stats: p }))).map((s, k) => Object.assign(s, { at: SIG_LEVELS[k] })));
+  }
+  const sigUnlocked = inst => sigAll(inst.c).filter(s => (inst.lvl || 1) >= s.at);
+  // Roll every unlocked special for one match; returns the ones that fire.
+  const sigRoll = (inst, rng) => sigUnlocked(inst).filter(() => rng() < sigChance(inst));
+  const sigMult = (procs, i) => 1 + T.sigBoost * procs.filter(s => s.stats.includes(i)).length;
   const supPct = s => s.pct;
   // Levelling: spend one spare duplicate of the same wrestler to gain one level.
   const canLevel = inst => inst.d > 0;
@@ -127,11 +144,11 @@
   function sideTotal(cards, focus, sup, rng) {
     let lp = 0, bp = 0; const parts = [];
     for (const c of cards) {
-      const bs = baseStats(c), lb = lvlBonus(c), ss = sigStats(c);
-      const sig = rng() < sigChance(c);
+      const bs = baseStats(c), lb = lvlBonus(c), procs = sigRoll(c, rng);
       let cl = 0, cb = 0, full = 0;
-      focus.forEach(i => { cl += lb; cb += bs[i] * (sig && ss.includes(i) ? 1 + T.sigBoost : 1); full += bs[i] + lb; });
-      parts.push({ u: c.u, c: c.c, base: Math.round(full), sig: sig && ss.some(i => focus.includes(i)), value: Math.round(cl + cb) });
+      focus.forEach(i => { cl += lb; cb += bs[i] * sigMult(procs, i); full += bs[i] + lb; });
+      const fired = procs.filter(s => s.stats.some(i => focus.includes(i)));
+      parts.push({ u: c.u, c: c.c, base: Math.round(full), sig: fired.length > 0, sigs: fired.map(s => s.n), value: Math.round(cl + cb) });
       lp += cl; bp += cb;
     }
     let tag = 1; if (cards.length === 2) { tag = tagMod(cards[0], cards[1]); bp *= tag; }
@@ -327,8 +344,8 @@
     F.reserve = F.reserve.filter(c => c !== challenger);
     const hv = stats(st.holder)[statIdx] * st.drain, cv = stats(challenger)[statIdx];
     const hb = baseStats(st.holder)[statIdx] * st.drain, cb = baseStats(challenger)[statIdx];
-    const hs = st.rng() < sigChance(st.holder) && sigStats(st.holder).includes(statIdx), cs = st.rng() < sigChance(challenger) && sigStats(challenger).includes(statIdx);
-    const H = hv + (hs ? hb * T.sigBoost : 0), C = cv + (cs ? cb * T.sigBoost : 0);
+    const hp = sigRoll(st.holder, st.rng), cp = sigRoll(challenger, st.rng), hs = hp.some(s => s.stats.includes(statIdx)), cs = cp.some(s => s.stats.includes(statIdx));
+    const H = hv + hb * (sigMult(hp, statIdx) - 1), C = cv + cb * (sigMult(cp, statIdx) - 1);
     const holderWins = H >= C;
     const info = { ring: ringSide, stat: statIdx, holder: st.holder, challenger, hv: Math.round(H), cv: Math.round(C), hs, cs, sacrifice, holderWins };
     st.round++;
@@ -359,7 +376,7 @@
 
   return {
     STATS, RAR, T, SUPPORTS, SUP_IDX, SYM, DIRS, CARDS, IDX, TYPE_NAME,
-    mulberry32, pickR, shuffle, mk, stats, baseStats, total, sigStats, sigChance, isF, canLevel, levelUp,
+    mulberry32, pickR, shuffle, mk, stats, baseStats, total, sigStats, sigChance, sigAll, sigUnlocked, sigRoll, sigMult, SIG_LEVELS, isF, canLevel, levelUp,
     deckCards, deckPower, bestDeck, aiDeck, aiName, makeSpecs, tagMod, sideTotal, newGame, availCards, availM, availF, availS, canField, validPick,
     aiPick, aiSupport, playMatch, playExtra, extraSpec, autoPlayGame, smartPick, perfect, opponents, picksFor, pickTable, powerTier, movieOpen, pullable, MOVIE_END: T_MOVIE_END,
     rdNew, rdMoves, rdPlay, rdAI, rdNeighbours, rrNew, rrStart, rrRound, rrAIStat, rrAIChallenger, rrAISacrifice, cardsNeeded,

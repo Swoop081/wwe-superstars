@@ -70,10 +70,10 @@
       + '<div class="pgnav"><button onclick="UI.pgGo(\'' + key + '\',-1)" aria-label="Previous page">‹</button><span class="pgl"></span><button onclick="UI.pgGo(\'' + key + '\',1)" aria-label="Next page">›</button></div></div>';
   }
   // Re-flow a pager to the space that is really left on screen: picks the column count that wastes least, spreads spare room between rows.
-  function layoutPager(w) {
+  function layoutPager(w, shrink) {
     const key = w.dataset.key, r = w.querySelector('.pgr'), items = [].slice.call(w.querySelectorAll('.pgpage > *'));
     const opts = w.dataset.cols.split(',').map(Number), aspect = +w.dataset.aspect, gap = 8, W = Math.min(560, window.innerWidth) - 28, NAV = 44;
-    const top = w.getBoundingClientRect().top, below = Math.max(0, +w.dataset.res - top - NAV - 14), avail = Math.max(120, window.innerHeight - top - NAV - 14 - below);
+    const top = w.getBoundingClientRect().top, below = Math.max(0, +w.dataset.res - top - NAV - 14), avail = Math.max(120, window.innerHeight - top - NAV - 14 - below - (shrink || 0));
     let best = null;
     opts.forEach(cols => {
       const cw = (W - gap * (cols - 1)) / cols, lo = cw * aspect * 0.92, hi = cw * aspect * 1.1, rows = Math.max(1, Math.floor((avail + gap) / (lo + gap)));
@@ -90,6 +90,9 @@
     }
     w.querySelector('.pgl').textContent = 'Page ' + ((PGN[key] || 0) + 1) + ' / ' + n + ' · ' + w.dataset.total;
     w.querySelector('.pgnav').style.visibility = n > 1 ? 'visible' : 'hidden';
+    // anything still taller than the screen? give the pager that much less room and lay out again
+    const over = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
+    if (over > 2 && !shrink && w.dataset.noshrink !== '1') { const rows = w.querySelectorAll('.pgpage > *').length; if (rows) layoutPager(w, over + 4); }
   }
   function initPagers() {
     document.querySelectorAll('.pgwrap').forEach(w => {
@@ -358,6 +361,12 @@
   }
   let DT = 'lvl';
   function dtab(u, t) { DT = t; detail(u); }
+  function sigPanel(inst) {
+    const all = E.sigAll(inst.c), lv = inst.lvl || 1, un = all.filter(s => lv >= s.at).length, next = all.find(s => lv < s.at);
+    const row = s => { const on = lv >= s.at; return '<div class="sigrow ' + (on ? 'on' : 'lock') + '"><span class="sigic">' + (on ? '★' : '🔒') + '</span><div class="sigtx"><b>' + (on ? s.n : 'Locked special') + '</b><small>' + (on ? s.stats.map(i => ST[i].name).join(' + ') + ' +' + Math.round(E.T.sigBoost * 100) + '%' : 'Unlocks at level ' + s.at) + '</small></div><span class="sigst">' + (on ? s.stats.map(i => statImg(i)).join('') : 'LV ' + s.at) + '</span></div>'; };
+    return '<p class="edge sighead"><b>' + un + ' of 6 specials unlocked.</b> Each has a ' + Math.round(E.T.sigChance * 100) + '% chance per match to boost its 2 stats by ' + Math.round(E.T.sigBoost * 100) + '% of base.' + (next ? ' Next: level ' + next.at + '.' : ' All unlocked!') + ' <span class="mp">Matches played ' + Math.min(100, inst.mt || 0) + '/100 (+' + Math.round(Math.min(100, inst.mt || 0) * 0.1) + '% base)</span></p>'
+      + '<div class="siglist">' + all.map(row).join('') + '</div>';
+  }
   function detail(u) {
     const inst = byU(u); if (!inst) return collection();
     const c = C[inst.c], st = E.stats(inst), ss = E.sigStats(inst), mx = Math.max.apply(null, st);
@@ -368,7 +377,7 @@
       lvl: '<p class="edge">Level <b>' + fmt(inst.lvl) + '</b> · +' + fmt((inst.lvl - 1) * E.T.levelAdd) + ' to every stat. Each level adds +' + E.T.levelAdd + ' to all five stats, with no maximum, so a higher level beats a lower one almost every time.</p>'
         + '<p class="edge dupline">' + (inst.d ? 'You have <b>' + inst.d + '</b> spare duplicate' + (inst.d > 1 ? 's' : '') + ' of ' + c.n + '.' : 'Get a duplicate of ' + c.n + ' from a card pick to level this card up.') + '</p>'
         + '<div class="btnrow"><button class="btn" ' + (inst.d ? '' : 'disabled') + ' onclick="UI.levelUp(' + inst.u + ')">Level up</button>' + (inst.d > 1 ? '<button class="btn alt" onclick="UI.levelUp(' + inst.u + ',1)">Use all ' + inst.d + '</button>' : '') + '</div>',
-      sig: '<p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance() * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '% of base stats.</p><p class="edge">Matches played: ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '% of base stats).</p>',
+      sig: sigPanel(inst),
       tag: '<div class="tagrow"><div class="arrows">' + arrows.join('') + '</div><p class="edge">Tag symbol <b class="sym ' + c.sym + '" style="position:static;background:none">' + SYMCH[c.sym] + '</b>. Opposite arrows of the same colour make a diamond (+10%); mixed colours −5%. Lit squares show where this card can challenge in Ring Domination.</p></div>'
     };
     const tabs = [['lvl', 'Level up'], ['sig', 'Signature'], ['tag', 'Tag &amp; ring']];
@@ -378,7 +387,13 @@
       + '<div class="seg dtabs">' + tabs.map(t => '<button class="' + (DT === t[0] ? 'on' : '') + '" onclick="UI.dtab(' + inst.u + ',\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
       + '<div class="panel dpanel">' + panels[DT] + '</div></div>');
   }
-  function levelUp(u, all) { const t = byU(u); if (!t) return; if (E.levelUp(t, all)) { sfx('win'); persist(); } detail(u); }
+  function levelUp(u, all) {
+    const t = byU(u); if (!t) return; const before = E.sigUnlocked(t).length;
+    if (E.levelUp(t, all)) { sfx('win'); persist(); }
+    detail(u);
+    const now = E.sigUnlocked(t).length;
+    if (now > before) { const nm = E.sigAll(t.c)[now - 1].n; const el = document.createElement('div'); el.className = 'sigtoast'; el.innerHTML = '★ NEW SPECIAL<br><b>' + nm + '</b>'; document.body.appendChild(el); setTimeout(() => el.remove(), 2600); sfx('sig'); }
+  }
 
   /* ---------- deck builder ---------- */
   let DP = null;
@@ -519,7 +534,7 @@
     return '<div class="rrow ' + side + (win ? ' win' : res.winner ? ' lose' : '') + '"><div class="rcards n' + n + '">' + r.cards.map((c, k) => face(c, { cls: 'rc flip' + (r.parts[k].sig ? ' sigflash' : ''), hl: spec.stats, val: r.parts[k].value | 0 })).join('') + '</div>'
       + '<div class="rscore"><div class="who3"><span class="av">' + initials(name) + '</span><b>' + name + '</b>' + (win ? '<em class="stamp">WINNER</em>' : '') + '</div>'
       + '<div class="paper"><span class="rtotal" data-t="' + r.total + '">0</span></div><div class="rchips">'
-      + r.parts.map((p, k) => p.sig ? '<span class="chip gold">SIGNATURE · ' + C[r.cards[k].c].f + '</span>' : '').join('')
+      + r.parts.map(p => (p.sigs || []).map(n => '<span class="chip gold">SPECIAL · ' + n + '</span>').join('')).join('')
       + (r.tag > 1 ? '<span class="chip gold">DIAMOND +10%</span>' : r.tag < 1 ? '<span class="chip red">MISMATCH −5%</span>' : '')
       + (r.sup ? '<span class="chip cyan">' + SUP[r.sup.s].name + (r.boost ? ' +' + Math.round(r.boost * 100) + '%' : ' (no effect)') + '</span>' : '') + '</div></div></div>';
   }
