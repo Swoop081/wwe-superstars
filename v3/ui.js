@@ -65,16 +65,35 @@
   // items: array of single-element html strings. o: {cols, reserve (px used by everything else), aspect (cell height / width)}
   function pagedCards(key, items, o) {
     o = o || {};
-    const cols = o.cols || 3, gap = 8, W = Math.min(560, window.innerWidth) - 28, cw = (W - gap * (cols - 1)) / cols, ch = Math.round(cw * (o.aspect || 1.43));
-    const rows = Math.max(1, Math.floor((window.innerHeight - (o.reserve || 200) + gap) / (ch + gap))), per = cols * rows, n = Math.max(1, Math.ceil(items.length / per));
-    PGN[key] = Math.min(PGN[key] || 0, n - 1);
-    let pages = '';
-    for (let p = 0; p < n; p++) pages += '<div class="pgpage" style="grid-template-columns:repeat(' + cols + ',1fr);grid-template-rows:repeat(' + rows + ',' + ch + 'px)">' + items.slice(p * per, (p + 1) * per).join('') + '</div>';
-    return '<div class="pgwrap" data-key="' + key + '" data-n="' + n + '"><div class="pgr">' + pages + '</div>'
-      + '<div class="pgnav"><button onclick="UI.pgGo(\'' + key + '\',-1)" aria-label="Previous page">‹</button><span class="pgl">Page ' + (PGN[key] + 1) + ' / ' + n + ' · ' + items.length + '</span><button onclick="UI.pgGo(\'' + key + '\',1)" aria-label="Next page">›</button></div></div>';
+    const cols = Array.isArray(o.cols) ? o.cols.join(',') : (o.cols || 3);
+    return '<div class="pgwrap" data-key="' + key + '" data-n="1" data-cols="' + cols + '" data-aspect="' + (o.aspect || 1.43) + '" data-total="' + items.length + '" data-res="' + (o.reserve || 200) + '"><div class="pgr"><div class="pgpage">' + items.join('') + '</div></div>'
+      + '<div class="pgnav"><button onclick="UI.pgGo(\'' + key + '\',-1)" aria-label="Previous page">‹</button><span class="pgl"></span><button onclick="UI.pgGo(\'' + key + '\',1)" aria-label="Next page">›</button></div></div>';
+  }
+  // Re-flow a pager to the space that is really left on screen: picks the column count that wastes least, spreads spare room between rows.
+  function layoutPager(w) {
+    const key = w.dataset.key, r = w.querySelector('.pgr'), items = [].slice.call(w.querySelectorAll('.pgpage > *'));
+    const opts = w.dataset.cols.split(',').map(Number), aspect = +w.dataset.aspect, gap = 8, W = Math.min(560, window.innerWidth) - 28, NAV = 44;
+    const top = w.getBoundingClientRect().top, below = Math.max(0, +w.dataset.res - top - NAV - 14), avail = Math.max(120, window.innerHeight - top - NAV - 14 - below);
+    let best = null;
+    opts.forEach(cols => {
+      const cw = (W - gap * (cols - 1)) / cols, lo = cw * aspect * 0.92, hi = cw * aspect * 1.1, rows = Math.max(1, Math.floor((avail + gap) / (lo + gap)));
+      const ch = Math.round(Math.min(hi, (avail - (rows - 1) * gap) / rows)), waste = avail - (rows * ch + (rows - 1) * gap);
+      if (!best || waste < best.waste - 6) best = { cols, ch, rows, waste, per: cols * rows };
+    });
+    const n = Math.max(1, Math.ceil(items.length / best.per)), rg = best.rows > 1 ? gap + Math.min(14, best.waste / (best.rows - 1)) : gap;
+    PGN[key] = Math.min(PGN[key] || 0, n - 1); w.dataset.n = n;
+    r.innerHTML = '';
+    for (let p = 0; p < n; p++) {
+      const pg = document.createElement('div'); pg.className = 'pgpage';
+      pg.style.cssText = 'grid-template-columns:repeat(' + best.cols + ',1fr);grid-template-rows:repeat(' + best.rows + ',' + best.ch + 'px);row-gap:' + rg.toFixed(1) + 'px';
+      items.slice(p * best.per, (p + 1) * best.per).forEach(x => pg.appendChild(x)); r.appendChild(pg);
+    }
+    w.querySelector('.pgl').textContent = 'Page ' + ((PGN[key] || 0) + 1) + ' / ' + n + ' · ' + w.dataset.total;
+    w.querySelector('.pgnav').style.visibility = n > 1 ? 'visible' : 'hidden';
   }
   function initPagers() {
     document.querySelectorAll('.pgwrap').forEach(w => {
+      layoutPager(w);
       const key = w.dataset.key, r = w.querySelector('.pgr'), l = w.querySelector('.pgl'), n = +w.dataset.n;
       r.scrollLeft = (PGN[key] || 0) * r.clientWidth;
       r.addEventListener('scroll', () => { const i = Math.max(0, Math.min(n - 1, Math.round(r.scrollLeft / Math.max(1, r.clientWidth)))); PGN[key] = i; l.textContent = l.textContent.replace(/Page \d+/, 'Page ' + (i + 1)); }, { passive: true });
@@ -239,12 +258,12 @@
   const ini = n => (String(n || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 2) || 'ME').toUpperCase();
   function welcome(edit) {
     const cur = S && S.name || '';
-    screen((edit ? back('UI.home()', 'Home') : '') + LOGO
+    screen('<div class="fillscr wel"><div class="fh">' + (edit ? back('UI.home()', 'Home') : '') + '</div><div class="fillmid">' + LOGO
       + '<h2 class="big-title">' + (edit ? 'Your name' : 'Welcome') + '</h2>'
       + '<p class="sub">' + (edit ? 'This shows on your profile and in matches.' : 'Collect wrestlers, build a deck and win matches. Free to play: no energy, timers or purchases, ever.') + '</p>'
       + '<div class="panel namep"><label for="pname">What should we call you?</label><div class="nmrow"><span class="av" id="pav">' + ini(cur) + '</span>'
-      + '<input id="pname" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Your name" value="' + esc(cur) + '" oninput="document.getElementById(\'pav\').textContent=UI.ini(this.value)"></div></div>'
-      + '<button class="btn big" onclick="UI.nameGo(' + (edit ? 1 : 0) + ')">' + (edit ? 'Save' : 'Continue') + '</button>' + devBar());
+      + '<input id="pname" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Your name" value="' + esc(cur) + '" oninput="document.getElementById(\'pav\').textContent=UI.ini(this.value)"></div></div></div>'
+      + '<div class="fillbot"><button class="btn big" onclick="UI.nameGo(' + (edit ? 1 : 0) + ')">' + (edit ? 'Save' : 'Continue') + '</button></div></div>' + devBar());
   }
   function nameGo(edit) {
     const el = document.getElementById('pname'), nm = cleanName(el && el.value) || 'Champ';
@@ -260,16 +279,16 @@
     let h;
     if (i === 0) {
       const c = d.m[0] || d.f[0];
-      h = '<h2 class="big-title">Your cards</h2><p class="sub">Every Superstar has 5 stats. Higher is better.</p>'
+      h = '<h2 class="big-title">Your cards</h2><p class="sub">Every Superstar has 5 stats. Higher is better.</p>@@MID@@'
         + '<div class="obrow"><div class="obcard">' + face(c, { cls: '' }) + '</div><div class="obleg">' + ST.map((s, k) => '<div><span style="--sc:' + s.col + '">' + statImg(k) + '</span><b>' + s.name + '</b><small>' + STAT_INFO[k] + '</small></div>').join('') + '</div></div>'
         + '<div class="panel obnote"><p>The <b>big number</b> top right is the card&rsquo;s level. Everyone starts at level 1, and every level adds <b>+20</b> to all five stats, so a higher level beats a lower level almost every time.</p></div>';
     } else if (i === 1) {
-      h = '<h2 class="big-title">Your deck</h2><p class="sub">3 men, 3 women and 2 support cards.</p>'
-        + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini' })).join('') + '</div>'
-        + '<div class="obsup">' + d.s.map(s => supFace(s, {})).join('') + '</div>'
-        + '<div class="panel obnote"><p>We pick your strongest deck automatically. Open <b>Deck</b> on the home screen to swap anyone in or out. Support cards add a bonus to certain stats.</p></div>';
+      h = '<h2 class="big-title">Your deck</h2><p class="sub">3 men, 3 women and 2 support cards.</p>@@MID@@'
+        + '<div class="obgrid deck6">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini' })).join('') + '</div>'
+        + '<div class="obsup">' + d.s.map(s => supFace(s, { cls: 'sm' })).join('') + '</div>'
+        + '<div class="panel obnote"><p>We pick your strongest deck automatically. Open <b>Deck</b> on the home screen to swap anyone. Support cards boost certain stats.</p></div>';
     } else if (i === 2) {
-      h = '<h2 class="big-title">How a match works</h2>'
+      h = '<h2 class="big-title">How a match works</h2>@@MID@@'
         + '<div class="panel obsteps"><ol>'
         + '<li><b>3 matches per game.</b> Solo uses 1 man, Tag uses 2 men, Women&rsquo;s uses 1 woman.</li>'
         + '<li><b>Each match counts certain stats</b>, shown in <span class="gold">gold</span> on your cards. Pick the cards from your hand with the highest total.</li>'
@@ -279,14 +298,15 @@
         + '</ol></div>';
     } else {
       const rest = S.cards.length - 6;
-      h = '<h2 class="big-title">Ready!</h2><p class="sub">Your starting team. ' + (rest > 0 ? 'You own ' + S.cards.length + ' cards in total.' : '') + '</p>'
+      h = '<h2 class="big-title">Ready!</h2><p class="sub">Your starting team. ' + (rest > 0 ? 'You own ' + S.cards.length + ' cards in total.' : '') + '</p>@@MID@@'
         + '<div class="obgrid">' + d.m.concat(d.f).map(c => face(c, { click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
-        + '<div class="panel obnote"><p>Find every card under <b>Cards</b>. Win matches to open card picks and grow your collection. You start with one spare copy of your best man and woman, so try levelling them up. If you pull a duplicate of someone you own, spend it to level that wrestler up. You can only level a wrestler with their own duplicates.</p></div>';
+        + '<div class="panel obnote"><p>Win matches to open card picks. Pull a duplicate of someone you own and spend it in <b>Cards</b> to level them up. You start with a spare copy of your best man and woman.</p></div>';
     }
     const last = i === N - 1;
-    screen((last ? '<div class="topbar"><button onclick="UI.obStep(' + (i - 1) + ')">‹ Back</button></div>' : skip) + h + obDots(i, N)
+    const hp = h.split('@@MID@@');
+    screen('<div class="fillscr ob' + i + '"><div class="fh">' + (last ? '<div class="topbar"><button onclick="UI.obStep(' + (i - 1) + ')">‹ Back</button></div>' : skip) + hp[0] + '</div><div class="fillmid">' + hp[1] + '</div><div class="fillbot">' + obDots(i, N)
       + (last ? '<button class="btn big" onclick="UI.obDone(1)">Play a match</button><button class="btn alt" onclick="UI.obDone(0)">Go to home</button>'
-        : '<button class="btn big" onclick="UI.obStep(' + (i + 1) + ')">Next</button>' + (i ? '<button class="btn alt" onclick="UI.obStep(' + (i - 1) + ')">Back</button>' : '')));
+        : '<button class="btn big" onclick="UI.obStep(' + (i + 1) + ')">Next</button>' + (i ? '<button class="btn alt" onclick="UI.obStep(' + (i - 1) + ')">Back</button>' : '')) + '</div></div>');
   }
   let OB = { i: 0, help: false };
   function obDone(play) { S.onb = 1; persist(); if (play) wild(); else home(); }
@@ -319,7 +339,7 @@
     const items = COL.tab === 's' ? list.map(s => supFace(s, { cls: 'pgs' + (inDeck(s.u) ? ' indeck' : '') })) : list.map(c => face(c, { cls: 'mini' + (inDeck(c.u) ? ' indeck' : ''), click: 'UI.detail(' + c.u + ')' }));
     screen(back('UI.home()', 'Home') + '<div class="seg">' + tabs.map(t => '<button class="' + (COL.tab === t[0] ? 'on' : '') + '" onclick="UI.collection(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
       + (COL.tab === 's' ? '' : '<div class="seg small">' + [['power', 'Overall'], ['lvl', 'Level'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
-      + pagedCards('col' + COL.tab + COL.sort, items, COL.tab === 's' ? { cols: 2, aspect: 0.5, reserve: 175 } : { cols: 4, reserve: 215 }));
+      + pagedCards('col' + COL.tab + COL.sort, items, COL.tab === 's' ? { cols: 2, aspect: 0.5, reserve: 175 } : { cols: [3, 4], reserve: 170 }));
   }
   window.COL_SORT = k => { COL.sort = k; collection(); };
   function book() {
@@ -344,11 +364,11 @@
       tag: '<div class="tagrow"><div class="arrows">' + arrows.join('') + '</div><p class="edge">Tag symbol <b class="sym ' + c.sym + '" style="position:static;background:none">' + SYMCH[c.sym] + '</b>. Opposite arrows of the same colour make a diamond (+10%); mixed colours −5%. Lit squares show where this card can challenge in Ring Domination.</p></div>'
     };
     const tabs = [['lvl', 'Level up'], ['sig', 'Signature'], ['tag', 'Tag &amp; ring']];
-    screen(back('UI.collection()', 'Cards')
+    screen('<div class="fillscr dscr"><div class="fh">' + back('UI.collection()', 'Cards') + '</div>'
       + '<div class="dtl"><div class="dcard">' + face(inst, { cls: 'big' }) + '</div><div class="dstats"><h3>' + (E.isF(inst) ? 'Women' : 'Men') + ' · Level ' + fmt(inst.lvl) + '</h3>'
       + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '<b>' + fmt(v) + '</b></span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.max(4, v / mx * 100) + '%"></i></span></div>').join('') + '</div></div>'
       + '<div class="seg dtabs">' + tabs.map(t => '<button class="' + (DT === t[0] ? 'on' : '') + '" onclick="UI.dtab(' + inst.u + ',\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
-      + '<div class="panel dpanel">' + panels[DT] + '</div>');
+      + '<div class="panel dpanel">' + panels[DT] + '</div></div>');
   }
   function levelUp(u, all) { const t = byU(u); if (!t) return; if (E.levelUp(t, all)) { sfx('win'); persist(); } detail(u); }
 
@@ -388,9 +408,11 @@
     const ov = sh ? '<div class="pickov"><div class="gotbox' + (sh.inst && sh.isNew ? ' burst' : '') + '" style="--rc:#ffd34d">' + (sh.sup ? supFace(sh.sup, { cls: 'reveal-in' }) : face(sh.inst, { cls: 'reveal-in gotcard' }))
       + '<div class="gotlbl">' + (sh.isNew ? 'NEW WRESTLER!' : sh.sup ? 'SUPPORT CARD' : 'DUPLICATE!<br><small>Spend it on this wrestler in Cards → Level up</small>') + '</div></div>'
       + '<button class="btn big" onclick="UI.pickNext()">' + (p.left > 0 ? 'Next pick (' + p.left + ' left)' : 'Continue') + '</button></div>' : '';
-    screen('<h2 class="big-title">' + p.title + '</h2><p class="sub">' + (p.left > 0 ? p.left + ' pick' + (p.left === 1 ? '' : 's') + ' left — tap a card' : 'All picks used') + '</p>'
+    const gn = p.got.length, gc = gn <= 1 ? 1 : gn <= 4 ? 2 : 3, gr = Math.ceil(gn / gc);
+    screen('<div class="fillscr pkscr"><div class="fh"><h2 class="big-title">' + p.title + '</h2><p class="sub">' + (p.left > 0 ? p.left + ' pick' + (p.left === 1 ? '' : 's') + ' left. Tap a card.' : 'All picks used') + '</p></div><div class="fillmid">'
       + (p.left > 0 ? '<div class="pickgrid">' + p.table.map((s, i) => '<button class="pk' + (s.open ? ' open' : '') + '" ' + (s.open ? 'disabled' : '') + ' onclick="UI.pick(' + i + ')">' + (s.open ? (s.k === 'card' ? '<span style="color:#ffd34d">★</span>' : '<span>✦</span>') : '?') + '</button>').join('') + '</div>'
-        : '<div class="recap">' + p.got.map(g => g.sup ? supFace(g.sup, { cls: 'mini' }) : face(g.inst, { cls: 'mini' })).join('') + '</div><button class="btn big" onclick="UI.picksDone()">Done</button>') + ov);
+        : '<div class="recap" style="--gc:' + gc + ';--gr:' + gr + '">' + p.got.map(g => g.sup ? supFace(g.sup, { cls: 'mini' }) : face(g.inst, { cls: 'mini' })).join('') + '</div>')
+      + '</div><div class="fillbot">' + (p.left > 0 ? '' : '<button class="btn big" onclick="UI.picksDone()">Done</button>') + '</div></div>' + ov);
   }
   function pickNext() { PT.show = null; renderPicks(); }
   function pickSlot(i) {
@@ -534,9 +556,10 @@
   /* ---------- Wild ---------- */
   function wild() {
     const opps = E.opponents(power(), rnd, 3); WILD = opps;
-    screen(back('UI.home()', 'Home') + '<h2 class="big-title">Play Now</h2><p class="sub">Pick an opponent · win 2 cards · perfect win 3 · loss still gives 1</p>'
-      + opps.map((o, i) => '<button class="opp" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '</span></button>').join('')
-      + '<p class="edge" style="text-align:center">Your deck rank: <b>' + rankNo() + '</b></p>');
+    const star = o => { const all = o.deck.m.concat(o.deck.f).sort((a, b) => E.total(b) - E.total(a)); return all[0] ? C[all[0].c].a : ''; };
+    screen('<div class="fillscr wildscr"><div class="fh">' + back('UI.home()', 'Home') + '<h2 class="big-title">Play Now</h2><p class="sub">Pick an opponent. Win 2 picks, perfect win 3, a loss still gives 1.</p></div><div class="fillmid oppcol">'
+      + opps.map((o, i) => '<button class="opp bigopp ' + o.label.toLowerCase() + '" style="--art:url(../assets/superstars-t/' + star(o) + '.webp)" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '</span></button>').join('')
+      + '</div><div class="fillbot"><p class="edge" style="text-align:center;margin:0">Your deck rank <b>' + rankNo() + '</b></p></div></div>');
   }
   let WILD = [];
   function wildGo(i) {
