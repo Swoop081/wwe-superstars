@@ -243,16 +243,16 @@
   function pickTable(power, rng) {
     const tier = powerTier(power);
     const w = [];
-    for (let r = 0; r <= 8; r++) w.push(r > tier + 1 ? 0 : r === tier + 1 ? 0.04 : r === tier ? 0.12 : r >= tier - 1 ? 0.28 : r >= tier - 2 ? 0.2 : 0.08);
+    for (let r = 0; r <= 8; r++) w.push(r > tier + 1 ? 0 : r === tier + 1 ? (tier <= 2 ? 0.09 : 0.04) : r === tier ? 0.12 : r >= tier - 1 ? 0.28 : r >= tier - 2 ? 0.2 : 0.08);
     const roll = () => { let tot = w.reduce((a, b) => a + b, 0), x = rng() * tot; for (let r = 0; r <= 8; r++) { x -= w[r]; if (x <= 0) return r; } return 0; };
     const slots = [];
     for (let i = 0; i < 12; i++) {
       if (rng() < 0.17) { const s = SUPPORTS.map((s, k) => k).filter(k => SUPPORTS[k].rar <= tier + 1); slots.push({ k: 'sup', s: pickR(s, rng), open: false }); }
-      else { const r = roll(); const pool = CARDS.map((c, k) => k).filter(k => CARDS[k].rar === r); slots.push({ k: 'card', c: pickR(pool, rng), open: false }); }
+      else { const r = roll(); const pool = CARDS.map((c, k) => k).filter(k => CARDS[k].rar === r); slots.push({ k: 'card', c: pickR(pool, rng), open: false, reset: r >= Math.max(2, tier) }); }
     }
     return slots;
   }
-  const isRarePlus = slot => slot.k === 'card' && CARDS[slot.c].rar >= 2;
+  const isRarePlus = slot => slot.k === 'card' && (slot.reset != null ? slot.reset : CARDS[slot.c].rar >= 2);
 
   /* ---------- Ring Domination (3x3 board) ---------- */
   function rdNew(deckA, deckB, rng) {

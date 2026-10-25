@@ -9,6 +9,27 @@
   const rnd = Math.random;
   let S = null;
 
+  /* ---------- tiny synth sounds + haptics (no audio files; mute on the home screen) ---------- */
+  let AC = null;
+  function tone(f, d, type, at, vol) {
+    try {
+      if (S && S.mute) return;
+      AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+      const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime + (at || 0);
+      o.type = type || 'sine'; o.frequency.value = f; g.gain.setValueAtTime(vol || 0.08, t); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + d);
+    } catch (e) { }
+  }
+  const buzz = p => { try { if (!(S && S.mute) && navigator.vibrate) navigator.vibrate(p); } catch (e) { } };
+  function sfx(k) {
+    if (k === 'flip') tone(520, 0.08, 'triangle');
+    else if (k === 'win') { [523, 659, 784].forEach((f, i) => tone(f, 0.18, 'triangle', i * 0.09)); buzz(30); }
+    else if (k === 'lose') { tone(160, 0.3, 'sawtooth', 0, 0.06); buzz([20, 40, 20]); }
+    else if (k === 'sig') { tone(880, 0.12, 'square', 0, 0.04); tone(1320, 0.18, 'square', 0.08, 0.04); }
+    else if (k === 'rare') { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.22, 'triangle', i * 0.08)); buzz(40); }
+    else if (k === 'tap') tone(380, 0.04, 'sine', 0, 0.04);
+  }
+
   /* ---------- save ---------- */
   function persist() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
   function load() {
@@ -104,7 +125,7 @@
     if (!S) return welcome();
     const d = getDeck();
     screen('<div class="logo">WWE<span>SUPERSTARS</span></div>'
-      + '<div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span><span>Cards <b>' + S.cards.length + '</b></span><span>W–L <b>' + S.stats.wins + '–' + S.stats.losses + '</b></span></div>'
+      + '<div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span><span>Cards <b>' + S.cards.length + '</b></span><span>W–L <b>' + S.stats.wins + '–' + S.stats.losses + '</b></span><span onclick="UI.mute()" style="cursor:pointer">Sound <b>' + (S.mute ? 'off' : 'on') + '</b></span></div>'
       + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
       + '<button class="btn big" onclick="UI.mode(\'wild\')">Play Wild</button>'
       + '<div class="modes">' + MODES.slice(1).map(m => '<button class="mode' + (V3.modes[m[0]] ? '' : ' soon') + '" onclick="UI.mode(\'' + m[0] + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>').join('') + '</div>'
@@ -229,7 +250,7 @@
   }
   function renderPicks() {
     const p = PT;
-    const lastHTML = p.last ? '<div class="gotbox">' + (p.last.sup ? supFace(p.last.sup, { cls: 'reveal-in' }) : face(p.last.inst, { cls: 'reveal-in gotcard' })) + '<div class="gotlbl">' + (p.last.isNew ? 'NEW SUPERSTAR!' : p.last.sup ? 'SUPPORT CARD' : 'DUPLICATE · use it to level up or go Pro') + (p.refreshed ? '<br><small>Rare or better! The table has been refreshed.</small>' : '') + '</div></div>' : '';
+    const lastHTML = p.last ? '<div class="gotbox' + (p.last.inst && C[p.last.inst.c].rar >= 3 ? ' burst' : '') + '" style="--rc:' + (p.last.inst ? RAR[C[p.last.inst.c].rar].col : '#ffd34d') + '">' + (p.last.sup ? supFace(p.last.sup, { cls: 'reveal-in' }) : face(p.last.inst, { cls: 'reveal-in gotcard' })) + '<div class="gotlbl">' + (p.last.isNew ? 'NEW SUPERSTAR!' : p.last.sup ? 'SUPPORT CARD' : 'DUPLICATE · use it to level up or go Pro') + (p.refreshed ? '<br><small>Rare or better! The table has been refreshed.</small>' : '') + '</div></div>' : '';
     screen('<h2 class="big-title">' + p.title + '</h2><p class="sub">' + (p.left > 0 ? p.left + ' pick' + (p.left === 1 ? '' : 's') + ' left — tap a card' : 'All picks used') + '</p>' + lastHTML
       + (p.left > 0 ? '<div class="pickgrid">' + p.table.map((s, i) => '<button class="pk' + (s.open ? ' open' : '') + '" ' + (s.open ? 'disabled' : '') + ' onclick="UI.pick(' + i + ')">' + (s.open ? (s.k === 'card' ? '<span style="color:' + RAR[C[s.c].rar].col + '">★</span>' : '<span>✦</span>') : '?') + '</button>').join('') + '</div>'
         : '<div class="recap">' + p.got.map(g => g.sup ? supFace(g.sup, { cls: 'mini' }) : face(g.inst, { cls: 'mini' })).join('') + '</div><button class="btn big" onclick="UI.picksDone()">Done</button>'));
@@ -240,6 +261,7 @@
     if (s.k === 'sup') { const o = giveSup(s.s); p.last = { sup: o }; p.got.push(p.last); p.refreshed = false; }
     else { const r = give(s.c); p.last = r; p.got.push(r); p.refreshed = false; if (E.isRarePlus(s)) { p.table = E.pickTable(power(), rnd); p.refreshed = true; } }
     persist(); renderPicks();
+    const rr = p.last && p.last.inst ? C[p.last.inst.c].rar : 0; sfx(rr >= 3 ? 'rare' : 'flip');
   }
   function picksDone() { const t = PT.then; PT = null; t(); }
 
@@ -313,7 +335,7 @@
   }
   function sideBlock(side, res, spec) {
     const r = res[side], win = res.winner === side;
-    return '<div class="rside ' + side + (win ? ' win' : res.winner ? ' lose' : '') + '"><div class="rcards">' + r.cards.map((c, k) => face(c, { cls: 'mini flip', hl: spec.stats, val: r.parts[k].value | 0 })).join('') + '</div>'
+    return '<div class="rside ' + side + (win ? ' win' : res.winner ? ' lose' : '') + '"><div class="rcards">' + r.cards.map((c, k) => face(c, { cls: 'mini flip' + (r.parts[k].sig ? ' sigflash' : ''), hl: spec.stats, val: r.parts[k].value | 0 })).join('') + '</div>'
       + '<div class="rtotal" data-t="' + r.total + '">' + 0 + '</div><div class="rchips">'
       + r.parts.map((p, k) => p.sig ? '<span class="chip gold">SIGNATURE · ' + C[r.cards[k].c].f + '</span>' : '').join('')
       + (r.tag > 1 ? '<span class="chip gold">DIAMOND +10%</span>' : r.tag < 1 ? '<span class="chip red">MISMATCH −5%</span>' : '')
@@ -323,11 +345,13 @@
     const { g } = GM, spec = res.spec.extra ? E.extraSpec() : res.spec;
     const w = res.winner;
     screen('<div class="hud"><span class="rnd">' + (spec.extra ? 'EXTRA MATCH' : 'MATCH ' + (res.idx + 1)) + '</span><span class="who">' + E.TYPE_NAME[spec.type] + ' · ' + spec.stats.map(i => ST[i].name).join(' + ') + '</span></div>'
-      + '<div class="banner ' + (w === 'a' ? 'w' : w === 'b' ? 'l' : 't') + '">' + (w === 'a' ? 'YOU WIN THE MATCH' : w === 'b' ? 'THEY WIN THE MATCH' : 'DRAW — BOTH SCORE') + '</div>'
+      + '<div class="banner late ' + (w === 'a' ? 'w' : w === 'b' ? 'l' : 't') + '">' + (w === 'a' ? 'YOU WIN THE MATCH' : w === 'b' ? 'THEY WIN THE MATCH' : 'DRAW — BOTH SCORE') + '</div>'
       + '<div class="rv"><div class="who2">YOU</div>' + sideBlock('a', res, spec) + '<div class="vsb2">VS</div><div class="who2">' + GM.cfg.oppName + '</div>' + sideBlock('b', res, spec) + '</div>'
       + '<div class="pills"><span>Score <b>' + g.a.pts + ' – ' + g.b.pts + '</b></span></div>'
       + '<button class="btn big sticky" onclick="UI.afterMatch()">' + (g.over ? 'Finish' : 'Next match') + '</button>');
-    document.querySelectorAll('.rtotal').forEach(el => { const t = +el.dataset.t, t0 = performance.now(); (function tick(now) { const k = Math.min(1, (now - t0) / 700); el.textContent = fmt(Math.round(t * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); })(t0); });
+    if (res.a.parts.concat(res.b.parts).some(x => x.sig)) setTimeout(() => sfx('sig'), 500);
+    setTimeout(() => sfx(w === 'a' ? 'win' : w === 'b' ? 'lose' : 'flip'), 1150);
+    document.querySelectorAll('.rtotal').forEach(el => { const t = +el.dataset.t, t0 = performance.now() + 450; (function tick(now) {  const k = Math.max(0, Math.min(1, (now - t0) / 700)); el.textContent = fmt(Math.round(t * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); })(t0); });
   }
   function afterMatch() {
     const { g, cfg } = GM;
@@ -359,7 +383,7 @@
   const V3 = { E, C, RAR, SUP, ST, I, get S() { return S; }, persist, give, giveSup, byU, getDeck, power, rankNo, face, supFace, art, screen, back, home, awardPicks, startGame, statImg, fmt, pick, rnd, clamp, uid, modes: {}, specOf, autoDeck };
   window.V3 = V3;
   window.UI = {
-    home, start, dev, collection, book, detail, feedScreen, feedTog, feedAuto, feedGo, makePro, fortify, deckScreen, deckPick, deckSet, deckAuto,
+    mute: () => { S.mute = !S.mute; persist(); home(); }, home, start, dev, collection, book, detail, feedScreen, feedTog, feedAuto, feedGo, makePro, fortify, deckScreen, deckPick, deckSet, deckAuto,
     pick: pickSlot, picksDone, selTog, supTog, play, afterMatch, gameDone, wild, wildGo,
     mode: k => { if (k === 'wild') return wild(); if (V3.modes[k]) return V3.modes[k](); soon(k); }
   };
