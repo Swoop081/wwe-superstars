@@ -32,7 +32,13 @@
 
   /* ---------- save ---------- */
   // v3.10: no rarities. Duplicates of a wrestler stack on one card (d = spare copies) and are spent to level it up.
+  function mergeSups(s) {
+    const keep = {}, drop = new Set(); const inDeck = u => (s.deck && s.deck.s || []).includes(u);
+    (s.sups || []).slice().sort((a, b) => (inDeck(b.u) ? 1 : 0) - (inDeck(a.u) ? 1 : 0) || (b.l || 1) - (a.l || 1)).forEach(x => { const k = keep[x.s]; if (k) { k.d = (k.d || 0) + 1 + (x.d || 0); drop.add(x.u); } else { keep[x.s] = x; x.d = x.d || 0; } });
+    if (drop.size) { s.sups = s.sups.filter(x => !drop.has(x.u)); if (s.deck) s.deck.s = (s.deck.s || []).filter(u => !drop.has(u)); }
+  }
   function migrate(s) {
+    mergeSups(s);
     if (s.lv2) return;
     const keep = {}, remap = {};
     (s.cards || []).slice().sort((a, b) => (b.lvl || 0) - (a.lvl || 0)).forEach(c => { const k = keep[c.c]; if (k) { k.d++; remap[c.u] = k.u; } else { keep[c.c] = c; c.d = 0; } });
@@ -123,7 +129,7 @@
     S.cards.push(inst); S.seen[C[ci].n] = 1; persist();
     return { inst, isNew: true };
   }
-  function giveSup(si) { const s = { u: uid(), s: si }; S.sups.push(s); persist(); return s; }
+  function giveSup(si) { const have = S.sups.find(x => x.s === si); if (have) { have.d = (have.d || 0) + 1; persist(); return { sup: have, isNew: false }; } const s = { u: uid(), s: si, d: 0 }; S.sups.push(s); persist(); return { sup: s, isNew: true }; }
   function newSave() {
     S = { v: 3, lv2: 1, nextU: 0, cards: [], sups: [], deck: { m: [], f: [], s: [] }, stats: { wins: 0, losses: 0, perfect: 0, picks: 0 }, camp: { stars: {} }, mitb: { step: 0 }, pcc: null, surv: null, seen: {} };
     const idx = g => C.map((c, i) => i).filter(i => C[i].g === g && !C[i].mv);
@@ -187,7 +193,7 @@
     o = o || {}; const d = SUP[s.s], r = RAR[d.rar], all = d.stats.length === 4 || d.stats.length === 5;
     const ab = all ? 'ALL' : d.stats.map(i => ST[i].ab).join('+');
     const badges = all ? '<b class="all">ALL</b>' : d.stats.map(i => '<span style="--sc:' + ST[i].col + '">' + statImg(i) + '</span>').join('');
-    return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sart"><div class="sico">' + I[d.id] + '</div><img class="simg" src="../assets/supports/' + (d.art || d.id) + '.webp" alt="" onload="this.parentNode.classList.add(\'hasart\')" onerror="this.remove()"></div>'
+    return '<div class="sf ' + (o.cls || '') + (o.upg && s.d ? ' upg' : '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>' + (o.upg && s.d ? '<div class="upgb">▲ LEVEL UP' + (s.d > 1 ? ' ×' + s.d : '') + '</div>' : '') + (E.supLvl(s) > 1 ? '<div class="slv">' + E.supLvl(s) + '</div>' : '') + '<div class="sart"><div class="sico">' + I[d.id] + '</div><img class="simg" src="../assets/supports/' + (d.art || d.id) + '.webp" alt="" onload="this.parentNode.classList.add(\'hasart\')" onerror="this.remove()"></div>'
       + '<div class="stx"><div class="snm">' + d.name + '</div><div class="spct"><span class="pc">+' + Math.round(d.pct * 100) + '%</span> <span class="ab">' + ab + '</span></div><div class="sstats">' + badges + '</div></div></div>';
   }
   // thumbnails exist for the base roster; movie cards use their full artwork
@@ -340,14 +346,14 @@
     if (tab) COL.tab = tab;
     const tabs = [['all', 'All'], ['m', 'Men'], ['f', 'Women'], ['s', 'Support']];
     let list;
-    if (COL.tab === 's') list = S.sups.slice().sort((a, b) => SUP[b.s].pct - SUP[a.s].pct);
+    if (COL.tab === 's') list = S.sups.slice().sort((a, b) => (b.d || 0) - (a.d || 0) || E.supPctOf(b) - E.supPctOf(a));
     else {
       list = S.cards.filter(c => COL.tab === 'all' || (COL.tab === 'f') === E.isF(c));
       list.sort(COL.sort === 'upg' ? (a, b) => (b.d || 0) - (a.d || 0) || E.total(b) - E.total(a) : COL.sort === 'power' ? (a, b) => E.total(b) - E.total(a) : COL.sort === 'lvl' ? (a, b) => b.lvl - a.lvl || (b.d || 0) - (a.d || 0) || E.total(b) - E.total(a) : (a, b) => C[a.c].n.localeCompare(C[b.c].n));
     }
-    const nUp = S.cards.filter(c => c.d > 0).length;
+    const nUp = S.cards.filter(c => c.d > 0).length + S.sups.filter(x => x.d > 0).length;
     const inDeck = u => S.deck.m.includes(u) || S.deck.f.includes(u) || S.deck.s.includes(u);
-    const items = COL.tab === 's' ? list.map(s => supFace(s, { cls: 'pgs' + (inDeck(s.u) ? ' indeck' : '') })) : list.map(c => face(c, { cls: 'mini' + (inDeck(c.u) ? ' indeck' : ''), upg: 1, click: 'UI.detail(' + c.u + ')' }));
+    const items = COL.tab === 's' ? list.map(s => supFace(s, { cls: 'pgs' + (inDeck(s.u) ? ' indeck' : ''), upg: 1, click: 'UI.supDetail(' + s.u + ')' })) : list.map(c => face(c, { cls: 'mini' + (inDeck(c.u) ? ' indeck' : ''), upg: 1, click: 'UI.detail(' + c.u + ')' }));
     screen(back('UI.home()', 'Home') + '<div class="seg">' + tabs.map(t => '<button class="' + (COL.tab === t[0] ? 'on' : '') + '" onclick="UI.collection(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
       + (COL.tab === 's' ? '' : '<div class="seg small">' + [['upg', 'Upgrade' + (nUp ? ' (' + nUp + ')' : '')], ['power', 'Overall'], ['lvl', 'Level'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + (t[0] === 'upg' && nUp ? ' hot' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
       + pagedCards('col' + COL.tab + COL.sort, items, COL.tab === 's' ? { cols: [3, 4], reserve: 170 } : { cols: [3, 4], reserve: 170 }));
@@ -387,6 +393,17 @@
       + '<div class="seg dtabs">' + tabs.map(t => '<button class="' + (DT === t[0] ? 'on' : '') + '" onclick="UI.dtab(' + inst.u + ',\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
       + '<div class="panel dpanel">' + panels[DT] + '</div></div>');
   }
+  // Support card detail: spend spare duplicates to level it (+10% of its base boost per level).
+  function supDetail(u) {
+    const x = supByU(u); if (!x) return collection('s'); const d = SUP[x.s], lv = E.supLvl(x), cur = E.supPctOf(x), nxt = d.pct * (1 + 0.1 * lv);
+    const ab = d.stats.length >= 4 ? 'all five stats' : d.stats.map(i => ST[i].name).join(' and ');
+    screen('<div class="fillscr sdscr"><div class="fh">' + back("UI.collection('s')", 'Cards') + '<h2 class="big-title">' + d.name + '</h2><p class="sub">Support · Level ' + lv + '</p></div>'
+      + '<div class="fillmid"><div class="sdcard">' + supFace(x, { cls: 'big' }) + '</div>'
+      + '<div class="panel"><p>Adds <b>+' + Math.round(cur * 100) + '%</b> to ' + ab + ' in the match you play it. Each level adds 10% of its base boost.</p>'
+      + '<p class="edge dupline">' + (x.d ? 'You have <b>' + x.d + '</b> spare duplicate' + (x.d > 1 ? 's' : '') + ' of ' + d.name + '. Next level: <b>+' + Math.round(nxt * 100) + '%</b>.' : 'Get a duplicate of ' + d.name + ' from a card pick to level this up.') + '</p></div></div>'
+      + '<div class="fillbot"><div class="btnrow"><button class="btn big' + (x.d ? '' : ' dis') + '" ' + (x.d ? '' : 'disabled ') + 'onclick="UI.supLevel(' + u + ')">Level up</button>' + (x.d > 1 ? '<button class="btn alt" onclick="UI.supLevel(' + u + ',1)">Use all (' + x.d + ')</button>' : '') + '</div></div></div>');
+  }
+  function supLevel(u, all) { const x = supByU(u); if (!x) return; if (E.supLevelUp(x, all)) { sfx('win'); persist(); } supDetail(u); }
   function levelUp(u, all) {
     const t = byU(u); if (!t) return; const before = E.sigUnlocked(t).length;
     if (E.levelUp(t, all)) { sfx('win'); persist(); }
@@ -410,7 +427,7 @@
     DP = { kind, i };
     const cur = S.deck[kind];
     let list;
-    if (kind === 's') list = S.sups.filter(s => !cur.includes(s.u) || cur[i] === s.u).sort((a, b) => SUP[b.s].pct * SUP[b.s].stats.length - SUP[a.s].pct * SUP[a.s].stats.length);
+    if (kind === 's') list = S.sups.filter(s => !cur.includes(s.u) || cur[i] === s.u).sort((a, b) => E.supPctOf(b) * SUP[b.s].stats.length - E.supPctOf(a) * SUP[a.s].stats.length);
     else list = S.cards.filter(c => (kind === 'f') === E.isF(c) && (!cur.includes(c.u) || cur[i] === c.u)).sort((a, b) => E.total(b) - E.total(a));
     screen(back('UI.deckScreen()', 'Deck') + '<h3 class="mini-title">Choose <small>' + (kind === 's' ? 'a support card' : kind === 'f' ? 'a woman' : 'a man') + '</small></h3>'
       + pagedCards('dp' + kind, list.map(x => kind === 's' ? supFace(x, { cls: 'pgs', click: 'UI.deckSet(' + x.u + ')' }) : face(x, { cls: 'mini', click: 'UI.deckSet(' + x.u + ')' })), kind === 's' ? { cols: [3, 4], reserve: 130 } : { cols: 4, reserve: 130 }));
@@ -428,8 +445,8 @@
   }
   function renderPicks() {
     const p = PT, sh = p.show;
-    const ov = sh ? '<div class="pickov"><div class="gotbox' + (sh.inst && sh.isNew ? ' burst' : '') + '" style="--rc:#ffd34d">' + (sh.sup ? supFace(sh.sup, { cls: 'reveal-in' }) : face(sh.inst, { cls: 'reveal-in gotcard' }))
-      + '<div class="gotlbl">' + (sh.isNew ? (sh.inst && C[sh.inst.c].mv ? 'NEW FIGHTER!' : 'NEW WRESTLER!') : sh.sup ? 'SUPPORT CARD' : 'DUPLICATE!<br><small>Spend it on this wrestler in Cards → Level up</small>') + '</div></div>'
+    const ov = sh ? '<div class="pickov"><div class="gotbox' + ((sh.inst || sh.sup) && sh.isNew ? ' burst' : '') + '" style="--rc:#ffd34d">' + (sh.sup ? supFace(sh.sup, { cls: 'reveal-in' }) : face(sh.inst, { cls: 'reveal-in gotcard' }))
+      + '<div class="gotlbl">' + (sh.isNew ? (sh.sup ? 'NEW SUPPORT!' : sh.inst && C[sh.inst.c].mv ? 'NEW FIGHTER!' : 'NEW WRESTLER!') : sh.sup ? 'DUPLICATE!<br><small>Spend it on this support in Cards → Support → Level up</small>' : 'DUPLICATE!<br><small>Spend it on this wrestler in Cards → Level up</small>') + '</div></div>'
       + '<button class="btn big" onclick="UI.pickNext()">' + (p.left > 0 ? 'Next pick (' + p.left + ' left)' : 'Continue') + '</button></div>' : '';
     const gn = p.got.length, gc = gn <= 1 ? 1 : gn <= 4 ? 2 : 3, gr = Math.ceil(gn / gc);
     screen('<div class="fillscr pkscr"><div class="fh"><h2 class="big-title">' + p.title + '</h2><p class="sub">' + (p.left > 0 ? p.left + ' pick' + (p.left === 1 ? '' : 's') + ' left. Tap a card.' + (E.movieOpen() ? '<br><span class="mvnote">Street Fighter movie fighters are in the packs until 30 Nov</span>' : '') : 'All picks used') + '</p></div><div class="fillmid">'
@@ -441,7 +458,7 @@
   function pickSlot(i) {
     const p = PT, s = p.table[i]; if (!s || s.open || p.left < 1 || p.show) return;
     s.open = true; p.left--;
-    if (s.k === 'sup') { const o = giveSup(s.s); p.last = { sup: o }; p.got.push(p.last); }
+    if (s.k === 'sup') { const o = giveSup(s.s); p.last = { sup: o.sup, isNew: o.isNew }; p.got.push(p.last); }
     else { const r = give(s.c); p.last = r; p.got.push(r); }
     p.show = p.last;
     persist(); renderPicks();
@@ -595,6 +612,7 @@
   const V3 = { paged: pagedCards, E, C, RAR, SUP, ST, I, get S() { return S; }, persist, give, giveSup, byU, getDeck, power, rankNo, face, supFace, art, screen, back, home, awardPicks, startGame, statImg, fmt, pick, rnd, clamp, uid, modes: {}, specOf, autoDeck };
   window.V3 = V3;
   window.UI = {
+    supDetail, supLevel,
     mute: () => { S.mute = !S.mute; persist(); home(); }, home, start, ini, nameGo, obStep: i => howto(i, OB.help), obDone, help: () => howto(0, true), rename: () => welcome(true), dev, collection, book, detail, levelUp, pgGo, dtab, pickNext, deckScreen, deckPick, deckSet, deckAuto,
     pick: pickSlot, picksDone, selTog, supTog, play, afterMatch, gameDone, wild, wildGo,
     mode: k => { if (k === 'wild') return wild(); if (V3.modes[k]) return V3.modes[k](); soon(k); }

@@ -296,7 +296,7 @@
   /* ================= King of the Ring: stamina tournament, simulated ================= */
   let KR = null;
   M.kotr = function () {
-    KR = { m: best('M', 8), f: best('F', 4), s: S().sups.slice().sort((a, b) => E.SUPPORTS[b.s].pct - E.SUPPORTS[a.s].pct).slice(0, 4), stam: {}, rec: { w: 0, l: 0 }, log: [], phase: 'qual', n: 0, tour: null };
+    KR = { m: best('M', 8), f: best('F', 4), s: S().sups.slice().sort((a, b) => E.supPctOf(b) - E.supPctOf(a)).slice(0, 4), stam: {}, rec: { w: 0, l: 0 }, log: [], phase: 'qual', n: 0, tour: null };
     KR.m.concat(KR.f).forEach(c => { KR.stam[c.u] = 100; });
     krRender();
   };

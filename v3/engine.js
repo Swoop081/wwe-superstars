@@ -79,7 +79,10 @@
   // Roll every unlocked special for one match; returns the ones that fire.
   const sigRoll = (inst, rng) => sigUnlocked(inst).filter(() => rng() < sigChance(inst));
   const sigMult = (procs, i) => 1 + T.sigBoost * procs.filter(s => s.stats.includes(i)).length;
-  const supPct = s => s.pct;
+  // Support levels: each spare duplicate spent adds a level; the card's boost grows by 10% of its base per level (no maximum).
+  const supLvl = inst => Math.max(1, inst.l || 1);
+  const supPctOf = inst => SUPPORTS[inst.s].pct * (1 + 0.1 * (supLvl(inst) - 1));
+  const supLevelUp = (inst, all) => { let n = 0; while ((inst.d || 0) > 0) { inst.d--; inst.l = supLvl(inst) + 1; n++; if (!all) break; } return n; };
   // Levelling: spend one spare duplicate of the same wrestler to gain one level.
   const canLevel = inst => inst.d > 0;
   function levelUp(inst, all) { let n = 0; while (canLevel(inst)) { inst.d--; inst.lvl++; n++; if (!all) break; } return n; }
@@ -90,7 +93,7 @@
   function deckPower(d) { const t = deckCards(d).map(total).sort((a, b) => b - a); return t.length ? t.reduce((a, b) => a + b, 0) / t.length : 0; }
   function bestDeck(cards, supports, sizeM, sizeF, sizeS) {
     const by = (g, n) => cards.filter(c => (isF(c) ? 'F' : 'M') === g).sort((a, b) => total(b) - total(a)).slice(0, n);
-    const sups = supports.slice().sort((a, b) => SUPPORTS[b.s].pct * SUPPORTS[b.s].stats.length - SUPPORTS[a.s].pct * SUPPORTS[a.s].stats.length);
+    const sups = supports.slice().sort((a, b) => supPctOf(b) * SUPPORTS[b.s].stats.length - supPctOf(a) * SUPPORTS[a.s].stats.length);
     return { m: by('M', sizeM == null ? 3 : sizeM), f: by('F', sizeF == null ? 3 : sizeF), s: sups.slice(0, sizeS == null ? 2 : sizeS) };
   }
   const NAME_A = ['Iron', 'Night', 'Steel', 'Ring', 'Chaos', 'Royal', 'Thunder', 'Cobra', 'Neon', 'Savage', 'Lucky', 'Rogue', 'Dark', 'Mega', 'Crimson', 'Ghost', 'Turbo', 'Atomic'];
@@ -156,7 +159,7 @@
     }
     let tag = 1; if (cards.length === 2) { tag = tagMod(cards[0], cards[1]); bp *= tag; }
     let boost = 0;
-    if (sup) { const S = SUPPORTS[sup.s]; if (focus.some(i => S.stats.includes(i))) { boost = S.pct; bp *= (1 + S.pct); } }
+    if (sup) { const S = SUPPORTS[sup.s]; if (focus.some(i => S.stats.includes(i))) { boost = supPctOf(sup); bp *= (1 + boost); } }
     return { total: Math.round(lp + bp), parts, tag, boost };
   }
   function newGame(deckA, deckB, rng, o) {
@@ -203,7 +206,7 @@
     // use a support if it helps this match and chance favours (about 1 use per game)
     const helpful = sups.filter(s => spec.stats.some(i => SUPPORTS[s.s].stats.includes(i)));
     if (!helpful.length) return null;
-    return rng() < 0.45 ? helpful.sort((x, y) => SUPPORTS[y.s].pct - SUPPORTS[x.s].pct)[0] : null;
+    return rng() < 0.45 ? helpful.sort((x, y) => supPctOf(y) - supPctOf(x))[0] : null;
   }
   // Play match number g.results.length. pa = {cards, sup} for player (side a); side b is the AI (or pb given).
   function playMatch(g, pa, pb) {
@@ -379,7 +382,7 @@
 
   return {
     STATS, RAR, T, SUPPORTS, SUP_IDX, SYM, DIRS, CARDS, IDX, TYPE_NAME,
-    mulberry32, pickR, shuffle, mk, stats, baseStats, total, sigStats, sigChance, sigAll, sigUnlocked, sigRoll, sigMult, SIG_LEVELS, isF, canLevel, levelUp,
+    mulberry32, pickR, shuffle, mk, stats, baseStats, total, sigStats, sigChance, sigAll, sigUnlocked, sigRoll, sigMult, supLvl, supPctOf, supLevelUp, SIG_LEVELS, isF, canLevel, levelUp,
     deckCards, deckPower, bestDeck, aiDeck, aiName, makeSpecs, tagMod, sideTotal, newGame, availCards, availM, availF, availS, canField, validPick,
     aiPick, aiSupport, playMatch, playExtra, extraSpec, autoPlayGame, smartPick, perfect, opponents, picksFor, pickTable, powerTier, movieOpen, pullable, MOVIE_END: T_MOVIE_END,
     rdNew, rdMoves, rdPlay, rdAI, rdNeighbours, rrNew, rrStart, rrRound, rrAIStat, rrAIChallenger, rrAISacrifice, cardsNeeded,
