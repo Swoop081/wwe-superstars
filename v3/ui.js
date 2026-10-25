@@ -244,9 +244,8 @@
       + '<div class="deckcap"><b>' + esc(S.name) + '\'s deck</b><button onclick="UI.deckScreen()">Edit ›</button></div>'
       + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
       + (S.stats.wins + S.stats.losses === 0 ? '<div class="tip"><b>New here?</b> These 6 are your starting team. Hit <em>Play Now</em> for a quick best-of-3, or tap <em>?</em> for a quick guide.</div>' : '')
-      + '<button class="btn big go" style="--art:url(' + tileArt('wild') + ')" onclick="UI.mode(\'wild\')"><span>Play Now</span></button>'
       + '<div class="railwrap"><div class="railhead"><b>Game modes</b><span class="pdots">' + PAGES.map((p, k) => '<i class="' + (k === HP ? 'on' : '') + '"></i>').join('') + '</span></div>'
-      + '<div class="pager">' + PAGES.map(pg => '<div class="page">' + pg.map(([k, c, r]) => modeBtn(k, c, r, hi++)).join('') + '</div>').join('') + '</div></div>'
+      + '<div class="pager">' + PAGES.map((pg, pi) => '<div class="page' + (pi === 0 ? ' p1' : '') + '">' + (pi === 0 ? '<button class="btn big go goTile" style="--art:url(' + tileArt('wild') + ')" onclick="UI.mode(\'wild\')"><span>Play Now</span></button>' : '') + pg.map(([k, c, r]) => modeBtn(k, c, r, hi++)).join('') + '</div>').join('') + '</div></div>'
       + '<div class="hnav"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
       + devBar() + '</div>');
     const pg = document.querySelector('.pager');
