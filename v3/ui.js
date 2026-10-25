@@ -37,7 +37,7 @@
     const keep = {}, remap = {};
     (s.cards || []).slice().sort((a, b) => (b.lvl || 0) - (a.lvl || 0)).forEach(c => { const k = keep[c.c]; if (k) { k.d++; remap[c.u] = k.u; } else { keep[c.c] = c; c.d = 0; } });
     s.cards = (s.cards || []).filter(c => keep[c.c] === c);
-    s.cards.forEach(c => { c.lvl = Math.max(1, Math.min(40, c.lvl || 1)); delete c.pro; delete c.fort; });
+    s.cards.forEach(c => { c.lvl = Math.max(1, c.lvl || 1); delete c.pro; delete c.fort; });
     if (s.deck) ['m', 'f'].forEach(k => { const seen = []; s.deck[k] = (s.deck[k] || []).map(u => remap[u] || u).filter(u => seen.includes(u) ? false : (seen.push(u), true)); });
     s.lv2 = 1;
   }
@@ -129,8 +129,8 @@
     const c = C[inst.c], st = E.stats(inst), dup = inst.d || 0;
     return '<div class="cf ' + (o.cls || '') + '" style="--rc:#2b3050"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
       + '<div class="art">' + art(c) + '</div>'
-      + (dup ? '<div class="gem dup"><span class="f">+' + dup + ' DUPLICATE' + (dup > 1 ? 'S' : '') + '</span><span class="s">+' + dup + '</span></div>' : '')
-      + '<div class="lv">' + inst.lvl + '</div>'
+      + (dup ? '<div class="gem dup"><span class="f">+' + dup + ' DUP</span><span class="s">+' + dup + '</span></div>' : '')
+      + '<div class="lv' + (inst.lvl > 999 ? ' d4' : inst.lvl > 99 ? ' d3' : '') + '">' + inst.lvl + '</div>'
       + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
       + (o.val != null ? '<div class="val">' + fmt(o.val) + '</div>' : '')
       + nameEl(c)
@@ -256,7 +256,7 @@
     if (w === 'reset') { S = null; try { localStorage.removeItem(KEY); } catch (e) { } return home(); }
     if (!S) { newSave(); S.onb = 1; }
     if (w === 'cards') for (let i = 0; i < 20; i++) give(Math.floor(rnd() * C.length));
-    if (w === 'max') { S.cards.forEach(c => { c.lvl = 40; c.d = 0; }); autoDeck(); }
+    if (w === 'max') { S.cards.forEach(c => { c.lvl = 100; c.d = 0; }); autoDeck(); }
     persist(); home();
   }
 
@@ -292,13 +292,11 @@
     c.ar.forEach(d => { arrows[ar[d]] = '<i class="on">' + '↑↗→↘↓↙←↖'[d] + '</i>'; });
     screen(back('UI.collection()', 'Cards') + face(inst, { cls: 'big' })
       + '<div class="panel"><h3>' + (E.isF(inst) ? 'Women' : 'Men') + ' · Level ' + inst.lvl + '</h3>'
-      + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.min(100, v / 110 * 100) + '%"></i></span><b>' + v + '</b></div>').join('')
+      + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.max(4, v / Math.max.apply(null, st) * 100) + '%"></i></span><b>' + v + '</b></div>').join('')
       + '</div><div class="panel"><h3>Signature move</h3><p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance() * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '%.</p></div>'
-      + '<div class="panel"><h3>Level up</h3><p class="edge">Level <b>' + inst.lvl + '</b> / ' + E.T.levelMax + ' · +' + (Math.round((inst.lvl - 1) * E.T.levelStep * 1000) / 10) + '% stats. Each level adds +' + (E.T.levelStep * 100) + '%. Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
-      + '<div class="bar"><i style="width:' + (inst.lvl - 1) / (E.T.levelMax - 1) * 100 + '%"></i></div>'
+      + '<div class="panel"><h3>Level up</h3><p class="edge">Level <b>' + fmt(inst.lvl) + '</b> · +' + fmt(Math.round((inst.lvl - 1) * E.T.levelStep * 1000) / 10) + '% stats. Every level adds +' + (E.T.levelStep * 100) + '% and there is no maximum. Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
       + '<p class="edge dupline">' + (inst.d ? 'You have <b>' + inst.d + '</b> spare duplicate' + (inst.d > 1 ? 's' : '') + ' of ' + c.n + '.' : 'Get a duplicate of ' + c.n + ' from a card pick to level this card up.') + '</p>'
-      + (inst.lvl >= E.T.levelMax ? '<button class="btn alt" disabled>Max level</button>'
-        : '<button class="btn" ' + (inst.d ? '' : 'disabled') + ' onclick="UI.levelUp(' + inst.u + ')">Level up (uses 1 duplicate)</button>' + (inst.d > 1 ? '<button class="btn alt" onclick="UI.levelUp(' + inst.u + ',1)">Use all ' + inst.d + ' duplicates</button>' : '')) + '</div>'
+      + '<button class="btn" ' + (inst.d ? '' : 'disabled') + ' onclick="UI.levelUp(' + inst.u + ')">Level up (uses 1 duplicate)</button>' + (inst.d > 1 ? '<button class="btn alt" onclick="UI.levelUp(' + inst.u + ',1)">Use all ' + inst.d + ' duplicates</button>' : '') + '</div>'
       + '<div class="panel"><h3>Tag &amp; ring</h3><p class="edge">Tag symbol <b class="sym ' + c.sym + '" style="position:static;background:none">' + SYMCH[c.sym] + '</b> — opposite arrows of the same colour make a diamond (+10% team stats); mixed colours −5%.</p><div class="arrows">' + arrows.join('') + '</div><p class="edge">Ring Domination arrows: where this card can challenge.</p></div>');
   }
   function levelUp(u, all) { const t = byU(u); if (!t) return; if (E.levelUp(t, all)) { sfx('win'); persist(); } detail(u); }
@@ -390,7 +388,7 @@
       return '<button class="supb ' + (used ? 'used ' : '') + (GM.sup === s ? 'on ' : '') + (helps && !used ? 'helps' : '') + '" ' + (used ? 'disabled' : 'onclick="UI.supTog(' + i + ')"') + '><span class="si">' + I[D.id] + '</span><small>+' + Math.round(D.pct * 100) + '%</small></button>';
     }).join('');
     const foeCards = cfg.deckB.m.concat(cfg.deckB.f);
-    const slot = sel.length ? sel.map(c => face(c, { cls: 'slotbig' + (sel.length > 1 ? ' two' : ''), hl, val: vsum(c, spec), click: 'UI.selTog(' + hand.indexOf(c) + ')' })).join('') : '<div class="slotempty"><span class="ic">' + I[spec.type] + '</span><b>' + (spec.extra ? 'TIE-BREAK' : E.TYPE_NAME[spec.type].toUpperCase()) + '</b><small>Tap ' + need + ' card' + (need > 1 ? 's' : '') + ' below</small></div>';
+    const slot = sel.length ? sel.map(c => face(c, { cls: 'slotbig' + (sel.length > 1 ? ' two' : ''), hl, val: vsum(c, spec), click: 'UI.selTog(' + hand.indexOf(c) + ')' })).join('') : '<div class="slotempty"><span class="ic">' + I[spec.type] + '</span><b>' + (spec.extra ? 'TIE-BREAK' : E.TYPE_NAME[spec.type].toUpperCase()) + '</b><small>Tap ' + need + ' card' + (need > 1 ? 's' : '') + ' to play</small></div>';
     screen(arenaBG + '<div class="mscreen mpk">'
       + '<div class="topline">' + plate(cfg.oppName, cfg.oppRec || cfg.title, g.b.pts, false) + '</div>' + backs(foeCards, g.b.used)
       + '<div class="mnum"><span>' + (g.extra ? 'EXTRA' : 'MATCH ' + (g.results.length + 1)) + '</span><div class="mdots">' + (g.extra ? '' : g.specs.map((sp, i) => { const r = g.results[i]; return '<i class="' + (r ? (r.winner === 'a' ? 'won' : r.winner === 'b' ? 'lost' : 'tied') : i === g.results.length ? 'cur' : '') + '"></i>'; }).join('')) + '</div></div>'
@@ -401,13 +399,14 @@
         const used = g.a.used.includes(c), elig = eligible(spec, c, g);
         return face(c, { cls: 'tr ' + (used ? 'used ' : !elig ? 'dim ' : '') + (sel.includes(c) ? 'sel' : ''), hl, val: elig ? vsum(c, spec) : null, click: elig ? 'UI.selTog(' + i + ')' : '' });
       }).join('') + '</div>'
-      + '<button class="btn big play sticky" ' + (ok ? '' : 'disabled') + ' onclick="UI.play()">PLAY</button></div>');
+      + '</div>');
   }
   // Solo/Tag matches show your men, Women's matches your women, a tie-break any unused card.
   const handFor = (spec, d, g) => spec.extra ? d.m.concat(d.f).filter(c => !g.a.used.includes(c)) : spec.type === 'divas' ? d.f : d.m;
   const vsum = (c, spec) => spec.stats.reduce((a, i) => a + E.stats(c)[i], 0);
   function selTog(i) {
     const { g } = GM, spec = specOf(g), d = g.a.deck, hand = handFor(spec, d, g), c = hand[i], need = needCount(spec);
+    if (GM.locked) return;
     const k = GM.sel.indexOf(c);
     if (k >= 0) GM.sel.splice(k, 1);
     else {
@@ -416,8 +415,10 @@
       GM.sel.push(c);
     }
     pickPhase();
+    // Tapping the last card the match needs plays it straight away (choose a support card first if you want one).
+    if (GM.sel.length === need) { GM.locked = true; setTimeout(() => { GM.locked = false; if (GM.sel.length === need) play(); }, 380); }
   }
-  function supTog(i) { const s = GM.g.a.deck.s[i]; GM.sup = GM.sup === s ? null : s; pickPhase(); }
+  function supTog(i) { if (GM.locked) return; const s = GM.g.a.deck.s[i]; GM.sup = GM.sup === s ? null : s; pickPhase(); }
   function play() {
     const { g, cfg } = GM, spec = specOf(g), need = needCount(spec);
     if (GM.sel.length !== need) return;
@@ -454,11 +455,23 @@
     const win = g.winner === 'a', perf = E.perfect(g);
     S.stats[win ? 'wins' : 'losses']++; if (perf) S.stats.perfect++; persist();
     GM.done = () => cfg.onEnd(g);
-    screen('<div class="victory ' + (win ? 'vw' : 'vl') + '"><div class="vband"></div><div class="vtxt"><small>' + (perf ? 'PERFECT' : win ? 'MATCH' : 'MATCH') + '</small><h1>' + (win ? 'VICTORY!' : 'DEFEAT') + '</h1></div>'
-      + '<div class="vscore"><b>' + g.a.pts + '</b><span>' + cfg.oppName + '</span><b class="r">' + g.b.pts + '</b></div>'
-      + '<div class="vpicks">' + E.picksFor(g) + '× CARD PICK' + (E.picksFor(g) > 1 ? 'S' : '') + '</div>'
-      + '<div class="vdots">' + g.results.map(r => '<i class="' + (r.winner === 'a' ? 'w' : r.winner === 'b' ? 'l' : 't') + '"></i>').join('') + '</div>'
-      + '<button class="btn big play" onclick="UI.gameDone()">TAP TO CONTINUE</button></div>');
+    const n = E.picksFor(g), me = S.name || 'You';
+    const thumb = c => '<img src="../assets/superstars-t/' + C[c.c].a + '.webp" alt="">';
+    const rows = g.results.map((r, i) => {
+      const t = r.spec && r.spec.extra ? 'Tie-break' : E.TYPE_NAME[r.spec.type], w = r.winner;
+      return '<div class="vrow ' + (w === 'a' ? 'w' : w === 'b' ? 'l' : 't') + '" style="--i:' + i + '"><span class="vm"><b>' + (r.spec && r.spec.extra ? 'EX' : i + 1) + '</b><small>' + t + '</small></span>'
+        + '<span class="vt a ' + (w === 'a' ? 'win' : '') + '"><span class="th">' + r.a.cards.map(thumb).join('') + '</span><b>' + fmt(Math.round(r.a.total)) + '</b></span>'
+        + '<i class="vv">' + (w === 'a' ? 'W' : w === 'b' ? 'L' : 'D') + '</i>'
+        + '<span class="vt b ' + (w === 'b' ? 'win' : '') + '"><b>' + fmt(Math.round(r.b.total)) + '</b><span class="th">' + r.b.cards.map(thumb).join('') + '</span></span></div>';
+    }).join('');
+    const confetti = win ? '<div class="vconf">' + Array.from({ length: 22 }, (_, k) => '<i style="left:' + ((k * 47) % 100) + '%;--d:' + (2.6 + (k % 5) * 0.5) + 's;--w:' + ((k % 7) * 0.18) + 's;--c:' + ['#ffd23f', '#ff7a1a', '#fff', '#38bdf8', '#ff4d5a'][k % 5] + '"></i>').join('') + '</div>' : '';
+    screen('<div class="victory ' + (win ? 'vw' : 'vl') + '">' + confetti
+      + '<div class="vhead"><small>' + (perf ? 'PERFECT · 3–0' : win ? 'YOU WON THE GAME' : 'YOU LOST THE GAME') + '</small><h1>' + (win ? 'VICTORY!' : 'DEFEAT') + '</h1></div>'
+      + '<div class="vsc2"><div class="vside me"><span class="av">' + initials(me) + '</span><em>' + esc(me) + '</em></div><div class="vnums"><b class="' + (win ? 'g' : '') + '">' + g.a.pts + '</b><i>–</i><b class="' + (!win && g.b.pts > g.a.pts ? 'g' : '') + '">' + g.b.pts + '</b></div><div class="vside vfoe"><span class="av">' + initials(cfg.oppName) + '</span><em>' + esc(cfg.oppName) + '</em></div></div>'
+      + '<div class="vrows">' + rows + '</div>'
+      + '<div class="vrew"><div class="vbacks">' + Array.from({ length: n }, (_, k) => '<i style="--k:' + k + '"><b>WS</b></i>').join('') + '</div><div class="vrt"><b>' + n + '× CARD PICK' + (n > 1 ? 'S' : '') + '</b><small>' + (perf ? 'Clean sweep bonus!' : win ? 'Win 3–0 for a bonus pick' : 'A loss still earns a pick') + '</small></div></div>'
+      + '<div class="vrec"><span>Record <b>' + S.stats.wins + '–' + S.stats.losses + '</b></span><span>Perfect wins <b>' + S.stats.perfect + '</b></span><span>Deck rank <b>' + rankNo() + '</b></span></div>'
+      + '<button class="btn big go2" onclick="UI.gameDone()">Continue</button></div>');
     sfx(win ? 'win' : 'lose');
   }
   function gameDone() { const d = GM.done; d(); }

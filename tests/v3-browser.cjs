@@ -37,12 +37,12 @@ const SH = process.env.SHOTS || '/tmp/shots';
   // Plays a 3-match game screen by screen, always choosing the first legal cards.
   async function playGame() {
     for (let g = 0; g < 60; g++) {
-      if (await C('button:has-text("TAP TO CONTINUE")').count()) { await C('button:has-text("TAP TO CONTINUE")').first().click(); return true; }
+      if (await C('.victory .btn.go2').count()) { if (!global.__vs) { global.__vs = 1; await page.waitForTimeout(1500); await page.screenshot({ path: SH + '/v3-victory.png' }); } await C('.victory .btn.go2').first().click(); return true; }
       if (await C('.tray').count() && await C('.slotarea').count()) {
         const need = await page.evaluate(() => { const e = document.querySelector('.slotempty small'); const m = e && /Tap (\d)/.exec(e.textContent); if (m) return +m[1]; return 0; });
         for (let k = 0; k < need; k++) { const el = C('.tray .cf:not(.used):not(.dim):not(.sel)').first(); await el.click(); }
         if (g === 1) await page.screenshot({ path: SH + '/v3-selected.png' });
-        await C('button:has-text("PLAY")').click(); continue;
+        await page.waitForTimeout(700); continue; // tapping the last needed card plays it
       }
       const nx = C('button:has-text("NEXT MATCH"), button:has-text("FINISH")');
       if (await nx.count()) { if (g < 6) await page.screenshot({ path: SH + '/v3-reveal.png' }); await nx.first().click(); continue; }
@@ -75,7 +75,8 @@ const SH = process.env.SHOTS || '/tmp/shots';
   await C('button.tile:has-text("Cards")').click(); await page.screenshot({ path: SH + '/v3-collection.png' });
   await C('.grid .cf').first().click(); await page.screenshot({ path: SH + '/v3-detail.png' });
   const lvBefore = await page.evaluate(() => V3.S.cards.map(c => c.lvl).reduce((a, b) => a + b, 0));
-  await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 2; UI.detail(c.u); }); await C(`button:has-text("Level up (uses 1 duplicate)")`).click(); assert((await page.textContent("body")).includes("Level 2"), "level up works"); await C(`button:has-text("Use all 1 duplicates"), button:has-text("Level up (uses 1 duplicate)")`).first().click();
+  await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 2; UI.detail(c.u); }); await C(`button:has-text("Level up (uses 1 duplicate)")`).click(); assert((await page.textContent("body")).includes("Level 2"), "level up works");
+  await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 80; UI.levelUp(c.u, 1); }); assert(await page.evaluate(() => V3.S.cards[0].lvl) > 80, 'levels have no cap'); await page.screenshot({ path: SH + '/v3-bigdetail.png' });
   await home(); await C('button.tile:has-text("Book")').click(); assert((await page.textContent('body')).includes('of 239'), 'book');
   await home(); await C('button.tile:has-text("Deck")').click(); await C('button:has-text("Auto-build")').click(); await page.screenshot({ path: SH + '/v3-deck.png' });
 

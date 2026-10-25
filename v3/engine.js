@@ -22,7 +22,7 @@
     { n: 'Legendary', mult: 6.0, sig: 0.33, col: '#ffd34d' }, { n: 'Survivor', mult: 7.2, sig: 0.36, col: '#ff4d5e' },
     { n: 'WrestleMania', mult: 8.6, sig: 0.4, col: '#7fe7ff' }
   ];
-  const T = { levelMax: 40, levelStep: 0.0125, power: 4.2, sigChance: 0.2, matchBoost: 0.10, matchMax: 100, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
+  const T = { levelStep: 0.0125, power: 4.2, sigChance: 0.2, matchBoost: 0.10, matchMax: 100, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
   // Support cards: one-use boosts per game. pct is applied to the listed stats for the match they are played in.
   const SUPPORTS = [
     { id: 'chair', name: 'Steel Chair', stats: [0], pct: 0.25, rar: 0 }, { id: 'table', name: 'Table', stats: [2], pct: 0.25, rar: 0 },
@@ -44,7 +44,7 @@
   const isF = inst => CARDS[inst.c].g === 'F';
 
   /* ---------- cards ---------- */
-  // inst = {u, c:index into CARDS, lvl 1..40, d spare duplicates, mt matches played}
+  // inst = {u, c:index into CARDS, lvl 1.. (no cap), d spare duplicates, mt matches played}
   function mk(c, o) { return Object.assign({ u: 0, c, lvl: 1, d: 0, mt: 0 }, o || {}); }
   // Every level adds +1.25% to all five stats. Playing matches adds up to +10% on top.
   function cardMult(inst) {
@@ -58,7 +58,7 @@
   const sigChance = () => T.sigChance;
   const supPct = s => s.pct;
   // Levelling: spend one spare duplicate of the same wrestler to gain one level.
-  const canLevel = inst => inst.d > 0 && inst.lvl < T.levelMax;
+  const canLevel = inst => inst.d > 0;
   function levelUp(inst, all) { let n = 0; while (canLevel(inst)) { inst.d--; inst.lvl++; n++; if (!all) break; } return n; }
 
   /* ---------- decks ---------- */
@@ -78,14 +78,16 @@
     o = o || {};
     const nM = o.m == null ? 3 : o.m, nF = o.f == null ? 3 : o.f, nS = o.s == null ? 2 : o.s;
     const pool = g => CARDS.map((c, i) => i).filter(i => CARDS[i].g === g);
+    // Computer cards: random wrestlers levelled so each one lands near the target strength (levels have no cap).
     const make = (idxs, n) => {
       const out = [];
-      const cand = idxs.map(i => { const inst = mk(i, { lvl: 1 + Math.floor(rng() * 40), mt: Math.floor(rng() * 80) }); return { inst, t: total(inst) }; });
-      while (out.length < n && cand.length) {
+      const cand = shuffle(idxs, rng).map(i => { const mt = Math.floor(rng() * 80), inst = mk(i, { lvl: 1, mt }), base = total(inst); return { i, mt, base }; });
+      const fit = cand.filter(c => c.base <= target * 1.02), rest = cand.filter(c => c.base > target * 1.02).sort((a, b) => a.base - b.base);
+      for (const c of fit.concat(rest)) {
+        if (out.length >= n) break;
         const want = target * (0.88 + rng() * 0.24);
-        let best = 0, bd = 1e9;
-        for (let k = 0; k < cand.length; k++) { const d = Math.abs(cand[k].t - want); if (d < bd) { bd = d; best = k; } }
-        out.push(cand.splice(best, 1)[0].inst);
+        const lvl = Math.max(1, Math.round(1 + (want / c.base - 1) / T.levelStep));
+        out.push(mk(c.i, { lvl, mt: c.mt }));
       }
       return out;
     };
