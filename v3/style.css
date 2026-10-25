@@ -655,7 +655,7 @@ body:has(.plist) .btn.big{margin-top:clamp(4px,1.5dvh,14px)}
 .sf{container-type:inline-size;padding:5cqw;gap:2cqw;justify-content:flex-start;overflow:hidden}
 .sf:not(.sm) .sart{position:relative;flex:1;min-height:0;width:100%;border-radius:8px;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--rc) 35%,#1a1a28),#0e0e16);display:grid;place-items:center;overflow:hidden}
 .sf:not(.sm) .sico{width:62cqw;height:62cqw;max-width:none}.sf .sico svg{width:100%;height:100%}
-.sf .simg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.sf .sart.hasart .sico{display:none}
+.sf .simg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 25%}.sf .sart.hasart .sico{display:none}
 .sf:not(.sm) .stx{width:100%;gap:1cqw}
 .sf:not(.sm) .snm{font-size:17cqw;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .sf:not(.sm) .spct{font-size:25cqw;line-height:1;color:var(--gold2);font-weight:800}.sf:not(.sm) .spct .ab{display:none}
@@ -695,3 +695,11 @@ body:has(.plist) .btn.big{margin-top:clamp(4px,1.5dvh,14px)}
 .bigopp .tag{background:#07070dee;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 2px 10px #000a;padding:5px 14px}
 .bigopp .tag small{color:#fff;opacity:1;font-size:12px;font-weight:700;letter-spacing:.05em;text-shadow:0 1px 2px #000}
 .bigopp .on small{color:#e9e9f2}
+
+/* v3.21 support art fills its slot */
+.sf:not(.sm) .sart{align-self:stretch;width:auto;max-width:none}
+/* cqw padding on the container itself resolves against the wrong ancestor: pad the children instead */
+.sf:not(.sm){padding:0;gap:0}
+.sf:not(.sm) .sart{margin:5cqw 5cqw 2cqw;align-self:stretch}
+.sf:not(.sm) .stx{padding:0 4cqw 5cqw;box-sizing:border-box}
+.sf:not(.sm) .snm{font-size:13.5cqw;letter-spacing:.03em}.sf:not(.sm) .spct{font-size:22cqw}

@@ -187,7 +187,7 @@
     o = o || {}; const d = SUP[s.s], r = RAR[d.rar], all = d.stats.length === 4 || d.stats.length === 5;
     const ab = all ? 'ALL' : d.stats.map(i => ST[i].ab).join('+');
     const badges = all ? '<b class="all">ALL</b>' : d.stats.map(i => '<span style="--sc:' + ST[i].col + '">' + statImg(i) + '</span>').join('');
-    return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sart"><div class="sico">' + I[d.id] + '</div><img class="simg" src="../assets/supports/' + d.id + '.webp" alt="" onload="this.parentNode.classList.add(\'hasart\')" onerror="this.remove()"></div>'
+    return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sart"><div class="sico">' + I[d.id] + '</div><img class="simg" src="../assets/supports/' + (d.art || d.id) + '.webp" alt="" onload="this.parentNode.classList.add(\'hasart\')" onerror="this.remove()"></div>'
       + '<div class="stx"><div class="snm">' + d.name + '</div><div class="spct"><span class="pc">+' + Math.round(d.pct * 100) + '%</span> <span class="ab">' + ab + '</span></div><div class="sstats">' + badges + '</div></div></div>';
   }
   // thumbnails exist for the base roster; movie cards use their full artwork
@@ -422,7 +422,7 @@
   let PT = null;
   // Reward screen: n face-down picks. Every pick is a random wrestler or support card.
   function awardPicks(n, then, title) {
-    PT = { n, left: n, table: E.pickTable(power(), rnd, new Set(S.cards.map(c => c.c))), got: [], last: null, then: then || home, title: title || 'Card Picks' };
+    PT = { n, left: n, table: E.pickTable(power(), rnd, new Set(S.cards.map(c => c.c)), null, new Set(S.sups.map(x => x.s))), got: [], last: null, then: then || home, title: title || 'Card Picks' };
     S.stats.picks += n; persist();
     renderPicks();
   }

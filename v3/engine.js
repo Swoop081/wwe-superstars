@@ -27,11 +27,14 @@
   const SUPPORTS = [
     { id: 'chair', name: 'Steel Chair', stats: [0], pct: 0.25, rar: 0 }, { id: 'table', name: 'Table', stats: [2], pct: 0.25, rar: 0 },
     { id: 'ladder', name: 'Ladder', stats: [3], pct: 0.25, rar: 0 }, { id: 'mic', name: 'Microphone', stats: [4], pct: 0.25, rar: 0 },
-    { id: 'kendo', name: 'Kendo Stick', stats: [1, 3], pct: 0.18, rar: 1 }, { id: 'bell', name: 'Ring Bell', stats: [2, 4], pct: 0.18, rar: 1 },
+    { id: 'kendo', art: 'kendo-stick', name: 'Kendo Stick', stats: [1, 3], pct: 0.18, rar: 1 }, { id: 'bell', art: 'ring-bell', name: 'Ring Bell', stats: [2, 4], pct: 0.18, rar: 1 },
     { id: 'manager', name: 'Manager', stats: [0, 1, 2, 3, 4], pct: 0.12, rar: 2 }, { id: 'mastermind', name: 'Mastermind', stats: [0, 1, 2, 3, 4], pct: 0.15, rar: 3 },
     { id: 'belt', name: 'Title Belt', stats: [0, 1, 2, 3, 4], pct: 0.2, rar: 4 }, { id: 'spotlight', name: 'Spotlight', stats: [3, 4], pct: 0.32, rar: 3 },
-    { id: 'barricade', name: 'Barricade', stats: [0, 2], pct: 0.32, rar: 3 }, { id: 'legacy', name: 'Hall of Fame', stats: [0, 1, 2, 3, 4], pct: 0.28, rar: 6 }
+    { id: 'barricade', name: 'Barricade', stats: [0, 2], pct: 0.32, rar: 3 }, { id: 'legacy', name: 'Hall of Fame', stats: [0, 1, 2, 3, 4], pct: 0.28, rar: 6 },
+    // Street Fighter movie managers (mv: limited-time pulls, then duplicates only). Append-only: saves store supports by index.
+    { id: 'dan-hibiki', name: 'Dan Hibiki', stats: [1, 4], pct: 0.34, rar: 4, mv: 1 }, { id: 'don-sauvage', name: 'Don Sauvage', stats: [0, 1, 2, 3, 4], pct: 0.24, rar: 5, mv: 1 }
   ];
+  const BASE_SUPPORTS = 12; // AI decks only use the original supports
   const SUP_IDX = Object.fromEntries(SUPPORTS.map((s, i) => [s.id, i]));
   const SYM = { BL: { c: 'blue', d: 'left' }, BR: { c: 'blue', d: 'right' }, YU: { c: 'yellow', d: 'up' }, YD: { c: 'yellow', d: 'down' } };
   const DIRS = [[-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1]]; // N NE E SE S SW W NW as (row, col)
@@ -112,8 +115,8 @@
       }
       return out;
     };
-    const lvlSup = Math.min(SUPPORTS.length - 1, Math.max(0, Math.round(target / 80)));
-    const sup = []; for (let i = 0; i < nS; i++) sup.push({ u: 0, s: Math.min(SUPPORTS.length - 1, Math.max(0, lvlSup - Math.floor(rng() * 5))) });
+    const lvlSup = Math.min(BASE_SUPPORTS - 1, Math.max(0, Math.round(target / 80)));
+    const sup = []; for (let i = 0; i < nS; i++) sup.push({ u: 0, s: Math.min(BASE_SUPPORTS - 1, Math.max(0, lvlSup - Math.floor(rng() * 5))) });
     return { m: make(pool('M'), nM), f: make(pool('F'), nF), s: sup };
   }
 
@@ -266,10 +269,10 @@
   const T_MOVIE_END = Date.UTC(2026, 10, 30, 13, 0); // 30 Nov 2026, Melbourne midnight-ish
   const movieOpen = (now) => (now == null ? Date.now() : now) < T_MOVIE_END;
   function pullable(owned, now) { const open = movieOpen(now), out = []; for (let i = 0; i < CARDS.length; i++) if (!CARDS[i].mv || open || (owned && owned.has(i))) out.push(i); return out; }
-  function pickTable(power, rng, owned, now) {
-    const tier = powerTier(power), slots = [], pool = pullable(owned, now);
+  function pickTable(power, rng, owned, now, ownedSup) {
+    const tier = powerTier(power), slots = [], pool = pullable(owned, now), open = movieOpen(now);
     for (let i = 0; i < 12; i++) {
-      if (rng() < 0.17) { const s = SUPPORTS.map((s, k) => k).filter(k => SUPPORTS[k].rar <= tier + 1); slots.push({ k: 'sup', s: pickR(s, rng), open: false }); }
+      if (rng() < 0.17) { const s = SUPPORTS.map((s, k) => k).filter(k => (SUPPORTS[k].mv || SUPPORTS[k].rar <= tier + 1) && (!SUPPORTS[k].mv || open || (ownedSup && ownedSup.has(k)))); slots.push({ k: 'sup', s: pickR(s, rng), open: false }); }
       else slots.push({ k: 'card', c: pool[Math.floor(rng() * pool.length)], open: false });
     }
     return slots;

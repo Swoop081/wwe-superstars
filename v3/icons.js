@@ -6,6 +6,8 @@
     table: S('<path d="M4 12h24l-3-5H7z"/><path d="M7 12v14M25 12v14M7 18h18"/>'),
     ladder: S('<path d="M10 3v26M22 3v26M10 9h12M10 15h12M10 21h12"/>'),
     mic: S('<circle cx="16" cy="10" r="6"/><path d="M16 16v7M11 29h10M13 23h6"/>'),
+    'dan-hibiki': S('<path d="M11 15V7a2 2 0 014 0v6h8l-1 11H11z"/><path d="M6 15h5v9H6z"/>'),
+    'don-sauvage': S('<path d="M5 13l14-6v18L5 19z"/><path d="M19 12c4 0 7 1 7 4s-3 4-7 4"/><path d="M9 20l2 6h3"/>'),
     kendo: S('<path d="M6 26 26 6"/><path d="M5 27l4-1-3-3zM22 10l2 2M19 13l2 2"/>'),
     bell: S('<path d="M7 24c0-9 2-15 9-15s9 6 9 15z"/><path d="M5 24h22M16 9V5M14 28h4"/>'),
     manager: S('<circle cx="16" cy="10" r="5"/><path d="M6 28c0-8 4-11 10-11s10 3 10 11M16 17l-2 5 2 3 2-3z"/>'),
