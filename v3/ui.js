@@ -48,7 +48,18 @@
   const pick = a => a[Math.floor(rnd() * a.length)];
   const art = c => '<img class="artimg" src="../assets/superstars/' + c.a + '.webp" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/superstars/' + c.a + '.png\'">';
   const screen = (html, keepScroll) => { app.innerHTML = html; if (!keepScroll) window.scrollTo(0, 0); };
-  const statImg = i => '<img src="../assets/' + ST[i].icon + '" alt="' + ST[i].name + '">';
+  // Stat badges: a coloured disc with a white glyph (red Strength, green Technical, sky-blue Agility, yellow Charisma).
+  const gear = (() => { let d = ''; for (let k = 0; k < 16; k++) { const a = k * Math.PI / 8, r = k % 2 ? 6.4 : 9.4, w = 0.2; const pts = (k % 2) ? [[a - w, 6.4], [a + w, 6.4]] : [[a - w * .7, 9.4], [a + w * .7, 9.4]]; pts.forEach(([t, rr]) => { d += (d ? 'L' : 'M') + (12 + rr * Math.cos(t)).toFixed(2) + ' ' + (12 + rr * Math.sin(t)).toFixed(2); }); } return d + 'Z M12 8.6a3.4 3.4 0 1 0 0 6.8a3.4 3.4 0 1 0 0-6.8z'; })();
+  const star = (() => { let d = ''; for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, r = k % 2 ? 4.2 : 9.6; d += (k ? 'L' : 'M') + (12 + r * Math.cos(a)).toFixed(2) + ' ' + (12 + r * Math.sin(a)).toFixed(2); } return d + 'Z'; })();
+  const FIST = 'M7 10.2c0-1 .8-1.7 1.7-1.7h6.6c1 0 1.7.8 1.7 1.7v4.1c0 1.7-1.3 3-3 3h-4c-1.7 0-3-1.3-3-3zM9.4 6.3a1 1 0 0 1 2 0v2.2h-2zM11.6 5.6a1 1 0 0 1 2 0v2.9h-2zM13.8 6.3a1 1 0 0 1 2 0v2.2h-2z'; // clenched fist (strike)
+  const GLYPH = [
+    'M3 9.5h2.2v5H3zM5.2 7.5h2.6v9H5.2zM7.8 11h8.4v2H7.8zM16.2 7.5h2.6v9h-2.6zM18.8 9.5H21v5h-2.2z', // dumbbell: strength
+    FIST, // fist: strike
+    gear, // gear: technical
+    'M13.4 2.5 5 13.6h5.4L9.4 21.5l9.2-11.6h-5.6z', // bolt: agility
+    star // star: charisma
+  ];
+  const statImg = i => '<svg class="sti" viewBox="0 0 24 24" aria-label="' + ST[i].name + '"><circle cx="12" cy="12" r="11.2" fill="' + ST[i].col + '" stroke="#000" stroke-opacity=".55" stroke-width="1"/><path fill="#fff" fill-rule="evenodd" stroke="#0007" stroke-width=".6" transform="translate(12 12) scale(.72) translate(-12 -12)" d="' + GLYPH[i] + '"/></svg>';
 
   function give(ci, extra) {
     const first = !S.cards.some(c => c.c === ci);
@@ -73,10 +84,10 @@
   function getDeck() {
     const clean = (arr, n, pool) => { const out = arr.filter(u => pool.some(x => x.u === u)); return out.slice(0, n); };
     const males = S.cards.filter(c => !E.isF(c)), females = S.cards.filter(E.isF);
-    S.deck.m = clean(S.deck.m, 4, males); S.deck.f = clean(S.deck.f, 2, females); S.deck.s = clean(S.deck.s, 2, S.sups);
+    S.deck.m = clean(S.deck.m, 3, males); S.deck.f = clean(S.deck.f, 3, females); S.deck.s = clean(S.deck.s, 2, S.sups);
     const best = E.bestDeck(S.cards, S.sups);
-    best.m.forEach(c => { if (S.deck.m.length < 4 && !S.deck.m.includes(c.u)) S.deck.m.push(c.u); });
-    best.f.forEach(c => { if (S.deck.f.length < 2 && !S.deck.f.includes(c.u)) S.deck.f.push(c.u); });
+    best.m.forEach(c => { if (S.deck.m.length < 3 && !S.deck.m.includes(c.u)) S.deck.m.push(c.u); });
+    best.f.forEach(c => { if (S.deck.f.length < 3 && !S.deck.f.includes(c.u)) S.deck.f.push(c.u); });
     best.s.forEach(c => { if (S.deck.s.length < 2 && !S.deck.s.includes(c.u)) S.deck.s.push(c.u); });
     return { m: S.deck.m.map(byU), f: S.deck.f.map(byU), s: S.deck.s.map(supByU) };
   }
@@ -110,11 +121,11 @@
       + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
       + (o.val != null ? '<div class="val">' + fmt(o.val) + '</div>' : '')
       + nameEl(c)
-      + '<div class="sb">' + st.map((v, i) => '<span class="' + (o.hl && o.hl.includes(i) ? 'hl' : '') + '">' + statImg(i) + '<em>' + 'PTSC'[i] + '</em><b>' + v + '</b></span>').join('') + '</div></div>';
+      + '<div class="sb">' + st.map((v, i) => '<span style="--sc:' + ST[i].col + '" class="' + (o.hl && o.hl.includes(i) ? 'hl' : '') + '">' + statImg(i) + '<b>' + v + '</b></span>').join('') + '</div></div>';
   }
   function supFace(s, o) {
     o = o || {}; const d = SUP[s.s], r = RAR[d.rar];
-    return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sico">' + I[d.id] + '</div><div class="stx"><div class="snm">' + d.name + '</div><div class="spct">+' + Math.round(d.pct * 100) + '% ' + (d.stats.length === 4 ? 'ALL' : d.stats.map(i => ST[i].name.slice(0, 3).toUpperCase()).join('+')) + '</div></div></div>';
+    return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sico">' + I[d.id] + '</div><div class="stx"><div class="snm">' + d.name + '</div><div class="spct">+' + Math.round(d.pct * 100) + '% ' + (d.stats.length === 4 ? 'ALL' : d.stats.map(i => ST[i].ab).join('+')) + '</div></div></div>';
   }
   const back = (to, label) => '<div class="topbar"><button onclick="' + to + '">‹ ' + (label || 'Back') + '</button></div>';
 
@@ -177,7 +188,7 @@
     }
     const inDeck = u => S.deck.m.includes(u) || S.deck.f.includes(u) || S.deck.s.includes(u);
     screen(back('UI.home()', 'Home') + '<div class="seg">' + tabs.map(t => '<button class="' + (COL.tab === t[0] ? 'on' : '') + '" onclick="UI.collection(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
-      + (COL.tab === 's' ? '' : '<div class="seg small">' + [['power', 'Power'], ['rar', 'Rarity'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
+      + (COL.tab === 's' ? '' : '<div class="seg small">' + [['power', 'Overall'], ['rar', 'Rarity'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
       + '<div class="grid">' + (COL.tab === 's' ? list.map(s => supFace(s, { cls: inDeck(s.u) ? 'indeck' : '' })).join('')
         : list.map(c => face(c, { cls: inDeck(c.u) ? 'indeck' : '', click: 'UI.detail(' + c.u + ')' })).join('')) + '</div>');
   }
@@ -198,7 +209,7 @@
     c.ar.forEach(d => { arrows[ar[d]] = '<i class="on">' + '↑↗→↘↓↙←↖'[d] + '</i>'; });
     screen(back('UI.collection()', 'Cards') + face(inst, { cls: 'big' })
       + '<div class="panel"><h3>' + RAR[c.rar].n + ' · ' + (E.isF(inst) ? 'Divas' : 'Superstar') + (inst.pro ? ' · PRO' + (inst.fort ? ' +' + inst.fort : '') : '') + '</h3>'
-      + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar"><i style="width:' + Math.min(100, v / (8.6 * 100) * 100 * 2.2) + '%"></i></span><b>' + v + '</b></div>').join('')
+      + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.min(100, v / (8.6 * 100) * 100 * 2.2) + '%"></i></span><b>' + v + '</b></div>').join('')
       + '</div><div class="panel"><h3>Signature move</h3><p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance(inst) * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '%.</p></div>'
       + '<div class="panel"><h3>Progress</h3><p class="edge">Level ' + inst.lvl + ' / 100 (+' + Math.round(inst.lvl * 0.3) + '% stats) · Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
       + '<div class="bar"><i style="width:' + inst.lvl + '%"></i></div>'
@@ -236,8 +247,8 @@
     const d = getDeck();
     const slot = (kind, i, inst) => inst ? (kind === 's' ? supFace(inst, { cls: 'slotc', click: "UI.deckPick('s'," + i + ')' }) : face(inst, { cls: 'slotc', click: 'UI.deckPick(\'' + kind + '\',' + i + ')' })) : '<div class="empty" onclick="UI.deckPick(\'' + kind + '\',' + i + ')">+</div>';
     screen(back('UI.home()', 'Home') + '<h2 class="big-title">Your Deck</h2><div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span></div>'
-      + '<h3 class="sect">Superstars (4)</h3><div class="slots">' + d.m.map((c, i) => slot('m', i, c)).join('') + '</div>'
-      + '<h3 class="sect">Divas (2)</h3><div class="slots two">' + d.f.map((c, i) => slot('f', i, c)).join('') + '</div>'
+      + '<h3 class="sect">Superstars (3)</h3><div class="slots">' + d.m.map((c, i) => slot('m', i, c)).join('') + '</div>'
+      + '<h3 class="sect">Divas (3)</h3><div class="slots">' + d.f.map((c, i) => slot('f', i, c)).join('') + '</div>'
       + '<h3 class="sect">Support (2)</h3><div class="slots two">' + d.s.map((c, i) => slot('s', i, c)).join('') + '</div>'
       + '<button class="btn" onclick="UI.deckAuto()">Auto-build best deck</button>');
   }
@@ -302,10 +313,10 @@
   const arenaBG = '<div class="arena-bg"><div class="spots"></div><div class="ringfloor"><i></i><i></i><i></i></div><div class="crowd"></div></div>';
   const backs = (cards, used) => '<div class="backs">' + cards.map((c, i) => '<i class="back ' + (used.includes(c) ? 'used' : '') + '" style="--r:' + ((i - (cards.length - 1) / 2) * 7) + 'deg"><b>WS</b></i>').join('') + '</div>';
   const plate = (name, sub, pts, me) => '<div class="plate ' + (me ? 'me' : 'foe') + '"><span class="av">' + initials(name) + '</span><span class="pn"><b>' + name + '</b><small>' + sub + '</small></span><span class="ptsb">' + pts + '<small>PTS</small></span></div>';
-  const statTags = hl => '<div class="stags">' + ST.map((s, i) => '<span class="' + (hl.includes(i) ? 'on' : '') + '">' + statImg(i) + s.name.slice(0, 3).toUpperCase() + '</span>').join('') + '</div>';
+  const statTags = hl => '<div class="stags">' + ST.map((s, i) => '<span style="--sc:' + s.col + '" class="' + (hl.includes(i) ? 'on' : '') + '">' + statImg(i) + s.ab + '</span>').join('') + '</div>';
   function pickPhase() {
     const { g, cfg } = GM, spec = specOf(g), d = g.a.deck;
-    const need = needCount(spec), sel = GM.sel, hl = spec.stats, hand = d.m.concat(d.f), ok = sel.length === need;
+    const need = needCount(spec), sel = GM.sel, hl = spec.stats, hand = handFor(spec, d, g), ok = sel.length === need;
     let tagTxt = '';
     if (sel.length === 2 && spec.type === 'tag') { const m = E.tagMod(sel[0], sel[1]); tagTxt = m > 1 ? '<span class="chip gold">DIAMOND +10%</span>' : m < 1 ? '<span class="chip red">MISMATCH −5%</span>' : '<span class="chip dim">NO TAG BONUS</span>'; }
     const supsHTML = d.s.map((s, i) => {
@@ -326,9 +337,11 @@
       }).join('') + '</div>'
       + '<button class="btn big play sticky" ' + (ok ? '' : 'disabled') + ' onclick="UI.play()">PLAY</button></div>');
   }
+  // Solo/Tag matches show your Superstars, Divas matches your Divas, a tie-break any unused card.
+  const handFor = (spec, d, g) => spec.extra ? d.m.concat(d.f).filter(c => !g.a.used.includes(c)) : spec.type === 'divas' ? d.f : d.m;
   const vsum = (c, spec) => spec.stats.reduce((a, i) => a + E.stats(c)[i], 0);
   function selTog(i) {
-    const { g } = GM, spec = specOf(g), d = g.a.deck, hand = d.m.concat(d.f), c = hand[i], need = needCount(spec);
+    const { g } = GM, spec = specOf(g), d = g.a.deck, hand = handFor(spec, d, g), c = hand[i], need = needCount(spec);
     const k = GM.sel.indexOf(c);
     if (k >= 0) GM.sel.splice(k, 1);
     else {

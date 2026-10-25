@@ -1,5 +1,5 @@
 // Builds v3/data/cards.js from v2/data/roster.json (the editable roster).
-// Each card gets 4 base stats (Power, Toughness, Speed, Charisma), a rarity, a tag symbol and ring arrows.
+// Each card gets 5 base stats (Strength, Strike, Technical, Agility, Charisma), a rarity, a tag symbol and ring arrows.
 const fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
 const roster = JSON.parse(fs.readFileSync(path.join(root, 'v2', 'data', 'roster.json'), 'utf8'));
@@ -9,12 +9,12 @@ const hash = s => { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0
 const TIER_BONUS = { 'Main Event': 6, 'Upper Midcard': 3, 'Midcard': 0, 'Lower Midcard': -3, 'Opener': -6 };
 const cards = roster.map(r => {
   const [pw, st, te, ag, su, ch, sp] = r.s;
-  const s = [0.75 * pw + 0.25 * st, 0.5 * te + 0.5 * su, 0.7 * ag + 0.3 * st, 0.6 * ch + 0.4 * sp].map(stretch);
+  const s = [0.85 * pw + 0.15 * st, 0.85 * st + 0.15 * pw, 0.5 * te + 0.5 * su, 0.85 * ag + 0.15 * st, 0.6 * ch + 0.4 * sp].map(stretch);
   const h = hash(r.n);
   // 3-4 arrows out of 8 directions (N,NE,E,SE,S,SW,W,NW), deterministic per card
   const arrows = []; let x = h;
   while (arrows.length < 3 + (h % 2)) { x = Math.imul(x ^ (x >>> 13), 1274126177) >>> 0; const d = x % 8; if (!arrows.includes(d)) arrows.push(d); }
-  return { n: r.n, a: r.a, g: r.g, f: r.f, s, sym: ['BL', 'BR', 'YU', 'YD'][h % 4], ar: arrows.sort(), score: s.reduce((p, c) => p + c, 0) / 4 + TIER_BONUS[r.p] };
+  return { n: r.n, a: r.a, g: r.g, f: r.f, s, sym: ['BL', 'BR', 'YU', 'YD'][h % 4], ar: arrows.sort(), score: s.reduce((p, c) => p + c, 0) / 5 + TIER_BONUS[r.p] };
 });
 // Rarity by overall rating percentile (Common .. WrestleMania).
 const cuts = [0.18, 0.18, 0.18, 0.14, 0.12, 0.09, 0.06, 0.03, 0.02];

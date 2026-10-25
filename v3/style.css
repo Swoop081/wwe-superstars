@@ -73,7 +73,7 @@ h2.big-title{font-size:38px;letter-spacing:.06em;text-shadow:0 2px 0 #7a5a00,0 0
 .cf .lv{position:absolute;top:4px;right:4px;background:#000b;border:1px solid var(--gold);color:var(--gold2);font-family:var(--disp);font-size:max(10px,6cqw);padding:0 5px;border-radius:5px;line-height:1.25}
 .cf .sym{position:absolute;top:calc(max(9px,5.5cqw) + 12px);right:4px;font-size:max(10px,6cqw);line-height:1;text-shadow:0 1px 2px #000}.sym.BL,.sym.BR{color:#4da3ff}.sym.YU,.sym.YD{color:#ffd34d}
 .cf .nm{position:absolute;left:0;right:0;bottom:calc(max(18px,12cqw) + 2px);padding:14px 4px 3px;background:linear-gradient(transparent,rgba(6,6,10,.85));font-family:var(--disp);text-transform:uppercase;letter-spacing:.04em;font-size:max(11px,8.6cqw);line-height:1;text-align:center;text-shadow:0 1px 3px #000;text-wrap:balance}
-.cf .sb{position:absolute;left:0;right:0;bottom:0;height:max(18px,12cqw);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(6,6,10,.88);border-top:1px solid var(--rc)}
+.cf .sb{position:absolute;left:0;right:0;bottom:0;height:max(18px,12cqw);display:grid;grid-template-columns:repeat(5,1fr);background:rgba(6,6,10,.88);border-top:1px solid var(--rc)}
 .cf .sb span{display:flex;align-items:center;justify-content:center;gap:1px;font-size:max(9px,6.6cqw);font-weight:700;color:#e6e6f0}.cf .sb img{width:max(9px,7cqw);height:max(9px,7cqw);object-fit:contain}.cf .sb b{font-weight:700}
 .cf .sb span.hl{background:#f5c54233;color:var(--gold2)}
 .cf .val{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);background:#000c;border:2px solid var(--gold);border-radius:10px;padding:0 8px;font-family:var(--disp);font-size:max(16px,14cqw);color:var(--gold2);letter-spacing:.04em}
@@ -282,7 +282,7 @@ h2.big-title{font-size:38px;letter-spacing:.06em;text-shadow:0 2px 0 #7a5a00,0 0
 .mpk .supb{gap:0;padding:0}.mpk .supb .si{width:20px;height:20px;flex:none}.mpk .supb .si svg{width:100%;height:100%}.mpk .supb small{margin-top:1px}
 .mpk .backs{height:30px;margin:0 0 10px}.mpk .back{width:22px;height:30px}.mpk .mnum{position:relative;z-index:1}
 .mpk .cf.slotbig{height:min(100cqh,calc(72cqw*1.4333))}.mpk .slotempty{height:min(100cqh,calc(72cqw*1.4333))}
-.mpk .tray{height:clamp(104px,20dvh,170px)}
+
 .cf .nm{-webkit-text-stroke:max(2px,.1em) #000;paint-order:stroke fill}
 
 /* ---- v3.3: arena look on every screen ---- */
@@ -314,3 +314,40 @@ h2.big-title::after{content:"";position:absolute;left:0;right:-24px;bottom:-4px;
 .cell.legal{box-shadow:0 0 16px #f5c54288}.cell.chal{box-shadow:0 0 16px #ff5a6a88}
 .panel{background:linear-gradient(#1d1d2ee6,#12121cdd);border:0;box-shadow:inset 0 0 0 2px #ffffff1a;border-radius:6px 16px 6px 16px}
 .panel h3{font-family:var(--disp2);font-weight:400;font-style:italic;letter-spacing:.06em;font-size:24px}
+
+/* ---- v3.4: coloured stat badges, value badge at the top of the card, 3+3 hands ---- */
+svg.sti{display:block;flex:none;width:1em;height:1em}
+.cf .sb svg.sti{display:block!important;width:max(10px,7.6cqw);height:max(10px,7.6cqw);margin-right:2px}
+.cf.big .sb svg.sti{width:22px;height:22px}
+.cf .sb em{display:none!important}
+.cf .sb span{gap:0}
+.srow svg.sti{width:24px;height:24px}
+.srow .bar i{background:linear-gradient(90deg,color-mix(in srgb,var(--sc) 65%,#000),var(--sc))}
+.tiles4 .stile svg.sti{width:34px;height:34px}
+.stags span svg.sti{width:20px;height:20px;opacity:.55}.stags span.on svg.sti{opacity:1}
+.stags span{color:var(--sc);border-color:color-mix(in srgb,var(--sc) 35%,transparent)}
+.stags span.on{color:#fff;border-color:var(--sc);background:linear-gradient(color-mix(in srgb,var(--sc) 55%,#000),color-mix(in srgb,var(--sc) 22%,#0b0b12));box-shadow:0 0 14px color-mix(in srgb,var(--sc) 60%,transparent)}
+.mpk .stags span svg.sti{width:18px;height:18px}
+.spec .sp svg.sti,.specs4 svg.sti{width:20px;height:20px;display:inline-block}
+/* value badge: top centre, off the face */
+.cf .val{top:5px;left:50%;transform:translateX(-50%);border-width:2px;border-radius:9px;padding:0 6px;font-size:max(13px,11cqw);line-height:1.15;background:#000d}
+.cf.slotbig .val{font-size:30px;padding:0 12px;top:8px}.cf.slotbig.two .val{font-size:23px;top:6px}
+.cf.tr .val{font-size:15px;top:4px}
+.rcards .cf .val{font-size:24px}.rcards.n2 .cf .val{font-size:17px}
+.cf .gem{max-width:34cqw;overflow:hidden}
+/* hands: 3 cards fill the tray */
+.mpk .tray{height:auto;padding:12px 0 0;gap:8px;justify-content:center;margin:0}
+.mpk .tray .cf{height:auto;width:min(calc((100% - 16px) / 3),14.5dvh);aspect-ratio:3/4.3}
+.slots{grid-template-columns:repeat(3,1fr)}
+
+/* ---- v3.5: five stats ---- */
+.cf .sb{grid-template-columns:repeat(5,1fr)}
+.cf .sb span{box-shadow:inset 0 3px 0 var(--sc);font-size:max(8px,6.2cqw);letter-spacing:-.02em;padding-top:2px}
+.cf .sb span.hl{box-shadow:inset 0 3px 0 var(--sc),0 0 0 1px #fff3 inset}
+.cf .sb svg.sti{display:none!important}
+@container (min-width:170px){.cf .sb svg.sti{display:block!important;width:max(11px,5.6cqw);height:max(11px,5.6cqw);margin-right:1px}.cf .sb span{box-shadow:none;padding-top:0;font-size:max(9px,5.9cqw)}.cf .sb span.hl{box-shadow:0 0 0 1px #fff3 inset}}
+.cf.big .sb span{font-size:16px;box-shadow:none}.cf.big .sb svg.sti{display:block!important;width:19px;height:19px}
+.stags{gap:4px}.stags span{padding:1px 8px 1px 4px;font-size:15px;letter-spacing:.04em;gap:3px}.stags span svg.sti{width:17px;height:17px}
+.mpk .stags span{font-size:14px;padding:0 6px 0 3px}.mpk .stags span svg.sti{width:16px;height:16px}
+.tiles4 .stile:last-child:nth-child(odd){grid-column:1/-1}
+.arena-bg .ringfloor{opacity:.3;filter:brightness(.4)}

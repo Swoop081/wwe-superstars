@@ -1,5 +1,5 @@
 /* WWE Superstars v3 - rules engine (no DOM). UMD: window.Eng / module.exports.
-   A card-battle game in the style of WWE SuperCard: 4 stats (Power, Toughness, Speed, Charisma),
+   A card-battle game in the style of WWE SuperCard: 5 stats (Strength, Strike, Technical, Agility, Charisma),
    rarity tiers, signature moves, tag-team alignment, support cards, and several game modes.
    Everything plays against computer-built decks, instantly, with no timers, energy or purchases. */
 (function (root, factory) {
@@ -8,10 +8,11 @@
 })(typeof self !== 'undefined' ? self : this, function (CARDS) {
   'use strict';
   const STATS = [
-    { k: 'pow', name: 'Power', icon: 'power.png' },
-    { k: 'tgh', name: 'Toughness', icon: 'defence.png' },
-    { k: 'spd', name: 'Speed', icon: 'agility.png' },
-    { k: 'cha', name: 'Charisma', icon: 'charisma.png' }
+    { k: 'str', name: 'Strength', ab: 'STR', col: '#ff9a2e' },
+    { k: 'stk', name: 'Strike', ab: 'STK', col: '#ff4d5a' },
+    { k: 'tec', name: 'Technical', ab: 'TEC', col: '#3ddc84' },
+    { k: 'agi', name: 'Agility', ab: 'AGI', col: '#38bdf8' },
+    { k: 'cha', name: 'Charisma', ab: 'CHA', col: '#ffd23f' }
   ];
   const RAR = [
     { n: 'Common', mult: 2.0, sig: 0, col: '#9aa3b2' }, { n: 'Uncommon', mult: 2.4, sig: 0.15, col: '#5fd38a' },
@@ -23,12 +24,12 @@
   const T = { levelMax: 100, levelBoost: 0.30, matchBoost: 0.10, matchMax: 100, proBoost: 0.30, fortBoost: 0.05, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
   // Support cards: one-use boosts per game. pct is applied to the listed stats for the match they are played in.
   const SUPPORTS = [
-    { id: 'chair', name: 'Steel Chair', stats: [0], pct: 0.25, rar: 0 }, { id: 'table', name: 'Table', stats: [1], pct: 0.25, rar: 0 },
-    { id: 'ladder', name: 'Ladder', stats: [2], pct: 0.25, rar: 0 }, { id: 'mic', name: 'Microphone', stats: [3], pct: 0.25, rar: 0 },
-    { id: 'kendo', name: 'Kendo Stick', stats: [0, 2], pct: 0.18, rar: 1 }, { id: 'bell', name: 'Ring Bell', stats: [1, 3], pct: 0.18, rar: 1 },
-    { id: 'manager', name: 'Manager', stats: [0, 1, 2, 3], pct: 0.12, rar: 2 }, { id: 'mastermind', name: 'Mastermind', stats: [0, 1, 2, 3], pct: 0.15, rar: 3 },
-    { id: 'belt', name: 'Title Belt', stats: [0, 1, 2, 3], pct: 0.2, rar: 4 }, { id: 'spotlight', name: 'Spotlight', stats: [2, 3], pct: 0.32, rar: 3 },
-    { id: 'barricade', name: 'Barricade', stats: [0, 1], pct: 0.32, rar: 3 }, { id: 'legacy', name: 'Hall of Fame', stats: [0, 1, 2, 3], pct: 0.28, rar: 6 }
+    { id: 'chair', name: 'Steel Chair', stats: [0], pct: 0.25, rar: 0 }, { id: 'table', name: 'Table', stats: [2], pct: 0.25, rar: 0 },
+    { id: 'ladder', name: 'Ladder', stats: [3], pct: 0.25, rar: 0 }, { id: 'mic', name: 'Microphone', stats: [4], pct: 0.25, rar: 0 },
+    { id: 'kendo', name: 'Kendo Stick', stats: [1, 3], pct: 0.18, rar: 1 }, { id: 'bell', name: 'Ring Bell', stats: [2, 4], pct: 0.18, rar: 1 },
+    { id: 'manager', name: 'Manager', stats: [0, 1, 2, 3, 4], pct: 0.12, rar: 2 }, { id: 'mastermind', name: 'Mastermind', stats: [0, 1, 2, 3, 4], pct: 0.15, rar: 3 },
+    { id: 'belt', name: 'Title Belt', stats: [0, 1, 2, 3, 4], pct: 0.2, rar: 4 }, { id: 'spotlight', name: 'Spotlight', stats: [3, 4], pct: 0.32, rar: 3 },
+    { id: 'barricade', name: 'Barricade', stats: [0, 2], pct: 0.32, rar: 3 }, { id: 'legacy', name: 'Hall of Fame', stats: [0, 1, 2, 3, 4], pct: 0.28, rar: 6 }
   ];
   const SUP_IDX = Object.fromEntries(SUPPORTS.map((s, i) => [s.id, i]));
   const SYM = { BL: { c: 'blue', d: 'left' }, BR: { c: 'blue', d: 'right' }, YU: { c: 'yellow', d: 'up' }, YD: { c: 'yellow', d: 'down' } };
@@ -49,9 +50,10 @@
       * (inst.pro ? 1 + T.proBoost : 1) * (1 + T.fortBoost * (inst.fort || 0)) * (inst.fat == null ? 1 : inst.fat);
   }
   function stats(inst) { const m = cardMult(inst); return CARDS[inst.c].s.map(v => Math.round(v * m)); }
-  const total = inst => stats(inst).reduce((a, b) => a + b, 0);
+  // Card strength on the same scale as the old 4-stat game (5 stats x 0.8) so AI targets and ranks stay balanced.
+  const total = inst => stats(inst).reduce((a, b) => a + b, 0) * 0.8;
   // Signature move boosts the card's two best stats.
-  function sigStats(inst) { const s = CARDS[inst.c].s; return [0, 1, 2, 3].sort((a, b) => s[b] - s[a]).slice(0, 2); }
+  function sigStats(inst) { const s = CARDS[inst.c].s; return [0, 1, 2, 3, 4].sort((a, b) => s[b] - s[a]).slice(0, 2); }
   const sigChance = inst => RAR[CARDS[inst.c].rar].sig;
   const supPct = s => s.pct;
   // level-up xp: feeding a card gives rarity-based levels
@@ -63,13 +65,13 @@
   const canFort = (a, b) => a.pro && a.fort < 3 && b.c === a.c && !b.pro && a.u !== b.u;
 
   /* ---------- decks ---------- */
-  // Deck = {m:[4 male], f:[2 female], s:[2 support]} of instances / support objects.
+  // Deck = {m:[3 male], f:[3 female], s:[2 support]} of instances / support objects.
   const deckCards = d => d.m.concat(d.f);
   function deckPower(d) { const t = deckCards(d).map(total).sort((a, b) => b - a); return t.length ? t.reduce((a, b) => a + b, 0) / t.length : 0; }
   function bestDeck(cards, supports, sizeM, sizeF, sizeS) {
     const by = (g, n) => cards.filter(c => (isF(c) ? 'F' : 'M') === g).sort((a, b) => total(b) - total(a)).slice(0, n);
     const sups = supports.slice().sort((a, b) => SUPPORTS[b.s].pct * SUPPORTS[b.s].stats.length - SUPPORTS[a.s].pct * SUPPORTS[a.s].stats.length);
-    return { m: by('M', sizeM == null ? 4 : sizeM), f: by('F', sizeF == null ? 2 : sizeF), s: sups.slice(0, sizeS == null ? 2 : sizeS) };
+    return { m: by('M', sizeM == null ? 3 : sizeM), f: by('F', sizeF == null ? 3 : sizeF), s: sups.slice(0, sizeS == null ? 2 : sizeS) };
   }
   const NAME_A = ['Iron', 'Night', 'Steel', 'Ring', 'Chaos', 'Royal', 'Thunder', 'Cobra', 'Neon', 'Savage', 'Lucky', 'Rogue', 'Dark', 'Mega', 'Crimson', 'Ghost', 'Turbo', 'Atomic'];
   const NAME_B = ['Fan', 'Mark', 'Hawk', 'King', 'Bomb', 'Crusher', 'Wolf', 'Legend', 'Titan', 'Viper', 'Boss', 'Hammer', 'Ace', 'Reaper', 'Dragon', 'Smash'];
@@ -77,7 +79,7 @@
   // A computer-built deck near a target card strength (sum of the 4 stats of an average card).
   function aiDeck(target, rng, o) {
     o = o || {};
-    const nM = o.m == null ? 4 : o.m, nF = o.f == null ? 2 : o.f, nS = o.s == null ? 2 : o.s;
+    const nM = o.m == null ? 3 : o.m, nF = o.f == null ? 3 : o.f, nS = o.s == null ? 2 : o.s;
     const pool = g => CARDS.map((c, i) => i).filter(i => CARDS[i].g === g);
     const make = (idxs, n) => {
       const out = [];
@@ -103,12 +105,12 @@
     const opts = [];
     for (const a of [SOLO, TAG, DIVAS]) for (const b of [SOLO, TAG, DIVAS]) for (const c of [SOLO, TAG, DIVAS]) {
       const ts = [a, b, c]; let m = 0, f = 0; ts.forEach(t => { m += cardsNeeded(t).m; f += cardsNeeded(t).f; });
-      if (m <= 4 && f <= 2 && m + f <= 5) opts.push(ts);
+      if (m <= 3 && f <= 3) opts.push(ts);
     }
     const ts = pickR(opts, rng);
     return ts.map(type => {
-      const two = rng() < 0.4, a = Math.floor(rng() * 4);
-      let b = Math.floor(rng() * 3); if (b >= a) b++;
+      const two = rng() < 0.4, a = Math.floor(rng() * 5);
+      let b = Math.floor(rng() * 4); if (b >= a) b++;
       return { type, stats: two ? [a, b].sort() : [a] };
     });
   }
@@ -182,7 +184,7 @@
   }
   // Play match number g.results.length. pa = {cards, sup} for player (side a); side b is the AI (or pb given).
   function playMatch(g, pa, pb) {
-    const idx = g.results.length, spec = g.specs[idx] || { type: SOLO, stats: [0, 1, 2, 3], extra: true };
+    const idx = g.results.length, spec = g.specs[idx] || { type: SOLO, stats: [0, 1, 2, 3, 4], extra: true };
     const future = g.specs.slice(idx + 1);
     pb = pb || { cards: aiPick(g.b, spec, future, g.rng), sup: aiSupport(g.b, spec, g.rng) };
     const ra = sideTotal(pa.cards, spec.stats, pa.sup, g.rng), rb = sideTotal(pb.cards, spec.stats, pb.sup, g.rng);
@@ -200,7 +202,7 @@
     return res;
   }
   // Extra (tie-break) match: any one unused card, all four stats.
-  function extraSpec() { return { type: SOLO, stats: [0, 1, 2, 3], extra: true }; }
+  function extraSpec() { return { type: SOLO, stats: [0, 1, 2, 3, 4], extra: true }; }
   function playExtra(g, pa) {
     const spec = extraSpec();
     const pickAny = side => { const c = availCards(side).sort((x, y) => total(y) - total(x))[0]; return c ? [c] : []; };
@@ -277,7 +279,7 @@
     st.hand[side] = st.hand[side].filter(c => c !== card);
     if (move.target == null) { st.board[move.cell] = { owner: side, card }; }
     else {
-      const def = st.board[move.target].card, stat = [Math.floor(st.rng() * 4)];
+      const def = st.board[move.target].card, stat = [Math.floor(st.rng() * 5)];
       if (st.rng() < 0.35) { let b = Math.floor(st.rng() * 3); if (b >= stat[0]) b++; stat.push(b); stat.sort(); }
       const x = sideTotal([card], stat, null, st.rng), y = sideTotal([def], stat, null, st.rng);
       const attWins = x.total >= y.total ? x.total > y.total || st.rng() < 0.5 : false;

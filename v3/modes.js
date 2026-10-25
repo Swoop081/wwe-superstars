@@ -251,8 +251,8 @@
     const R = RTG;
     if (R.round >= 4) return V.awardPicks(Math.round(3 + R.wins * 1.5), V.home, 'Road to Glory · ' + R.wins + ' / 4 wins');
     const pool = S().cards.slice().sort((a, b) => E.total(b) - E.total(a)).slice(0, 20);
-    const ms = E.shuffle(pool.filter(c => !E.isF(c)), rng).slice(0, 4), fs = E.shuffle(pool.filter(E.isF), rng).slice(0, 2);
-    while (ms.length < 4) ms.push(loaner('M')); while (fs.length < 2) fs.push(loaner('F'));
+    const ms = E.shuffle(pool.filter(c => !E.isF(c)), rng).slice(0, 3), fs = E.shuffle(pool.filter(E.isF), rng).slice(0, 3);
+    while (ms.length < 3) ms.push(loaner('M')); while (fs.length < 3) fs.push(loaner('F'));
     const sups = E.shuffle(S().sups, rng).slice(0, 2);
     const mult = [0.92, 1.0, 1.1, 1.2][R.round];
     V.startGame({ title: 'Road to Glory · R' + (R.round + 1), deckA: { m: ms, f: fs, s: sups }, deckB: opp(mult), oppName: E.aiName(rng), oppRec: 'Round ' + (R.round + 1) + ' of 4',
@@ -264,7 +264,7 @@
   let EC = null;
   M.ec = function () {
     const mine = best('F', 10), theirs = E.aiDeck(pw(), rng, { m: 0, f: 10, s: 0 }).f;
-    const order = []; while (order.length < 10) E.shuffle([0, 1, 2, 3], rng).forEach(x => { if (order.length < 10) order.push(x); });
+    const order = []; while (order.length < 10) E.shuffle([0, 1, 2, 3, 4], rng).forEach(x => { if (order.length < 10) order.push(x); });
     EC = { mine, theirs, usedA: [], usedB: [], pts: [0, 0], i: 0, order, oppName: E.aiName(rng), log: [] };
     ecRender();
   };
@@ -296,15 +296,15 @@
   /* ================= King of the Ring: stamina tournament, simulated ================= */
   let KR = null;
   M.kotr = function () {
-    KR = { m: best('M', 8), f: best('F', 2), s: S().sups.slice().sort((a, b) => E.SUPPORTS[b.s].pct - E.SUPPORTS[a.s].pct).slice(0, 4), stam: {}, rec: { w: 0, l: 0 }, log: [], phase: 'qual', n: 0, tour: null };
+    KR = { m: best('M', 8), f: best('F', 4), s: S().sups.slice().sort((a, b) => E.SUPPORTS[b.s].pct - E.SUPPORTS[a.s].pct).slice(0, 4), stam: {}, rec: { w: 0, l: 0 }, log: [], phase: 'qual', n: 0, tour: null };
     KR.m.concat(KR.f).forEach(c => { KR.stam[c.u] = 100; });
     krRender();
   };
   const FAT = s => 0.6 + 0.4 * s / 100;
   function krLineup() {
-    // auto-manage: use the freshest 4 Superstars + 1 Diva, 2 best-fit supports
-    const ms = KR.m.slice().sort((a, b) => KR.stam[b.u] * E.total(b) - KR.stam[a.u] * E.total(a)).slice(0, 4), fs = KR.f.slice().sort((a, b) => KR.stam[b.u] - KR.stam[a.u]);
-    return { act: ms.concat(fs.slice(0, 2)), ms, fs: fs.slice(0, 2) };
+    // auto-manage: use the freshest 3 Superstars + 3 Divas, 2 best-fit supports
+    const ms = KR.m.slice().sort((a, b) => KR.stam[b.u] * E.total(b) - KR.stam[a.u] * E.total(a)).slice(0, 3), fs = KR.f.slice().sort((a, b) => KR.stam[b.u] - KR.stam[a.u]);
+    return { act: ms.concat(fs.slice(0, 3)), ms, fs: fs.slice(0, 3) };
   }
   function krGame(oppMult) {
     const L = krLineup();
