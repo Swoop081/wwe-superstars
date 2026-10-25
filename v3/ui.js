@@ -323,8 +323,12 @@
   function pickPhase() {
     const { g, cfg } = GM, spec = specOf(g), d = g.a.deck;
     const need = needCount(spec), sel = GM.sel, hl = spec.stats, hand = handFor(spec, d, g), ok = sel.length === need;
-    let tagTxt = '';
-    if (sel.length === 2 && spec.type === 'tag') { const m = E.tagMod(sel[0], sel[1]); tagTxt = m > 1 ? '<span class="chip gold">DIAMOND +10%</span>' : m < 1 ? '<span class="chip red">MISMATCH −5%</span>' : '<span class="chip dim">NO TAG BONUS</span>'; }
+    let sub = 'Deck rank ' + rankNo();
+    if (sel.length) {
+      let tot = sel.reduce((a, c) => a + vsum(c, spec), 0), tg = '';
+      if (sel.length === 2 && spec.type === 'tag') { const m = E.tagMod(sel[0], sel[1]); tot = Math.round(tot * m); tg = m > 1 ? ' · <i class="g">DIAMOND +10%</i>' : m < 1 ? ' · <i class="r">MISMATCH −5%</i>' : ''; }
+      sub = '<span class="tot">TOTAL ' + fmt(tot) + '</span>' + tg;
+    }
     const supsHTML = d.s.map((s, i) => {
       const used = g.a.supUsed.includes(s), helps = hl.some(x => SUP[s.s].stats.includes(x)), D = SUP[s.s];
       return '<button class="supb ' + (used ? 'used ' : '') + (GM.sup === s ? 'on ' : '') + (helps && !used ? 'helps' : '') + '" ' + (used ? 'disabled' : 'onclick="UI.supTog(' + i + ')"') + '><span class="si">' + I[D.id] + '</span><small>+' + Math.round(D.pct * 100) + '%</small></button>';
@@ -335,8 +339,8 @@
       + '<div class="topline">' + plate(cfg.oppName, cfg.oppRec || cfg.title, g.b.pts, false) + '</div>' + backs(foeCards, g.b.used)
       + '<div class="mnum"><span>' + (g.extra ? 'EXTRA' : 'MATCH ' + (g.results.length + 1)) + '</span><div class="mdots">' + (g.extra ? '' : g.specs.map((sp, i) => { const r = g.results[i]; return '<i class="' + (r ? (r.winner === 'a' ? 'won' : r.winner === 'b' ? 'lost' : 'tied') : i === g.results.length ? 'cur' : '') + '"></i>'; }).join('')) + '</div></div>'
       + statTags(hl)
-      + '<div class="slotarea ' + (sel.length > 1 ? 'dbl' : '') + '">' + slot + '</div>' + (tagTxt ? '<div class="tagnote">' + tagTxt + '</div>' : '')
-      + '<div class="meline">' + plate('You', 'Deck rank ' + rankNo(), g.a.pts, true) + '<div class="supcol">' + supsHTML + '</div></div>'
+      + '<div class="slotarea ' + (sel.length > 1 ? 'dbl' : '') + '">' + slot + '</div>'
+      + '<div class="meline">' + plate('You', sub, g.a.pts, true) + '<div class="supcol">' + supsHTML + '</div></div>'
       + '<div class="tray">' + hand.map((c, i) => {
         const used = g.a.used.includes(c), elig = eligible(spec, c, g);
         return face(c, { cls: 'tr ' + (used ? 'used ' : !elig ? 'dim ' : '') + (sel.includes(c) ? 'sel' : ''), hl, val: elig ? vsum(c, spec) : null, click: elig ? 'UI.selTog(' + i + ')' : '' });

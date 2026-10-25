@@ -381,3 +381,19 @@ svg.sti{display:block;flex:none;width:1em;height:1em}
 .deckrow .cf .sb{display:block!important;height:5px!important;background:var(--rc)!important}.deckrow .cf .sb *{display:none!important}
 .deckrow .cf .lv{display:block!important;font-size:9px!important;top:4px!important;right:4px!important}
 .deckrow .cf .gem{display:none!important}
+
+/* ---- v3.8: no value badge on cards (gold stat band instead), big level number, bigger hand, smaller PLAY ---- */
+.cf .val{display:none}
+.ringhold .cf .val,.dline .cf .val{display:block}
+.cf .sb span.hl{background:linear-gradient(#ffe27a,#f5b82e)!important;color:#1a1300!important;box-shadow:0 0 10px #ffd34daa,inset 0 0 0 1px #fff8!important;font-weight:800;z-index:1;transform:scale(1.04);border-radius:3px}
+.cf .sb span.hl em{display:none}
+.cf .lv{font-size:max(16px,24cqw);font-weight:700;letter-spacing:0;top:2px;right:6px;line-height:.9;opacity:1;-webkit-text-stroke:max(1.5px,.9cqw) #000;paint-order:stroke fill}
+.cf .sym{top:calc(max(16px,24cqw) + 4px);right:8px}
+.cf .gem{top:7px}
+.cf.big .lv{font-size:62px}.cf.big .sym{top:68px}
+.deckrow .cf .lv{font-size:13px!important;-webkit-text-stroke:1px #000}.deckrow .cf .sym{display:none}
+.mpk .tray .cf{width:calc((100% - 16px) / 3)}
+.mpk .tray{padding-top:10px}
+.mpk .btn.play{height:40px;font-size:22px;letter-spacing:.12em;box-shadow:0 3px 0 #8a2a05,0 6px 14px #000a;border-radius:12px}
+.plate .pn small .tot{font-family:var(--disp2);font-size:15px;letter-spacing:.08em;color:var(--gold2)}.plate .pn small i{font-style:normal;font-family:var(--disp2);letter-spacing:.06em}.plate .pn small i.g{color:#5dffb0}.plate .pn small i.r{color:#ff8a94}
+.mpk .tray{padding-bottom:5px}

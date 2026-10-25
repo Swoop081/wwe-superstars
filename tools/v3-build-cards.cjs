@@ -7,9 +7,12 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const stretch = v => clamp(Math.round(70 + (v - 70) * 1.35), 30, 100);
 const hash = s => { let h = 2166136261; for (const c of s) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
 const TIER_BONUS = { 'Main Event': 6, 'Upper Midcard': 3, 'Midcard': 0, 'Lower Midcard': -3, 'Opener': -6 };
-const cards = roster.map(r => {
-  const [pw, st, te, ag, su, ch, sp] = r.s;
-  const s = [0.85 * pw + 0.15 * st, 0.85 * st + 0.15 * pw, 0.5 * te + 0.5 * su, 0.85 * ag + 0.15 * st, 0.6 * ch + 0.4 * sp].map(stretch);
+const raw = roster.map(r => { const [pw, st, te, ag, su, ch, sp] = r.s; return [0.85 * pw + 0.15 * st, 0.85 * st + 0.15 * pw, 0.5 * te + 0.5 * su, 0.85 * ag + 0.15 * st, 0.6 * ch + 0.4 * sp]; });
+// Re-centre every stat on the same average (so Strength/Agility aren't always weaker than Strike/Charisma) and keep weaknesses
+// gentle: nothing below 50, spread x1.15 instead of the old x1.35.
+const mean = [0, 1, 2, 3, 4].map(i => raw.reduce((a, r) => a + r[i], 0) / raw.length);
+const cards = roster.map((r, k) => {
+  const s = raw[k].map((v, i) => clamp(Math.round(72 + (v - mean[i]) * 1.15), 50, 100));
   const h = hash(r.n);
   // 3-4 arrows out of 8 directions (N,NE,E,SE,S,SW,W,NW), deterministic per card
   const arrows = []; let x = h;
