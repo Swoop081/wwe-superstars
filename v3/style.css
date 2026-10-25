@@ -362,3 +362,7 @@ svg.sti{display:block;flex:none;width:1em;height:1em}
 .deckrow .cf .lv{font-size:9px;padding:0;right:4px;top:4px}
 .cf .gem .s{display:none}.cf .gem .f{display:inline}
 @container (max-width:169px){.cf .gem .f{display:none}.cf .gem .s{display:inline}}
+
+/* logo from the main game */
+.logo{margin:0 0 4px;font-size:0}.logo img{display:block;width:min(78%,300px);margin:0 auto;filter:drop-shadow(0 6px 10px #000c) drop-shadow(0 0 18px #ff475755)}
+.pk:not(.open)::after{content:"";background:url(../assets/wwe-superstar-logo.png) center/78% no-repeat;filter:drop-shadow(0 2px 3px #000)}

@@ -117,7 +117,7 @@
     return '<div class="cf r' + c.rar + ' ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
       + '<div class="art">' + art(c) + '</div>'
       + '<div class="gem">' + (inst.pro ? '<b>PRO</b> ' : '') + '<span class="f">' + r.n + '</span><span class="s">' + RSHORT[c.rar] + '</span></div>'
-      + '<div class="lv">' + (inst.pro ? 'P' : 'LV ') + inst.lvl + '</div>'
+      + '<div class="lv">' + (inst.pro ? 'P' : '') + inst.lvl + '</div>'
       + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
       + (o.val != null ? '<div class="val">' + fmt(o.val) + '</div>' : '')
       + nameEl(c)
@@ -127,6 +127,7 @@
     o = o || {}; const d = SUP[s.s], r = RAR[d.rar];
     return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sico">' + I[d.id] + '</div><div class="stx"><div class="snm">' + d.name + '</div><div class="spct">+' + Math.round(d.pct * 100) + '% ' + (d.stats.length === 4 ? 'ALL' : d.stats.map(i => ST[i].ab).join('+')) + '</div></div></div>';
   }
+  const LOGO = '<div class="logo"><img src="../assets/wwe-superstar-logo.png" alt="WWE Superstars"></div>';
   const back = (to, label) => '<div class="topbar"><button onclick="' + to + '">‹ ' + (label || 'Back') + '</button></div>';
 
   /* ---------- home ---------- */
@@ -148,7 +149,7 @@
   function home() {
     if (!S) return welcome();
     const d = getDeck();
-    screen('<div class="logo">WWE<span>SUPERSTARS</span></div>'
+    screen(LOGO
       + '<div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span><span>Cards <b>' + S.cards.length + '</b></span><span>W–L <b>' + S.stats.wins + '–' + S.stats.losses + '</b></span><span onclick="UI.mute()" style="cursor:pointer">Sound <b>' + (S.mute ? 'off' : 'on') + '</b></span></div>'
       + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
       + '<button class="btn big" onclick="UI.mode(\'wild\')">Play Wild</button>'
