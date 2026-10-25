@@ -178,9 +178,13 @@
       + nameEl(c)
       + '<div class="sb">' + st.map((v, i) => '<span style="--sc:' + ST[i].col + '" class="' + (o.hl && o.hl.includes(i) ? 'hl' : '') + '">' + statImg(i) + '<b>' + short(v) + '</b></span>').join('') + '</div></div>';
   }
+  // Support cards are real cards: artwork slot (drop assets/supports/<id>.webp in to replace the icon), name, boost and the stats it boosts.
   function supFace(s, o) {
-    o = o || {}; const d = SUP[s.s], r = RAR[d.rar];
-    return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sico">' + I[d.id] + '</div><div class="stx"><div class="snm">' + d.name + '</div><div class="spct">+' + Math.round(d.pct * 100) + '% ' + (d.stats.length === 4 ? 'ALL' : d.stats.map(i => ST[i].ab).join('+')) + '</div></div></div>';
+    o = o || {}; const d = SUP[s.s], r = RAR[d.rar], all = d.stats.length === 4 || d.stats.length === 5;
+    const ab = all ? 'ALL' : d.stats.map(i => ST[i].ab).join('+');
+    const badges = all ? '<b class="all">ALL</b>' : d.stats.map(i => '<span style="--sc:' + ST[i].col + '">' + statImg(i) + '</span>').join('');
+    return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sart"><div class="sico">' + I[d.id] + '</div><img class="simg" src="../assets/supports/' + d.id + '.webp" alt="" onload="this.parentNode.classList.add(\'hasart\')" onerror="this.remove()"></div>'
+      + '<div class="stx"><div class="snm">' + d.name + '</div><div class="spct"><span class="pc">+' + Math.round(d.pct * 100) + '%</span> <span class="ab">' + ab + '</span></div><div class="sstats">' + badges + '</div></div></div>';
   }
   // thumbnails exist for the base roster; movie cards use their full artwork
   const thumbURL = c => c.mv ? '../assets/superstars/' + c.a + '.webp' : '../assets/superstars-t/' + c.a + '.webp';
@@ -341,7 +345,7 @@
     const items = COL.tab === 's' ? list.map(s => supFace(s, { cls: 'pgs' + (inDeck(s.u) ? ' indeck' : '') })) : list.map(c => face(c, { cls: 'mini' + (inDeck(c.u) ? ' indeck' : ''), click: 'UI.detail(' + c.u + ')' }));
     screen(back('UI.home()', 'Home') + '<div class="seg">' + tabs.map(t => '<button class="' + (COL.tab === t[0] ? 'on' : '') + '" onclick="UI.collection(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
       + (COL.tab === 's' ? '' : '<div class="seg small">' + [['power', 'Overall'], ['lvl', 'Level'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
-      + pagedCards('col' + COL.tab + COL.sort, items, COL.tab === 's' ? { cols: 2, aspect: 0.5, reserve: 175 } : { cols: [3, 4], reserve: 170 }));
+      + pagedCards('col' + COL.tab + COL.sort, items, COL.tab === 's' ? { cols: [3, 4], reserve: 170 } : { cols: [3, 4], reserve: 170 }));
   }
   window.COL_SORT = k => { COL.sort = k; collection(); };
   function book() {
@@ -392,7 +396,7 @@
     if (kind === 's') list = S.sups.filter(s => !cur.includes(s.u) || cur[i] === s.u).sort((a, b) => SUP[b.s].pct * SUP[b.s].stats.length - SUP[a.s].pct * SUP[a.s].stats.length);
     else list = S.cards.filter(c => (kind === 'f') === E.isF(c) && (!cur.includes(c.u) || cur[i] === c.u)).sort((a, b) => E.total(b) - E.total(a));
     screen(back('UI.deckScreen()', 'Deck') + '<h3 class="mini-title">Choose <small>' + (kind === 's' ? 'a support card' : kind === 'f' ? 'a woman' : 'a man') + '</small></h3>'
-      + pagedCards('dp' + kind, list.map(x => kind === 's' ? supFace(x, { cls: 'pgs', click: 'UI.deckSet(' + x.u + ')' }) : face(x, { cls: 'mini', click: 'UI.deckSet(' + x.u + ')' })), kind === 's' ? { cols: 2, aspect: 0.5, reserve: 120 } : { cols: 4, reserve: 130 }));
+      + pagedCards('dp' + kind, list.map(x => kind === 's' ? supFace(x, { cls: 'pgs', click: 'UI.deckSet(' + x.u + ')' }) : face(x, { cls: 'mini', click: 'UI.deckSet(' + x.u + ')' })), kind === 's' ? { cols: [3, 4], reserve: 130 } : { cols: 4, reserve: 130 }));
   }
   function deckSet(u) { S.deck[DP.kind][DP.i] = u; persist(); deckScreen(); }
   function deckAuto() { autoDeck(); persist(); deckScreen(); }
@@ -463,8 +467,8 @@
       sub = '<span class="tot">TOTAL ' + fmt(tot) + '</span>' + tg;
     }
     const supsHTML = d.s.map((s, i) => {
-      const used = g.a.supUsed.includes(s), helps = hl.some(x => SUP[s.s].stats.includes(x)), D = SUP[s.s];
-      return '<button class="supb ' + (used ? 'used ' : '') + (GM.sup === s ? 'on ' : '') + (helps && !used ? 'helps' : '') + '" ' + (used ? 'disabled' : 'onclick="UI.supTog(' + i + ')"') + '><span class="si">' + I[D.id] + '</span><small>+' + Math.round(D.pct * 100) + '%</small></button>';
+      const used = g.a.supUsed.includes(s), helps = hl.some(x => SUP[s.s].stats.includes(x));
+      return supFace(s, { cls: 'ps ' + (used ? 'used ' : '') + (GM.sup === s ? 'on ' : '') + (helps && !used ? 'helps' : ''), click: used ? '' : 'UI.supTog(' + i + ')' });
     }).join('');
     const foeCards = cfg.deckB.m.concat(cfg.deckB.f);
     const slot = sel.length ? sel.map(c => face(c, { cls: 'slotbig' + (sel.length > 1 ? ' two' : ''), hl, val: vsum(c, spec), click: 'UI.selTog(' + hand.indexOf(c) + ')' })).join('') : '<div class="slotempty"><span class="ic">' + I[spec.type] + '</span><b>' + (spec.extra ? 'TIE-BREAK' : E.TYPE_NAME[spec.type].toUpperCase()) + '</b><small>Tap ' + need + ' card' + (need > 1 ? 's' : '') + ' to play</small></div>';
@@ -473,11 +477,12 @@
       + '<div class="mnum"><span>' + (g.extra ? 'EXTRA' : 'MATCH ' + (g.results.length + 1)) + '</span><div class="mdots">' + (g.extra ? '' : g.specs.map((sp, i) => { const r = g.results[i]; return '<i class="' + (r ? (r.winner === 'a' ? 'won' : r.winner === 'b' ? 'lost' : 'tied') : i === g.results.length ? 'cur' : '') + '"></i>'; }).join('')) + '</div></div>'
       + statTags(hl)
       + '<div class="slotarea ' + (sel.length > 1 ? 'dbl' : '') + '">' + slot + '</div>'
-      + '<div class="meline">' + plate(S.name || 'You', sub, g.a.pts, true) + '<div class="supcol">' + supsHTML + '</div></div>'
+      + '<div class="meline">' + plate(S.name || 'You', sub, g.a.pts, true) + '</div>'
       + '<div class="tray">' + hand.map((c, i) => {
         const used = g.a.used.includes(c), elig = eligible(spec, c, g);
         return face(c, { cls: 'tr ' + (used ? 'used ' : !elig ? 'dim ' : '') + (sel.includes(c) ? 'sel' : ''), hl, val: elig ? vsum(c, spec) : null, click: elig ? 'UI.selTog(' + i + ')' : '' });
       }).join('') + '</div>'
+      + (supsHTML ? '<div class="suprow">' + supsHTML + '</div>' : '')
       + '</div>');
   }
   // Solo/Tag matches show your men, Women's matches your women, a tie-break any unused card.

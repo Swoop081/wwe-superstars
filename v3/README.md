@@ -32,3 +32,6 @@ Every screen fits a single iPhone screen (tested at 390×664, 390×700). Where t
 
 ## Street Fighter movie tie-in
 14 fighters (Ryu, Ken Masters, Chun-Li, Guile, Zangief, Dhalsim, Blanka, E. Honda, Balrog, Vega, M. Bison, Cammy, Akuma, Joe) are appended to the end of the card list in `tools/v3-build-cards.cjs` (`mv:1`; indices 239-252 so saves stay valid). Base stats are mid-60s (normal cards ~52), names use the Press Start 2P arcade font. In packs until `T_MOVIE_END` in engine.js (30 Nov 2026); after that packs only contain movie cards you already own, so duplicates level them up. They are never in the starting team.
+
+## Support card artwork
+Support cards (Steel Chair, Kendo Stick, Ring Bell...) are now real cards. To give one artwork, add `assets/supports/<id>.webp` (portrait, same shape as wrestler art; ids: chair, table, ladder, mic, kendo, bell, manager, mastermind, belt, spotlight, barricade, legacy). Until the file exists the card shows its icon.

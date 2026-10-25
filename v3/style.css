@@ -645,3 +645,29 @@ body:has(.grid2) .grid2{align-content:center;min-height:calc(100dvh - 170px)}
 body:has(.plist) .opp{padding:clamp(6px,1.6dvh,14px) 12px!important}
 body:has(.plist) .btn.big{margin-top:clamp(4px,1.5dvh,14px)}
 .bigopp .tag{display:flex;flex-direction:column;align-items:center;line-height:1.1}.bigopp .tag small{font-size:11px;letter-spacing:.04em;opacity:.9;margin-top:2px}
+
+/* reveal: long opponent names must not push the avatar off screen */
+.who3{flex-wrap:wrap;min-width:0;row-gap:2px;font-size:20px}.who3 b{min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400}
+.rrow.b .who3{justify-content:flex-end}.who3 .av{flex:none}.who3 .stamp{font-size:13px;padding:1px 8px;flex:none}
+.rscore{overflow:hidden}
+
+/* support cards: real cards with an artwork slot */
+.sf{container-type:inline-size;padding:5cqw;gap:2cqw;justify-content:flex-start;overflow:hidden}
+.sf:not(.sm) .sart{position:relative;flex:1;min-height:0;width:100%;border-radius:8px;background:radial-gradient(circle at 50% 40%,color-mix(in srgb,var(--rc) 35%,#1a1a28),#0e0e16);display:grid;place-items:center;overflow:hidden}
+.sf:not(.sm) .sico{width:62cqw;height:62cqw;max-width:none}.sf .sico svg{width:100%;height:100%}
+.sf .simg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.sf .sart.hasart .sico{display:none}
+.sf:not(.sm) .stx{width:100%;gap:1cqw}
+.sf:not(.sm) .snm{font-size:17cqw;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.sf:not(.sm) .spct{font-size:25cqw;line-height:1;color:var(--gold2);font-weight:800}.sf:not(.sm) .spct .ab{display:none}
+.sf:not(.sm) .sstats{display:flex;gap:2cqw;justify-content:center;align-items:center;min-height:19cqw}
+.sf .sstats span{width:19cqw;height:19cqw;display:block}.sf .sstats .sti{width:100%;height:100%}.sf .sstats b.all{font-size:11cqw;letter-spacing:.06em;color:#fff;background:var(--rc);padding:1cqw 4cqw;border-radius:8px}
+.sf.sm .sart{display:contents}.sf.sm .sstats,.sf.sm .simg{display:none}.sf.sm .spct .pc{margin-right:4px}
+/* match screen: support cards sit under your wrestlers, a little smaller */
+.mpk .suprow{flex:none;display:flex;justify-content:center;gap:10px;height:clamp(100px,15dvh,130px)}
+.mpk .suprow .sf{height:100%;aspect-ratio:3/4.3;width:auto;cursor:pointer;box-shadow:0 4px 10px #000a}
+.mpk .suprow .sf.helps{border-color:#49e68d;box-shadow:0 0 12px #49e68d77,0 4px 10px #000a}
+.mpk .suprow .sf.on{outline:3px solid var(--gold);transform:translateY(-4px)}
+.mpk .suprow .sf.used{opacity:.3;filter:grayscale(1)}
+.mpk .tray .cf{width:min(calc((100% - 16px) / 3),14dvh)}
+.pgpage .sf{width:100%;aspect-ratio:auto}
+@media (max-height:720px){.mpk .backs{display:none}.mpk .suprow{height:clamp(92px,14dvh,110px)}.mpk .tray .cf{width:min(calc((100% - 16px) / 3),13.2dvh)}}

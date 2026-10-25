@@ -17,8 +17,8 @@ const SH = process.env.SHOTS || '/tmp/shots';
     document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('app'); let q = 0; new MutationObserver(() => { chk(); setTimeout(chk, 500); }).observe(el, { childList: true }); });
   });
   page.on('pageerror', e => errors.push(e.message));
-  page.on('console', m => { if (m.type() === 'error' && !/TUNNEL|fonts/.test(m.text())) errors.push(m.text()); });
-  page.on('response', r => { if (r.status() >= 400 && /assets\//.test(r.url())) bad.push(r.status() + ' ' + r.url()); });
+  page.on('console', m => { if (m.type() === 'error' && !/TUNNEL|fonts|status of 404/.test(m.text())) errors.push(m.text()); });
+  page.on('response', r => { if (r.status() >= 400 && /assets\//.test(r.url()) && !/assets\/supports\//.test(r.url())) bad.push(r.status() + ' ' + r.url()); });
   await page.goto(BASE + '?dev=1', { waitUntil: 'load' });
   await page.evaluate(() => localStorage.clear()); await page.reload({ waitUntil: 'load' });
   // first run: name -> how to play (3 slides) -> starting deck -> home
