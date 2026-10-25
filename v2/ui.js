@@ -1,7 +1,7 @@
 /* WWE Superstars v2 — mobile UI. Pure view layer over Engine; the save lives in localStorage. */
 (function () {
   'use strict';
-  const E = window.Engine, R = window.ROSTER, T = E.TUNE;
+  const E = window.Engine, R = window.ROSTER, T = E.TUNE, ICONS = window.ICONS;
   const SAVE_KEY = 'wweSuperstarsV2';
   const DEV = new URLSearchParams(location.search).has('dev');
   const app = document.getElementById('app');
@@ -108,19 +108,18 @@
     B = null;
     if (!save) return welcome();
     accrue();
-    screen('<h1 class="title">WWE Superstars</h1><p class="sub">Collect · merge · level up forever</p>'
-      + '<div class="stats-row"><div class="stat-box"><b>' + Object.keys(save.owned).length + '/' + R.length + '</b><small>Cards</small></div>'
-      + '<div class="stat-box"><b>' + save.wins + '–' + save.losses + '</b><small>W–L</small></div>'
-      + '<div class="stat-box"><b>' + lv(rung()) + '</b><small>Ladder rung</small></div><div class="stat-box"><b>' + lv(bestLevel()) + '</b><small>Best level</small></div></div>'
-      + (save.bank > 0 ? '<button class="btn" style="background:var(--green);color:#04210f" onclick="UI.daily()">🎁 Free daily card' + (save.bank > 1 ? ' ×' + save.bank : '') + '</button>' : '<p class="edge" style="text-align:center">Next free card in ' + untilMidnight() + ' (they bank up to ' + BANK_MAX + ' — no rush)</p>')
-      + '<p class="edge" style="text-align:center">🔥 Win streak ' + (save.streak || 0) + ' · every ' + STREAK_BONUS + 'rd win in a row = bonus card (' + (STREAK_BONUS - ((save.streak || 0) % STREAK_BONUS)) + ' to go)</p>'
-      + '<p class="edge" style="text-align:center">⭐ Featured this week: <b>' + featured().n + '</b> (shows up more in picks)</p>'
-      + '<button class="btn" onclick="UI.fightSelect()">Fight</button>'
-      + '<button class="btn" onclick="UI.fightSelect(\'g\')">Gauntlet · 5 fights, HP carries over</button>'
-      + '<button class="btn alt" onclick="UI.goals()">🏆 Goals' + (goalsReady() ? ' (' + goalsReady() + ' ready!)' : '') + '</button>'
-      + '<button class="btn alt" onclick="UI.collection()">Collection</button>'
-      + devBar()
-      + '<p class="note">Climb the ladder: each win moves you up a rung and lets you pick 1 of 3 cards. A duplicate merges into your card and raises its level — every stat and HP grows ×' + T.m + ' per level.</p>');
+    const top = ownedList()[0], r = rung(), nextRank = RANK[(r - 1) % 3];
+    screen('<div class="logo">WWE<span>SUPERSTARS</span></div>'
+      + '<div class="hero" onclick="UI.detail(' + idxOf[top.n] + ')">' + cardHTML(top, save.owned[top.n], { cls: 'hero-card' }) + '<div class="hero-tag">YOUR TOP CARD</div></div>'
+      + '<button class="btn big fightbtn" onclick="UI.fightSelect()"><span class="ic">' + ICONS.fight + '</span>Fight<small>Ladder · rung ' + lv(r) + ' · ' + nextRank + '</small></button>'
+      + (save.bank > 0 ? '<button class="btn green" onclick="UI.daily()"><span class="ic sm">' + ICONS.gift + '</span>Free card' + (save.bank > 1 ? ' ×' + save.bank : '') + ' ready</button>' : '')
+      + '<div class="tiles">'
+      + '<button class="tile" onclick="UI.fightSelect(\'g\')"><span class="ic">' + ICONS.gauntlet + '</span><b>Gauntlet</b><small>5 fights · HP carries</small></button>'
+      + '<button class="tile" onclick="UI.goals()"><span class="ic">' + ICONS.goals + '</span><b>Goals</b><small>' + (goalsReady() ? goalsReady() + ' ready!' : 'rewards') + '</small>' + (goalsReady() ? '<i class="dot"></i>' : '') + '</button>'
+      + '<button class="tile" onclick="UI.collection()"><span class="ic">' + ICONS.cards + '</span><b>Cards</b><small>' + Object.keys(save.owned).length + ' / ' + R.length + '</small></button></div>'
+      + '<div class="pills"><span>🔥 Streak <b>' + (save.streak || 0) + '</b></span><span>W–L <b>' + save.wins + '–' + save.losses + '</b></span><span>Best <b>LVL ' + lv(bestLevel()) + '</b></span></div>'
+      + '<p class="edge" style="text-align:center">⭐ Featured this week: <b>' + featured().n + '</b>' + (save.bank > 0 ? '' : ' · next free card in ' + untilMidnight()) + '</p>'
+      + devBar());
   }
 
   function welcome() {
@@ -203,80 +202,104 @@
   function chooseStat(i) { B.idx = i; B.phase = 'action'; renderBattle(); }
   function chooseAction(id) {
     const m = B.m, idx = B.idx;
+    B.prev = { a: m.a.hp / m.a.max, b: m.b.hp / m.b.max };
     B.ev = E.resolveRound(m, idx, id, E.cpuAction(m, 'b', idx));
     if (B.rule && B.rule.id === 'nofin') { B.m.a.meter = 0; B.m.b.meter = 0; }
     B.phase = 'result';
     renderBattle();
   }
 
-  function fighterHTML(f, side, m) {
-    const r = f.hp / f.max, cls = r > 0.6 ? '' : r > 0.3 ? 'amber' : 'red';
+  const KCLS = { powerslam: 'atk', strike: 'atk', suplex: 'tech', dive: 'air', hold: 'sub', chair: 'heel', reversal: 'ctr', crowd: 'heal', finisher: 'fin' };
+  const mb = (id, big) => '<span class="mb k-' + KCLS[id] + (big ? ' big' : '') + '">' + ICONS[id] + '</span>';
+  const statImg = i => '<img src="../assets/' + E.STATS[i].icon + '" alt="">';
+
+  // One fighter in the arena: big card, control ribbon, HP bar, finisher pips, and floating results.
+  function fighterCard(f, side, m, o) {
+    const r = Math.max(0, f.hp / f.max), cls = r > 0.6 ? '' : r > 0.3 ? 'amber' : 'red';
+    const from = o.prev != null ? Math.max(0, o.prev) : r;
     const pips = [0, 1, 2].map(i => '<span class="pip ' + (f.meter > i ? 'on ' : '') + (f.meter >= T.meterMax ? 'ready' : '') + '"></span>').join('');
-    return '<div class="fighter"><div class="thumb">' + art(f.w) + '</div><div class="info">'
-      + '<div class="nm"><span>' + (side === 'a' ? 'You · ' : '') + f.w.n + '</span><i>LVL ' + lv(f.level) + '</i></div>'
-      + '<div class="hpbar"><div class="hpfill ' + cls + '" style="width:' + Math.max(0, r * 100) + '%"></div></div>'
-      + '<div class="hpnums"><span>' + m.fmtVal(f.hp) + ' / ' + m.fmtVal(f.max) + '</span><span class="pips" title="Finisher meter">' + pips + '</span></div></div></div>';
+    let fl = '';
+    if (o.taken > o.tiny) fl += '<div class="flt dmg">−' + m.fmtVal(o.taken) + '</div>';
+    if (o.healed > o.tiny) fl += '<div class="flt heal">+' + m.fmtVal(o.healed) + '</div>';
+    const chips = (o.chips || []).map(c => '<span class="chip ' + c[1] + '">' + c[0] + '</span>').join('');
+    return '<div class="fz ' + side + (o.ctrl ? ' ctrl' : '') + (o.taken > o.tiny ? ' hit' : '') + (o.healed > o.tiny ? ' healed' : '') + '">'
+      + '<div class="cardbox">' + cardHTML(f.w, f.level, { cls: 'arena', noShine: side === 'b' })
+      + (o.ctrl ? '<div class="ribbon">CONTROL</div>' : '') + fl + (chips ? '<div class="chips">' + chips + '</div>' : '') + '</div>'
+      + '<div class="hpbar"><div class="hpfill ' + cls + '" style="width:' + from * 100 + '%" data-to="' + r * 100 + '"></div></div>'
+      + '<div class="hpnums"><span>' + (side === 'a' ? 'YOU' : 'RIVAL') + ' · ' + m.fmtVal(f.hp) + '</span><span class="pips" title="Finisher meter">' + pips + '</span></div></div>';
   }
-  function describe(n, m) {
-    const F = v => m.fmtVal(v), p = [];
-    if (n.d) p.push('Deal ' + F(n.d));
-    if (n.risk) p.push('misses if you lose the stat — you take ' + pct(n.risk) + '% of your avg');
-    if (n.weak) p.push('their next stat −20%');
-    if (n.cancel) p.push('negates their move and hits back for ' + pct(n.counter) + '% of its damage');
-    if (n.h) p.push('Heal ' + F(n.h));
-    if (n.meter) p.push('+' + n.meter + ' finisher charge');
-    return p.join(' · ');
+  // Big number + one short tag per move tile.
+  function moveFace(n, m) {
+    const F = v => m.fmtVal(v);
+    let num = '', lab = '';
+    if (n.d) { num = F(n.d); lab = 'DAMAGE'; }
+    else if (n.h) { num = '+' + F(n.h); lab = 'HEAL'; }
+    else if (n.cancel) { num = pct(n.counter) + '%'; lab = 'RETURNED'; }
+    const chips = [];
+    if (n.combo) chips.push(['COMBO ×' + T.combo, 'gold']);
+    if (n.cancel) chips.push(['BLOCKS MOVE', 'cyan']);
+    if (n.risk) chips.push(['RISKY', 'red']);
+    if (n.weak) chips.push(['WEAKENS', 'purple']);
+    if (n.h && n.meter) chips.push(['+1 ⚡', 'gold']);
+    return { num, lab, chips };
   }
-  function resultHTML(m, ev) {
-    const F = v => m.fmtVal(v), st = E.STATS[ev.statIdx], youWin = ev.winner === 'a';
-    const tiny = m.a.avg * 0.01;
-    let h = '<p><b>' + st.name + '</b> · you ' + F(ev.vals.a) + ' vs them ' + F(ev.vals.b) + ' → <span class="win">' + (youWin ? 'YOU TAKE CONTROL' : 'THEY TAKE CONTROL') + '</span></p>';
-    for (const s of ['a', 'b']) {
-      const f = s === 'a' ? m.a : m.b, id = ev.act[s], fx = ev.fx[s];
-      const name = s === 'a' ? 'You' : f.w.n;
-      const act = id === 'finisher' ? 'FINISHER — ' + f.w.f : E.ACTIONS[id].name.toUpperCase();
-      const parts = [];
-      if (fx.negated) parts.push('NEGATED');
-      if (fx.fizzled) parts.push('fizzled (meter not full)');
-      if (fx.damage > tiny) parts.push('<span class="hit">' + F(fx.damage) + ' damage</span>');
-      if (fx.counter > tiny) parts.push('<span class="hit">countered for ' + F(fx.counter) + '</span>');
-      if (fx.missed) parts.push('MISSED — takes ' + F(fx.selfHit) + ' from the fall');
-      if (fx.combo) parts.push('<span class="win">COMBO</span>');
-      if (fx.healed > tiny) parts.push('<span class="heal">+' + F(fx.healed) + ' HP</span>');
-      if (fx.weakened) parts.push('opponent weakened');
-      h += '<p><b>' + name + '</b> · ' + act + (parts.length ? ' → ' + parts.join(' · ') : '') + '</p>';
+  function resultInfo(m, ev) {
+    const tiny = m.a.avg * 0.01, o = {};
+    for (const t of ['a', 'b']) {
+      const x = t === 'a' ? 'b' : 'a', fx = ev.fx[t], fo = ev.fx[x], chips = [];
+      if (fx.combo) chips.push(['COMBO', 'gold']);
+      if (fx.negated) chips.push(['NEGATED', 'cyan']);
+      if (fx.missed) chips.push(['MISSED', 'red']);
+      if (fx.fizzled) chips.push(['FIZZLED', 'dim']);
+      if (fo.weakened) chips.push(['WEAKENED', 'purple']);
+      if (fx.counter > tiny) chips.push(['COUNTER', 'cyan']);
+      if (ev.act[t] === 'finisher' && !fx.fizzled) chips.push(['FINISHER', 'gold']);
+      o[t] = { taken: (fo.damage || 0) + (fo.counter || 0) + (fx.selfHit || 0), healed: fx.healed || 0, chips, tiny };
     }
-    return h;
+    return o;
   }
 
   function renderBattle() {
-    const m = B.m, a = m.a, b = m.b;
+    const m = B.m, a = m.a, b = m.b, res = B.phase === 'result', ev = B.ev;
+    const F = v => m.fmtVal(v);
+    let ctrlSide = null, ri = null;
+    if (res) { ctrlSide = ev.winner; ri = resultInfo(m, ev); }
+    else if (B.phase === 'action') ctrlSide = E.predictedControl(m, 'a', B.idx) === T.ctrlWin ? 'a' : 'b';
+    const pv = B.prev || {};
+    const head = '<div class="hud"><span class="rnd">ROUND ' + (res ? m.round : m.round + 1) + '</span>'
+      + (B.rule ? '<span class="rule">' + B.rule.name + '</span>' : B.g ? '<span class="rule">GAUNTLET ' + (G.k + 1) + '/5</span>' : '')
+      + '<span class="who">' + (m.caller === 'a' ? 'YOUR CALL' : 'RIVAL\'S CALL') + '</span></div>';
+    const arena = '<div class="arena">' + fighterCard(a, 'a', m, Object.assign({ ctrl: ctrlSide === 'a', prev: res ? pv.a : null }, ri ? ri.a : {}))
+      + '<div class="vsbadge">VS</div>' + fighterCard(b, 'b', m, Object.assign({ ctrl: ctrlSide === 'b', prev: res ? pv.b : null }, ri ? ri.b : {})) + '</div>';
     let body = '';
-    const head = '<div class="topbar"><span>Round ' + (B.phase === 'result' ? m.round : m.round + 1) + '</span><span>' + (m.caller === 'a' ? 'You call the stat' : 'Opponent calls the stat') + '</span></div>';
     if (B.phase === 'call') {
-      body = '<div class="panel"><h3>You call the stat</h3><p class="edge">Both cards are compared on the stat you pick. Pick where you beat them — and remember the moves in your hand: a move that matches the stat is a COMBO.</p><div class="statbtns">'
+      body = '<div class="stage"><div class="stg-title">Call a stat <small>you vs rival · green = you win it</small></div><div class="tiles3">'
         + a.hand.map(i => {
-          const mine = a.stats[i], theirs = b.stats[i], st = E.STATS[i];
-          return '<button class="statbtn" onclick="UI.stat(' + i + ')"><img src="../assets/' + st.icon + '" alt=""><span class="t">' + st.name + '</span><span class="vs"><span class="' + (mine > theirs ? 'w' : 'l') + '">' + m.fmtVal(mine) + '</span> vs ' + m.fmtVal(theirs) + '</span></button>';
+          const mine = a.stats[i], theirs = b.stats[i], win = mine > theirs, st = E.STATS[i];
+          const combos = a.actions.filter(id => (E.ACTIONS[id].stats || []).includes(i));
+          return '<button class="stile ' + (win ? 'win' : 'lose') + '" onclick="UI.stat(' + i + ')">' + statImg(i) + '<b>' + st.name + '</b>'
+            + '<span class="duel"><em class="' + (win ? 'w' : 'l') + '">' + F(mine) + '</em><span class="vsb"><i style="width:' + Math.round(mine / (mine + theirs) * 100) + '%"></i></span><em>' + F(theirs) + '</em></span>'
+            + '<span class="cmb">' + (combos.length ? combos.map(id => mb(id)).join('') + '<small>COMBO</small>' : '<small>&nbsp;</small>') + '</span></button>';
         }).join('') + '</div></div>';
     } else if (B.phase === 'action') {
-      const st = E.STATS[B.idx], p = E.predictedControl(m, 'a', B.idx), youEdge = p === T.ctrlWin;
-      const swing = pct(T.noise);
-      body = '<div class="panel"><h3>' + (m.caller === 'a' ? 'You called' : 'Opponent called') + ' ' + st.name + '</h3>'
-        + '<p class="edge ' + (youEdge ? 'you' : 'them') + '">You ' + m.fmtVal(a.stats[B.idx]) + ' vs them ' + m.fmtVal(b.stats[B.idx]) + ' — '
-        + (youEdge ? 'you hold the edge: your action +' + pct(T.ctrlWin - 1) + '%, theirs −' + pct(1 - T.ctrlLose) + '%' : 'they hold the edge: their action +' + pct(T.ctrlWin - 1) + '%, yours −' + pct(1 - T.ctrlLose) + '%')
-        + '. Each roll swings ±' + swing + '%.</p><h3>Choose your move</h3><div class="statbtns">'
-        + (a.meter >= T.meterMax ? '<button class="actbtn finisher" onclick="UI.act(\'finisher\')"><img src="../assets/finisher.png" alt=""><span class="t"><b>Finisher · ' + a.w.f + '</b><em>' + describe(E.finisherNumbers(a), m) + ' · cannot be reversed</em></span></button>'
-          : '<p class="edge">Finisher charging ' + a.meter + '/' + T.meterMax + ' — win stat rounds to charge it.</p>')
-        + a.actions.map(id => {
-          const A = E.ACTIONS[id], n = E.actionNumbers(id, a, p, B.idx);
-          return '<button class="actbtn' + (n.combo ? ' combo' : '') + '" onclick="UI.act(\'' + id + '\')"><img src="../assets/' + A.icon + '" alt=""><span class="t"><b>' + A.name + (n.combo ? '<span class="tag">COMBO ×' + T.combo + '</span>' : '') + '</b><small class="kind">' + A.kind + '</small><em>' + describe(n, m) + '</em></span></button>';
+      const st = E.STATS[B.idx], you = ctrlSide === 'a';
+      body = '<div class="stage"><div class="ctrlstrip ' + (you ? 'you' : 'them') + '">' + statImg(B.idx) + '<span class="cs"><b>' + st.name + '</b><small>' + F(a.stats[B.idx]) + ' vs ' + F(b.stats[B.idx]) + '</small></span>'
+        + '<span class="cbadge">' + (you ? 'YOU HAVE CONTROL <small>your move +' + pct(T.ctrlWin - 1) + '%</small>' : 'RIVAL HAS CONTROL <small>your move −' + pct(1 - T.ctrlLose) + '%</small>') + '</span></div>'
+        + (a.meter >= T.meterMax ? (() => { const n = E.finisherNumbers(a), f = moveFace(n, m); return '<button class="mtile fin" onclick="UI.act(\'finisher\')">' + mb('finisher', true) + '<span class="mt"><b>FINISHER</b><small>' + a.w.f + '</small></span><span class="num">' + f.num + '<small>UNBLOCKABLE</small></span></button>'; })() : '')
+        + '<div class="moves">' + a.actions.map(id => {
+          const A = E.ACTIONS[id], n = E.actionNumbers(id, a, E.predictedControl(m, 'a', B.idx), B.idx), f = moveFace(n, m);
+          return '<button class="mtile k-' + KCLS[id] + (n.combo ? ' combo' : '') + '" onclick="UI.act(\'' + id + '\')">' + mb(id, true) + '<b>' + A.name + '</b><span class="num">' + f.num + '<small>' + f.lab + '</small></span>'
+            + '<span class="mchips">' + f.chips.map(c => '<span class="chip ' + c[1] + '">' + c[0] + '</span>').join('') + '</span></button>';
         }).join('') + '</div></div>';
-    } else if (B.phase === 'result') {
-      body = '<div class="panel log"><h3>Round ' + m.round + '</h3>' + resultHTML(m, B.ev) + '</div>'
-        + '<button class="btn" onclick="UI.next()">' + (m.over ? 'Finish match' : 'Next round') + '</button>';
+    } else if (res) {
+      const st = E.STATS[ev.statIdx], you = ev.winner === 'a';
+      const mv = s => { const id = ev.act[s], f = s === 'a' ? a : b; return '<div class="mv ' + s + '">' + mb(id, true) + '<span><small>' + (s === 'a' ? 'YOU' : 'RIVAL') + '</small><b>' + (id === 'finisher' ? f.w.f : E.ACTIONS[id].name) + '</b></span></div>'; };
+      body = '<div class="stage"><div class="ctrlstrip ' + (you ? 'you' : 'them') + '">' + statImg(ev.statIdx) + '<span class="cs"><b>' + st.name + '</b><small>' + F(ev.vals.a) + ' vs ' + F(ev.vals.b) + '</small></span><span class="cbadge">' + (you ? 'YOU TOOK CONTROL' : 'RIVAL TOOK CONTROL') + '</span></div>'
+        + '<div class="mvrow">' + mv('a') + '<span class="mvx">⚔</span>' + mv('b') + '</div>'
+        + '<button class="btn big" onclick="UI.next()">' + (m.over ? 'Finish match' : 'Next round') + '</button></div>';
     }
-    screen(head + fighterHTML(b, 'b', m) + fighterHTML(a, 'a', m) + body);
+    screen(head + arena + body);
+    requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.hpfill[data-to]').forEach(e => { e.style.width = e.dataset.to + '%'; })));
   }
 
   function endScreen() {
