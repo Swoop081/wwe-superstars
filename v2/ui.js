@@ -9,17 +9,31 @@
   let save = null, B = null, shown = null; // B = current battle controller
 
   /* ---------- save ---------- */
-  function load() { try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && s.owned) return s; } catch (e) { } return null; }
+  function load() {
+    try {
+      const s = JSON.parse(localStorage.getItem(SAVE_KEY));
+      if (s && s.owned) {
+        s.shards = s.shards || {}; s.claimed = s.claimed || {}; s.gClears = s.gClears || 0;
+        if (s.bank === undefined) { s.bank = s.daily === today() ? 0 : 1; s.lastDay = today(); }
+        return s;
+      }
+    } catch (e) { } return null;
+  }
   function persist() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { } }
   const ownedList = () => Object.keys(save.owned).map(n => R[idxOf[n]]).filter(Boolean)
     .sort((a, b) => save.owned[b.n] - save.owned[a.n] || a.n.localeCompare(b.n));
   const bestLevel = () => Math.max(1, ...Object.values(save.owned));
   // Give a card: new card = level 1; duplicate = merges into the owned card (+1 level).
+  // Merge cost rises: level L needs cost(L) duplicates to reach L+1 (1,2,2,3,3,4...). Extra copies are kept as progress.
+  const cost = L => 1 + Math.floor(L / 2);
   function give(w) {
     const old = save.owned[w.n] || 0;
-    save.owned[w.n] = old + 1;
-    persist();
-    return { w, from: old, to: old + 1, isNew: old === 0 };
+    save.shards = save.shards || {};
+    if (!old) { save.owned[w.n] = 1; save.shards[w.n] = 0; persist(); return { w, from: 0, to: 1, isNew: true, sh: 0 }; }
+    let sh = (save.shards[w.n] || 0) + 1, l = old;
+    while (sh >= cost(l)) { sh -= cost(l); l++; }
+    save.owned[w.n] = l; save.shards[w.n] = sh; persist();
+    return { w, from: old, to: l, isNew: false, sh };
   }
 
   /* ---------- helpers ---------- */
@@ -50,6 +64,25 @@
     ).join('') + '<div class="srow fin"><img src="../assets/finisher.png" alt=""><span class="sn">Finisher</span><b>' + w.f + '</b></div></div>';
   }
 
+  // Free cards bank up (max 5) so you never lose one by skipping a day.
+  const BANK_MAX = 5;
+  function accrue() {
+    const p = d => { const a = d.split('-'); return Date.UTC(+a[0], +a[1] - 1, +a[2]); };
+    const days = Math.max(0, Math.round((p(today()) - p(save.lastDay || today())) / 864e5));
+    if (days) { save.bank = Math.min(BANK_MAX, (save.bank || 0) + days); save.lastDay = today(); persist(); }
+  }
+  // Lifetime goals: no timers, claim whenever. Each pays a pick-1-of-3.
+  const METRICS = [
+    { id: 'cards', name: 'Own cards', v: () => Object.keys(save.owned).length, at: [10, 25, 50, 100, 150, R.length] },
+    { id: 'rung', name: 'Reach ladder rung', v: () => rung(), at: [5, 10, 20, 40, 80] },
+    { id: 'wins', name: 'Win matches', v: () => save.wins, at: [10, 25, 50, 100, 250] },
+    { id: 'level', name: 'Get a card to level', v: () => bestLevel(), at: [3, 5, 10, 25, 50] },
+    { id: 'streak', name: 'Win in a row', v: () => save.bestStreak || 0, at: [3, 5, 10, 20] },
+    { id: 'gaunt', name: 'Clear the Gauntlet', v: () => save.gClears || 0, at: [1, 3, 10, 25] }
+  ];
+  const nextGoal = m => { for (let i = 0; i < m.at.length; i++) if (!save.claimed[m.id + ':' + m.at[i]]) return { i, t: m.at[i] }; return null; };
+  const goalsReady = () => METRICS.filter(m => { const g = nextGoal(m); return g && m.v() >= g.t; }).length;
+
   /* ---------- screens ---------- */
   function devBar() {
     if (!DEV) return '';
@@ -59,13 +92,16 @@
   function home() {
     B = null;
     if (!save) return welcome();
+    accrue();
     screen('<h1 class="title">WWE Superstars</h1><p class="sub">Collect · merge · level up forever</p>'
       + '<div class="stats-row"><div class="stat-box"><b>' + Object.keys(save.owned).length + '/' + R.length + '</b><small>Cards</small></div>'
       + '<div class="stat-box"><b>' + save.wins + '–' + save.losses + '</b><small>W–L</small></div>'
       + '<div class="stat-box"><b>' + lv(rung()) + '</b><small>Ladder rung</small></div><div class="stat-box"><b>' + lv(bestLevel()) + '</b><small>Best level</small></div></div>'
-      + (save.daily !== today() ? '<button class="btn" style="background:var(--green);color:#04210f" onclick="UI.daily()">🎁 Free daily card</button>' : '<p class="edge" style="text-align:center">Next free card in ' + untilMidnight() + '</p>')
+      + (save.bank > 0 ? '<button class="btn" style="background:var(--green);color:#04210f" onclick="UI.daily()">🎁 Free daily card' + (save.bank > 1 ? ' ×' + save.bank : '') + '</button>' : '<p class="edge" style="text-align:center">Next free card in ' + untilMidnight() + ' (they bank up to ' + BANK_MAX + ' — no rush)</p>')
       + '<p class="edge" style="text-align:center">🔥 Win streak ' + (save.streak || 0) + ' · every ' + STREAK_BONUS + 'rd win in a row = bonus card (' + (STREAK_BONUS - ((save.streak || 0) % STREAK_BONUS)) + ' to go)</p>'
       + '<button class="btn" onclick="UI.fightSelect()">Fight</button>'
+      + '<button class="btn" onclick="UI.fightSelect(\'g\')">Gauntlet · 5 fights, HP carries over</button>'
+      + '<button class="btn alt" onclick="UI.goals()">🏆 Goals' + (goalsReady() ? ' (' + goalsReady() + ' ready!)' : '') + '</button>'
       + '<button class="btn alt" onclick="UI.collection()">Collection</button>'
       + devBar()
       + '<p class="note">Climb the ladder: each win moves you up a rung and lets you pick 1 of 3 cards. A duplicate merges into your card and raises its level — every stat and HP grows ×' + T.m + ' per level.</p>');
@@ -77,7 +113,7 @@
       + '<button class="btn" onclick="UI.starter()">Open starter pack</button>' + devBar());
   }
   function starter() {
-    save = { owned: {}, wins: 0, losses: 0 };
+    save = { owned: {}, shards: {}, claimed: {}, gClears: 0, wins: 0, losses: 0, bank: 1, lastDay: today() };
     const pool = R.slice(), got = [];
     while (got.length < 5) got.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
     got.forEach(give);
@@ -94,13 +130,14 @@
     screen('<div class="topbar"><button onclick="UI.collection()">‹ Collection</button><span>' + w.p + '</span></div>'
       + cardHTML(w, l, { cls: 'big' })
       + statsPanel(w, l)
-      + '<div class="panel"><h3>Next level</h3><p class="edge">Every stat and HP ×' + T.m + ' — Power ' + E.fmtStat(w.s[0], l) + ' → ' + E.fmtStat(w.s[0], l + 1) + '. Win a duplicate to merge it in.</p></div>');
+      + '<div class="panel"><h3>Next level</h3><p class="edge">Duplicates merged: <b>' + ((save.shards || {})[w.n] || 0) + ' / ' + cost(l) + '</b> to reach level ' + lv(l + 1) + '. Every stat and HP ×' + T.m + ' — Power ' + E.fmtStat(w.s[0], l) + ' → ' + E.fmtStat(w.s[0], l + 1) + '.</p></div>');
   }
 
-  function fightSelect() {
-    const list = ownedList();
-    screen('<div class="topbar"><button onclick="UI.home()">‹ Home</button><span>Choose your fighter</span></div>'
-      + '<div class="grid">' + list.map(w => cardHTML(w, save.owned[w.n], { cls: 'pick', click: 'UI.preview(' + idxOf[w.n] + ')' })).join('') + '</div>');
+  function fightSelect(mode) {
+    const list = ownedList(), g = mode === 'g';
+    screen('<div class="topbar"><button onclick="UI.home()">‹ Home</button><span>' + (g ? 'Gauntlet · choose your fighter' : 'Choose your fighter') + '</span></div>'
+      + (g ? '<p class="edge" style="text-align:center">5 fights in a row with one fighter. HP carries over (+30% between fights). Clear it for 3 picks.</p>' : '')
+      + '<div class="grid">' + list.map(w => cardHTML(w, save.owned[w.n], { cls: 'pick', click: (g ? 'UI.gIntro(' : 'UI.preview(') + idxOf[w.n] + ')' })).join('') + '</div>');
   }
 
   // Ranked ladder: rung r has a fixed opponent. Level steps up every 3 rungs; each step goes warm-up -> contender -> boss.
@@ -124,6 +161,7 @@
   function start() {
     const w = R[B.pi], o = B.opp;
     B.m = E.createMatch(w, save.owned[w.n], o.w, o.level);
+    if (B.g) B.m.a.hp = B.m.a.max * G.carry;
     B.phase = null; B.idx = null; B.ev = null;
     nextRound();
   }
@@ -214,6 +252,7 @@
   }
 
   function endScreen() {
+    if (B.g) return gEnd();
     const m = B.m, win = m.winner === 'a';
     if (win) { save.wins++; if (B.opp && B.opp.rung === rung()) save.rung = rung() + 1; save.streak = (save.streak || 0) + 1; save.bestStreak = Math.max(save.bestStreak || 0, save.streak); } else { save.losses++; save.streak = 0; }
     const bonus = win && save.streak % STREAK_BONUS === 0;
@@ -224,42 +263,98 @@
       + (win ? (bonus ? '<p class="merge" style="color:var(--gold2)">🔥 ' + save.streak + ' wins in a row — BONUS CARD!</p>' : '') + '<button class="btn" onclick="UI.reward()">Open reward card' + (bonus ? 's' : '') + '</button>' : '<button class="btn" onclick="UI.home()">Back home</button><button class="btn alt" onclick="UI.preview(' + B.pi + ')">Rematch</button>') + '</div>');
   }
   function daily() {
-    if (save.daily === today()) return home();
-    save.daily = today(); persist();
+    if (!(save.bank > 0)) return home();
+    save.bank--; persist();
     pending = { left: 1, total: 1 };
     reward();
   }
   // Pick 1 of 3: three different random cards, you keep one.
   function reward() {
     if (!pending || pending.left < 1) return home();
-    const pool = R.slice(), ch = [];
+    // One slot is always a card you own (guaranteed progress); the others are open to the whole roster.
+    const pool = R.slice(), ch = [], own = ownedList();
+    if (own.length) { const o = pick(own); ch.push(o); pool.splice(pool.indexOf(o), 1); }
     while (ch.length < 3) ch.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+    ch.sort(() => Math.random() - 0.5);
     pending.choices = ch;
     screen('<div class="reveal"><h2 class="big-title">Pick 1 card</h2><p class="sub">' + (pending.total > 1 ? 'Reward ' + (pending.total - pending.left + 1) + ' of ' + pending.total + ' · ' : '') + 'Duplicates level your card up.</p><div class="grid3">'
       + ch.map((w, i) => { const o = save.owned[w.n] || 0;
-        return '<div class="choice">' + cardHTML(w, o || 1, { cls: 'pick', click: 'UI.choose(' + i + ')' }) + '<div class="chtag ' + (o ? 'up' : 'new') + '">' + (o ? 'LVL ' + lv(o) + ' → ' + lv(o + 1) : 'NEW') + '</div></div>'; }).join('')
+        return '<div class="choice">' + cardHTML(w, o || 1, { cls: 'pick', click: 'UI.choose(' + i + ')' }) + '<div class="chtag ' + (o ? 'up' : 'new') + '">' + (!o ? 'NEW' : ((save.shards[w.n] || 0) + 1 >= cost(o) ? 'LEVEL UP → ' + lv(o + 1) : '+1 merge · ' + ((save.shards[w.n] || 0) + 1) + '/' + cost(o))) + '</div></div>'; }).join('')
       + '</div></div>');
   }
   function choose(i) {
     pending.left--;
     const g = give(pending.choices[i]), w = g.w;
     const jump = g.isNew ? '<div class="merge">NEW CARD!</div>'
-      : '<div class="merge">MERGED! LVL ' + lv(g.from) + ' → ' + lv(g.to) + '<br><small>Power ' + E.fmtStat(w.s[0], g.from) + ' → ' + E.fmtStat(w.s[0], g.to) + ' · HP ' + E.fmtHp(w, g.from) + ' → ' + E.fmtHp(w, g.to) + '</small></div>';
+      : g.to === g.from ? '<div class="merge">MERGED +1<br><small>' + g.sh + ' / ' + cost(g.to) + ' toward level ' + lv(g.to + 1) + '</small></div>'
+      : '<div class="merge">LEVEL UP! LVL ' + lv(g.from) + ' → ' + lv(g.to) + '<br><small>Power ' + E.fmtStat(w.s[0], g.from) + ' → ' + E.fmtStat(w.s[0], g.to) + ' · HP ' + E.fmtHp(w, g.from) + ' → ' + E.fmtHp(w, g.to) + '</small></div>';
     screen('<div class="reveal"><h2 class="big-title">You picked</h2>' + cardHTML(w, g.to, { cls: 'big reveal-in' }) + jump
       + (pending.left > 0 ? '<button class="btn" onclick="UI.reward()">Next pick (' + pending.left + ' left)</button>' : '<button class="btn" onclick="UI.fightSelect()">Fight again</button><button class="btn alt" onclick="UI.home()">Home</button>') + '</div>');
+  }
+
+  /* ---------- gauntlet ---------- */
+  let G = null;
+  const G_LEVELS = [-1, -1, 0, 0, 1];
+  const G_TIERS = [['Opener', 'Lower Midcard'], ['Lower Midcard', 'Midcard'], ['Midcard', 'Upper Midcard'], ['Upper Midcard', 'Main Event'], ['Main Event']];
+  function gIntro(pi, newRun) {
+    if (newRun !== false || !G || G.pi !== pi) G = { pi: pi, k: 0, carry: 1, wins: 0 };
+    const w = R[pi], l = save.owned[w.n], k = G.k;
+    const pool = R.filter((x, i) => i !== pi && G_TIERS[k].includes(x.p));
+    G.opp = { w: pick(pool), level: Math.max(1, l + G_LEVELS[k]) };
+    if (k > 0) G.carry = Math.min(1, G.carry + 0.3);
+    screen('<div class="topbar"><button onclick="UI.fightSelect(\'g\')">‹ Quit</button><span>Gauntlet · fight ' + (k + 1) + ' of 5</span></div>'
+      + '<div class="grid">' + cardHTML(w, l, {}) + cardHTML(G.opp.w, G.opp.level, {}) + '</div>'
+      + '<div class="panel"><h3>Your HP</h3><div class="hpbar"><div class="hpfill ' + (G.carry > 0.6 ? '' : G.carry > 0.3 ? 'amber' : 'red') + '" style="width:' + pct(G.carry) + '%"></div></div><p class="edge">' + pct(G.carry) + '% health' + (k > 0 ? ' (includes +30% rest)' : '') + ' · win ' + (5 - k) + ' more to clear it.</p></div>'
+      + '<button class="btn" onclick="UI.gGo()">Start fight</button>');
+  }
+  function gGo() { B = { pi: G.pi, opp: G.opp, g: true }; start(); }
+  function gEnd() {
+    const m = B.m, win = m.winner === 'a';
+    if (win) { G.wins++; G.carry = Math.max(0.05, m.a.hp / m.a.max); G.k++; }
+    if (win && G.k < 5) {
+      screen('<div class="reveal"><h2 class="big-title">Fight ' + G.k + ' won</h2><p class="sub">' + (5 - G.k) + ' to go · ' + pct(G.carry) + '% HP left</p><button class="btn" onclick="UI.gIntro(' + G.pi + ', false)">Next fight</button></div>');
+      return;
+    }
+    const clear = win, picks = clear ? 3 : Math.ceil(G.wins / 2);
+    if (clear) save.gClears = (save.gClears || 0) + 1;
+    persist();
+    pending = picks ? { left: picks, total: picks } : null;
+    screen('<div class="reveal"><h2 class="big-title">' + (clear ? 'Gauntlet cleared!' : 'Gauntlet over') + '</h2><p class="sub">' + G.wins + ' of 5 fights won · ' + picks + ' pick' + (picks === 1 ? '' : 's') + ' earned</p>'
+      + (picks ? '<button class="btn" onclick="UI.reward()">Open reward cards</button>' : '') + '<button class="btn alt" onclick="UI.home()">Home</button></div>');
+    G = null;
+  }
+
+  /* ---------- goals ---------- */
+  function goals() {
+    screen('<div class="topbar"><button onclick="UI.home()">‹ Home</button><span>Goals · no timers</span></div>'
+      + METRICS.map(m => {
+        const g = nextGoal(m);
+        if (!g) return '<div class="panel"><h3>' + m.name + '</h3><p class="edge">All done ✔</p></div>';
+        const v = m.v(), ok = v >= g.t, picks = 1 + (g.i >= 3 ? 1 : 0);
+        return '<div class="panel"><h3>' + m.name + ' ' + lv(g.t) + '</h3><div class="hpbar"><div class="hpfill" style="width:' + Math.min(100, v / g.t * 100) + '%"></div></div><p class="edge">' + lv(Math.min(v, g.t)) + ' / ' + lv(g.t) + ' · reward: ' + picks + ' pick' + (picks > 1 ? 's' : '') + '</p>'
+          + (ok ? '<button class="btn" onclick="UI.claim(\'' + m.id + '\')">Claim</button>' : '') + '</div>';
+      }).join(''));
+  }
+  function claim(id) {
+    const m = METRICS.find(x => x.id === id), g = nextGoal(m);
+    if (!g || m.v() < g.t) return goals();
+    save.claimed[id + ':' + g.t] = true; persist();
+    const picks = 1 + (g.i >= 3 ? 1 : 0);
+    pending = { left: picks, total: picks };
+    reward();
   }
 
   /* ---------- dev tools (?dev=1) ---------- */
   function dev(what) {
     if (!DEV) return;
     if (what === 'reset') { save = null; try { localStorage.removeItem(SAVE_KEY); } catch (e) { } return home(); }
-    if (!save) save = { owned: {}, wins: 0, losses: 0 };
+    if (!save) save = { owned: {}, shards: {}, claimed: {}, gClears: 0, wins: 0, losses: 0, bank: 1, lastDay: today() };
     if (what === 'cards') for (let i = 0; i < 10; i++) give(pick(R));
     else R.forEach(w => { save.owned[w.n] = what; });
     persist(); home();
   }
 
-  window.UI = { home, starter, collection, detail, fightSelect, preview: pi => preview(pi), start, daily, choose, stat: chooseStat, act: chooseAction, next: nextRound, reward, dev };
+  window.UI = { home, starter, collection, detail, fightSelect: m => fightSelect(m), preview: pi => preview(pi), start, daily, choose, goals, claim, gIntro, gGo, stat: chooseStat, act: chooseAction, next: nextRound, reward, dev };
   save = load();
   home();
 })();

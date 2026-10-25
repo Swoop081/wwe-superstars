@@ -24,7 +24,7 @@ const BASE = process.env.V2_URL || 'http://127.0.0.1:8766/v2/index.html';
   // Play several full matches by always taking the first option on each screen.
   let rounds = 0, wins = 0, merges = 0;
   for (let match = 0; match < 6; match++) {
-    await page.click('button.btn:has-text("Fight")');
+    await page.click('button.btn:text-is("Fight")');
     await page.locator('.card.pick').first().click();
     await page.click('text=Start match');
     for (let guard = 0; guard < 80; guard++) {
@@ -59,6 +59,27 @@ const BASE = process.env.V2_URL || 'http://127.0.0.1:8766/v2/index.html';
   assert(await page.locator('text=Free daily card').count() === 0, 'daily card cannot be claimed twice');
   assert((await page.textContent('body')).includes('Next free card in'), 'daily countdown shown');
 
+  // Goals screen + Gauntlet (loses or clears; either way must end cleanly)
+  await page.click('button:has-text("Goals")');
+  assert(await page.locator('.panel h3').count() >= 6, 'goals listed');
+  await page.click('text=‹ Home');
+  await page.click('button:has-text("Gauntlet")');
+  await page.locator('.card.pick').first().click();
+  let gFights = 0;
+  for (let g = 0; g < 400; g++) {
+    if (await page.locator('h2:has-text("Gauntlet")').count()) break;
+    if (await page.locator('button.btn:has-text("Start fight"), button.btn:has-text("Next fight")').count()) { await page.locator('button.btn:has-text("Start fight"), button.btn:has-text("Next fight")').first().click(); gFights++; continue; }
+    if (await page.locator('.statbtn').count()) { await page.locator('.statbtn').first().click(); continue; }
+    if (await page.locator('.actbtn').count()) { await page.locator('.actbtn').first().click(); continue; }
+    const nx = page.locator('button.btn:has-text("Next round"), button.btn:has-text("Finish match")');
+    if (await nx.count()) { await nx.first().click(); continue; }
+    throw new Error('gauntlet stuck');
+  }
+  assert(await page.locator('h2:has-text("Gauntlet")').count(), 'gauntlet ended');
+  console.log('gauntlet fights started', gFights);
+  if (await page.locator('text=Open reward cards').count()) { await page.click('text=Open reward cards'); await page.locator('.grid3 .card').first().click(); await page.locator('button:has-text("Home"), button:has-text("Next pick")').first().click(); if (await page.locator('.grid3').count() === 0 && await page.locator('button:has-text("Next pick")').count()) {} }
+  await page.evaluate(() => UI.home());
+
   // Level 10,000 rendering
   await page.evaluate(() => UI.dev(10000));
   await page.click('button.btn:has-text("Collection")');
@@ -66,7 +87,7 @@ const BASE = process.env.V2_URL || 'http://127.0.0.1:8766/v2/index.html';
   assert(/e\d{3}/.test(t), 'level 10,000 shows scientific notation: ' + t.replace(/\n/g, ' '));
   await page.screenshot({ path: process.env.SHOTS + '/5-collection-L10000.png' });
   // Battle at level 10,000 still works
-  await page.click('text=‹ Home'); await page.click('button.btn:has-text("Fight")');
+  await page.click('text=‹ Home'); await page.click('button.btn:text-is("Fight")');
   await page.locator('.card.pick').first().click(); await page.click('text=Start match');
   for (let g = 0; g < 80; g++) {
     if (await page.locator('text=Open reward card').count() || await page.locator('h2:has-text("Defeat")').count()) break;
