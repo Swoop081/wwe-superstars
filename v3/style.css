@@ -737,3 +737,6 @@ body:has(.plist) .btn.big{margin-top:clamp(4px,1.5dvh,14px)}
 .sdscr .sdcard{width:44%;margin:0 auto 10px}.sdscr .sdcard .sf{width:100%;aspect-ratio:3/4.3;height:auto}
 .sdscr .panel p{margin:0 0 6px}.sdscr .fillmid{justify-content:flex-start;gap:8px}
 .sdscr .panel{padding:12px 14px}
+
+/* v3.27 active stat chip takes the colour of its stat (orange/red/green/blue/gold) */
+.cf .sb span.hl{background:linear-gradient(color-mix(in srgb,var(--sc) 88%,#fff),color-mix(in srgb,var(--sc) 78%,#000))!important;color:#fff!important;text-shadow:0 1px 2px #000b;box-shadow:0 0 10px color-mix(in srgb,var(--sc) 70%,transparent),inset 0 0 0 1px #fff7!important}
