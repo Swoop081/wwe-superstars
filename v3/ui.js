@@ -53,6 +53,7 @@
   const byU = u => S.cards.find(c => c.u === u) || null;
   const supByU = u => S.sups.find(s => s.u === u) || null;
   const owned = () => S.cards;
+  const short = n => n >= 1e6 ? (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + 'M' : n >= 1e5 ? Math.round(n / 1e3) + 'k' : n >= 1e4 ? (n / 1e3).toFixed(1) + 'k' : String(n);
   const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const pick = a => a[Math.floor(rnd() * a.length)];
@@ -134,7 +135,7 @@
       + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
       + (o.val != null ? '<div class="val">' + fmt(o.val) + '</div>' : '')
       + nameEl(c)
-      + '<div class="sb">' + st.map((v, i) => '<span style="--sc:' + ST[i].col + '" class="' + (o.hl && o.hl.includes(i) ? 'hl' : '') + '">' + statImg(i) + '<b>' + v + '</b></span>').join('') + '</div></div>';
+      + '<div class="sb">' + st.map((v, i) => '<span style="--sc:' + ST[i].col + '" class="' + (o.hl && o.hl.includes(i) ? 'hl' : '') + '">' + statImg(i) + '<b>' + short(v) + '</b></span>').join('') + '</div></div>';
   }
   function supFace(s, o) {
     o = o || {}; const d = SUP[s.s], r = RAR[d.rar];
@@ -239,7 +240,7 @@
       const c = d.m[0] || d.f[0];
       h = '<h2 class="big-title">Your cards</h2><p class="sub">Every Superstar has 5 stats. Higher is better.</p>'
         + '<div class="obrow"><div class="obcard">' + face(c, { cls: '' }) + '</div><div class="obleg">' + ST.map((s, k) => '<div><span style="--sc:' + s.col + '">' + statImg(k) + '</span><b>' + s.name + '</b><small>' + STAT_INFO[k] + '</small></div>').join('') + '</div></div>'
-        + '<div class="panel obnote"><p>The <b>big number</b> top right is the card&rsquo;s level. Everyone starts at level 1, and every level adds <b>+1.25%</b> to all five stats.</p></div>';
+        + '<div class="panel obnote"><p>The <b>big number</b> top right is the card&rsquo;s level. Everyone starts at level 1, and every level adds <b>+20</b> to all five stats, so a higher level beats a lower level almost every time.</p></div>';
     } else if (i === 1) {
       h = '<h2 class="big-title">Your deck</h2><p class="sub">3 men, 3 women and 2 support cards.</p>'
         + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini' })).join('') + '</div>'
@@ -315,7 +316,7 @@
       + '<div class="panel"><h3>' + (E.isF(inst) ? 'Women' : 'Men') + ' · Level ' + inst.lvl + '</h3>'
       + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.max(4, v / Math.max.apply(null, st) * 100) + '%"></i></span><b>' + v + '</b></div>').join('')
       + '</div><div class="panel"><h3>Signature move</h3><p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance() * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '%.</p></div>'
-      + '<div class="panel"><h3>Level up</h3><p class="edge">Level <b>' + fmt(inst.lvl) + '</b> · +' + fmt(Math.round((inst.lvl - 1) * E.T.levelStep * 1000) / 10) + '% stats. Every level adds +' + (E.T.levelStep * 100) + '% and there is no maximum. Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
+      + '<div class="panel"><h3>Level up</h3><p class="edge">Level <b>' + fmt(inst.lvl) + '</b> · +' + fmt((inst.lvl - 1) * E.T.levelAdd) + ' to every stat. Each level adds +' + E.T.levelAdd + ' to all five stats and there is no maximum, so a higher level beats a lower one almost every time. Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '% of base stats)</p>'
       + '<p class="edge dupline">' + (inst.d ? 'You have <b>' + inst.d + '</b> spare duplicate' + (inst.d > 1 ? 's' : '') + ' of ' + c.n + '.' : 'Get a duplicate of ' + c.n + ' from a card pick to level this card up.') + '</p>'
       + '<button class="btn" ' + (inst.d ? '' : 'disabled') + ' onclick="UI.levelUp(' + inst.u + ')">Level up (uses 1 duplicate)</button>' + (inst.d > 1 ? '<button class="btn alt" onclick="UI.levelUp(' + inst.u + ',1)">Use all ' + inst.d + ' duplicates</button>' : '') + '</div>'
       + '<div class="panel"><h3>Tag &amp; ring</h3><p class="edge">Tag symbol <b class="sym ' + c.sym + '" style="position:static;background:none">' + SYMCH[c.sym] + '</b> — opposite arrows of the same colour make a diamond (+10% team stats); mixed colours −5%.</p><div class="arrows">' + arrows.join('') + '</div><p class="edge">Ring Domination arrows: where this card can challenge.</p></div>');

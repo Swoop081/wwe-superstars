@@ -21,7 +21,7 @@ A new game starts with a welcome screen (choose a name), a short how-to (cards a
 
 ## No rarities (v3.10)
 
-Wrestler cards have no rarity tiers. Every card starts at **level 1** with base stats around 38-70 (average 52). Each level adds **+1.25%** to all five stats (no maximum: level 1,000 is +1,248.75%). You can only level a wrestler up by spending **a duplicate of that same wrestler**: duplicates stack on the card (the green "+N DUP" tag) and each one is worth one level. Pro/Fortify and feeding other cards are gone. Colour is just the stat band; the hidden `rar` value in `data/cards.js` is only a star-power rank used to choose bosses, prizes and weak loaner cards.
+Wrestler cards have no rarity tiers. Every card starts at **level 1** with base stats around 38-70 (average 52). Each level adds a flat **+20** to all five stats (no maximum), which is far more than the gap between wrestlers, so a level 2 card beats a level 1 card about 87% of the time, and the same holds at level 300 or 1,000. Signature moves, support cards, tag diamonds and match experience are percentages of the **base** stats only, so they never outweigh a level lead. You can only level a wrestler up by spending **a duplicate of that same wrestler**: duplicates stack on the card (the green "+N DUP" tag) and each one is worth one level. Pro/Fortify and feeding other cards are gone. Colour is just the stat band; the hidden `rar` value in `data/cards.js` is only a star-power rank used to choose bosses, prizes and weak loaner cards.
 
 Matches: tap the card(s) a match needs and it plays straight away (choose a support card first if you want one). The result screen shows the score, each match with both sides' cards and totals, and your card-pick reward.
 

@@ -22,7 +22,7 @@
     { n: 'Legendary', mult: 6.0, sig: 0.33, col: '#ffd34d' }, { n: 'Survivor', mult: 7.2, sig: 0.36, col: '#ff4d5e' },
     { n: 'WrestleMania', mult: 8.6, sig: 0.4, col: '#7fe7ff' }
   ];
-  const T = { levelStep: 0.0125, power: 4.2, sigChance: 0.2, matchBoost: 0.10, matchMax: 100, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
+  const T = { levelAdd: 20, power: 4.2, sigChance: 0.2, matchBoost: 0.10, matchMax: 100, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
   // Support cards: one-use boosts per game. pct is applied to the listed stats for the match they are played in.
   const SUPPORTS = [
     { id: 'chair', name: 'Steel Chair', stats: [0], pct: 0.25, rar: 0 }, { id: 'table', name: 'Table', stats: [2], pct: 0.25, rar: 0 },
@@ -46,11 +46,14 @@
   /* ---------- cards ---------- */
   // inst = {u, c:index into CARDS, lvl 1.. (no cap), d spare duplicates, mt matches played}
   function mk(c, o) { return Object.assign({ u: 0, c, lvl: 1, d: 0, mt: 0 }, o || {}); }
-  // Every level adds +1.25% to all five stats. Playing matches adds up to +10% on top.
-  function cardMult(inst) {
-    return (1 + T.levelStep * (Math.max(1, inst.lvl) - 1)) * (1 + T.matchBoost * Math.min(inst.mt, T.matchMax) / T.matchMax) * (inst.fat == null ? 1 : inst.fat);
-  }
-  function stats(inst) { const m = cardMult(inst); return CARDS[inst.c].s.map(v => Math.round(v * m)); }
+  // Levels are worth more than any wrestler's natural talent: every level adds a flat +20 to all five stats (base stats are
+  // only ~38-70, so a level 2 card beats a level 1 card almost every time, at any level). Percentage boosts (signature moves,
+  // support cards, tag diamonds, match experience) apply to the BASE part only, so they can never outweigh a level lead.
+  const fatOf = inst => inst.fat == null ? 1 : inst.fat;
+  const expMult = inst => 1 + T.matchBoost * Math.min(inst.mt || 0, T.matchMax) / T.matchMax;
+  const lvlBonus = inst => (Math.max(1, inst.lvl) - 1) * T.levelAdd * fatOf(inst);
+  function baseStats(inst) { const m = expMult(inst) * fatOf(inst); return CARDS[inst.c].s.map(v => v * m); }
+  function stats(inst) { const lb = lvlBonus(inst); return baseStats(inst).map(v => Math.round(v + lb)); }
   // Card strength (used for AI targets and deck rank): 5 stats x 0.8, scaled so ranks stay on the familiar scale.
   const total = inst => stats(inst).reduce((a, b) => a + b, 0) * 0.8 * T.power;
   // Signature move boosts the card's two best stats.
@@ -81,12 +84,13 @@
     // Computer cards: random wrestlers levelled so each one lands near the target strength (levels have no cap).
     const make = (idxs, n) => {
       const out = [];
+      const slope = 0.8 * T.power * 5 * T.levelAdd;
       const cand = shuffle(idxs, rng).map(i => { const mt = Math.floor(rng() * 80), inst = mk(i, { lvl: 1, mt }), base = total(inst); return { i, mt, base }; });
       const fit = cand.filter(c => c.base <= target * 1.02), rest = cand.filter(c => c.base > target * 1.02).sort((a, b) => a.base - b.base);
       for (const c of fit.concat(rest)) {
         if (out.length >= n) break;
         const want = target * (0.88 + rng() * 0.24);
-        const lvl = Math.max(1, Math.round(1 + (want / c.base - 1) / T.levelStep));
+        const lvl = Math.max(1, Math.round(1 + (want - c.base) / slope));
         out.push(mk(c.i, { lvl, mt: c.mt }));
       }
       return out;
@@ -121,19 +125,19 @@
   }
   // Total for one side in one match. cards = instances (1 or 2); sup = support object or null. rng decides signature moves.
   function sideTotal(cards, focus, sup, rng) {
-    let sum = 0; const parts = [];
+    let lp = 0, bp = 0; const parts = [];
     for (const c of cards) {
-      const st = stats(c).slice(), ss = sigStats(c);
+      const bs = baseStats(c), lb = lvlBonus(c), ss = sigStats(c);
       const sig = rng() < sigChance(c);
-      if (sig) ss.forEach(i => { st[i] = st[i] * (1 + T.sigBoost); });
-      let v = 0; focus.forEach(i => { v += st[i]; });
-      parts.push({ u: c.u, c: c.c, base: focus.reduce((a, i) => a + stats(c)[i], 0), sig: sig && ss.some(i => focus.includes(i)), value: Math.round(v) });
-      sum += v;
+      let cl = 0, cb = 0, full = 0;
+      focus.forEach(i => { cl += lb; cb += bs[i] * (sig && ss.includes(i) ? 1 + T.sigBoost : 1); full += bs[i] + lb; });
+      parts.push({ u: c.u, c: c.c, base: Math.round(full), sig: sig && ss.some(i => focus.includes(i)), value: Math.round(cl + cb) });
+      lp += cl; bp += cb;
     }
-    let tag = 1; if (cards.length === 2) { tag = tagMod(cards[0], cards[1]); sum *= tag; }
+    let tag = 1; if (cards.length === 2) { tag = tagMod(cards[0], cards[1]); bp *= tag; }
     let boost = 0;
-    if (sup) { const S = SUPPORTS[sup.s]; if (focus.some(i => S.stats.includes(i))) { boost = S.pct; sum *= (1 + S.pct); } }
-    return { total: Math.round(sum), parts, tag, boost };
+    if (sup) { const S = SUPPORTS[sup.s]; if (focus.some(i => S.stats.includes(i))) { boost = S.pct; bp *= (1 + S.pct); } }
+    return { total: Math.round(lp + bp), parts, tag, boost };
   }
   function newGame(deckA, deckB, rng, o) {
     o = o || {};
@@ -318,8 +322,9 @@
     if (sacrifice) { R.reserve = R.reserve.filter(c => c !== sacrifice); R.out.push(sacrifice); }
     F.reserve = F.reserve.filter(c => c !== challenger);
     const hv = stats(st.holder)[statIdx] * st.drain, cv = stats(challenger)[statIdx];
+    const hb = baseStats(st.holder)[statIdx] * st.drain, cb = baseStats(challenger)[statIdx];
     const hs = st.rng() < sigChance(st.holder) && sigStats(st.holder).includes(statIdx), cs = st.rng() < sigChance(challenger) && sigStats(challenger).includes(statIdx);
-    const H = hv * (hs ? 1 + T.sigBoost : 1), C = cv * (cs ? 1 + T.sigBoost : 1);
+    const H = hv + (hs ? hb * T.sigBoost : 0), C = cv + (cs ? cb * T.sigBoost : 0);
     const holderWins = H >= C;
     const info = { ring: ringSide, stat: statIdx, holder: st.holder, challenger, hv: Math.round(H), cv: Math.round(C), hs, cs, sacrifice, holderWins };
     st.round++;
@@ -350,7 +355,7 @@
 
   return {
     STATS, RAR, T, SUPPORTS, SUP_IDX, SYM, DIRS, CARDS, IDX, TYPE_NAME,
-    mulberry32, pickR, shuffle, mk, stats, total, cardMult, sigStats, sigChance, isF, canLevel, levelUp,
+    mulberry32, pickR, shuffle, mk, stats, baseStats, total, sigStats, sigChance, isF, canLevel, levelUp,
     deckCards, deckPower, bestDeck, aiDeck, aiName, makeSpecs, tagMod, sideTotal, newGame, availCards, availM, availF, availS, canField, validPick,
     aiPick, aiSupport, playMatch, playExtra, extraSpec, autoPlayGame, smartPick, perfect, opponents, picksFor, pickTable, powerTier,
     rdNew, rdMoves, rdPlay, rdAI, rdNeighbours, rrNew, rrStart, rrRound, rrAIStat, rrAIChallenger, rrAISacrifice, cardsNeeded,

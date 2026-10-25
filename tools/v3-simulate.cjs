@@ -49,3 +49,21 @@ for (let i = 0; i < 300; i++) {
   if (rr.over) rrOk++;
 }
 console.log('ring domination finished', rdOk + '/300', ' royal rumble finished', rrOk + '/300');
+
+// 4) Level dominance: a card one level higher should beat a random same-gender card one level lower most of the time, at any level
+// (single stat, signature moves on, no supports).
+{
+  const out = {};
+  for (const L of [1, 2, 10, 100, 300, 1000]) {
+    let wins = 0, n = 6000;
+    for (let i = 0; i < n; i++) {
+      const a = E.mk(Math.floor(rng() * E.CARDS.length), { lvl: L + 1, mt: Math.floor(rng() * 100) });
+      const b = E.mk(Math.floor(rng() * E.CARDS.length), { lvl: L, mt: Math.floor(rng() * 100) });
+      const f = [Math.floor(rng() * 5)];
+      const ta = E.sideTotal([a], f, null, rng).total, tb = E.sideTotal([b], f, null, rng).total;
+      if (ta > tb) wins++; else if (ta === tb && rng() < 0.5) wins++;
+    }
+    out['L' + (L + 1) + ' vs L' + L] = (wins / n * 100).toFixed(1) + '%';
+  }
+  console.log('level+1 beats level (single stat):', JSON.stringify(out));
+}

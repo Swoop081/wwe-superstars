@@ -6,8 +6,16 @@ const BASE = process.env.V3_URL || 'http://127.0.0.1:8766/v3/index.html';
 const SH = process.env.SHOTS || '/tmp/shots';
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
-  const page = await browser.newPage({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true });
+  const VH = +process.env.VH || 800;
+  const page = await browser.newPage({ viewport: { width: 390, height: VH }, isMobile: true, hasTouch: true });
   const errors = [], bad = [];
+  // Fit audit: every screen must fit the viewport height (no vertical page scroll).
+  await page.addInitScript(() => {
+    window.__ov = {};
+    const chk = () => { const el = document.getElementById('app'); if (!el) return; const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      if (h > innerHeight + 2) { const t = ((el.querySelector('h1,h2,.mnum span,.hud .rnd,.topbar') || el).textContent || '').replace(/\s+/g, ' ').trim().slice(0, 34) + ' | ' + (el.className || '') + (el.firstElementChild ? ' ' + el.firstElementChild.className.toString().slice(0, 18) : ''); window.__ov[t] = Math.max(window.__ov[t] || 0, h); } };
+    document.addEventListener('DOMContentLoaded', () => { const el = document.getElementById('app'); let q = 0; new MutationObserver(() => { chk(); setTimeout(chk, 500); }).observe(el, { childList: true }); });
+  });
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', m => { if (m.type() === 'error' && !/TUNNEL|fonts/.test(m.text())) errors.push(m.text()); });
   page.on('response', r => { if (r.status() >= 400 && /assets\//.test(r.url())) bad.push(r.status() + ' ' + r.url()); });
@@ -128,6 +136,8 @@ const SH = process.env.SHOTS || '/tmp/shots';
   assert((await page.content()).indexOf('NaN') < 0, 'no NaN');
   assert.deepEqual(errors, [], 'errors: ' + errors.join(' | '));
   assert.deepEqual(bad, [], 'assets: ' + bad.slice(0, 3).join(' | '));
+  const ov = await page.evaluate(() => window.__ov); const ovk = Object.keys(ov); if (ovk.length) console.log('OVERFLOW (' + VH + 'px):\n' + ovk.map(k => '  ' + ov[k] + '  ' + k).join('\n')); if (process.env.FIT && ovk.length) throw new Error(ovk.length + ' screens overflow');
+
   console.log('PASS v3 browser flow');
   await browser.close();
 })().catch(e => { console.error('FAIL', e.message); process.exit(1); });
