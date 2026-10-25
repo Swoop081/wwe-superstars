@@ -13,7 +13,7 @@
     try {
       const s = JSON.parse(localStorage.getItem(SAVE_KEY));
       if (s && s.owned) {
-        s.shards = s.shards || {}; s.claimed = s.claimed || {}; s.gClears = s.gClears || 0;
+        s.shards = s.shards || {}; s.shiny = s.shiny || {}; s.claimed = s.claimed || {}; s.gClears = s.gClears || 0;
         if (s.bank === undefined) { s.bank = s.daily === today() ? 0 : 1; s.lastDay = today(); }
         return s;
       }
@@ -25,8 +25,17 @@
   const bestLevel = () => Math.max(1, ...Object.values(save.owned));
   // Give a card: new card = level 1; duplicate = merges into the owned card (+1 level).
   // Merge cost rises: level L needs cost(L) duplicates to reach L+1 (1,2,2,3,3,4...). Extra copies are kept as progress.
+  const weekNo = () => Math.floor(Date.now() / (7 * 864e5));
+  const featured = () => R[Math.floor(E.mulberry32(weekNo() * 31 + 7)() * R.length)];
   const cost = L => 1 + Math.floor(L / 2);
+  // Shiny: a rare cosmetic foil that can appear whenever you get a card. Purely for show.
   function give(w) {
+    const g = giveCore(w);
+    save.shiny = save.shiny || {};
+    if (!save.shiny[w.n] && Math.random() < (g.isNew ? 0.03 : 0.08)) { save.shiny[w.n] = true; g.shiny = true; persist(); }
+    return g;
+  }
+  function giveCore(w) {
     const old = save.owned[w.n] || 0;
     save.shards = save.shards || {};
     if (!old) { save.owned[w.n] = 1; save.shards[w.n] = 0; persist(); return { w, from: 0, to: 1, isNew: true, sh: 0 }; }
@@ -50,7 +59,7 @@
   // The card is the artwork: full-bleed art, level, HP and name. Stats never sit on the art.
   function cardHTML(w, level, o) {
     o = o || {};
-    return '<div class="card ' + (w.p === 'Main Event' ? 'tier-main ' : '') + (o.cls || '') + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
+    return '<div class="card ' + (w.p === 'Main Event' ? 'tier-main ' : '') + (!o.noShine && save && save.shiny && save.shiny[w.n] && save.owned[w.n] ? 'shiny ' : '') + (o.cls || '') + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
       + '<div class="artwrap">' + art(w) + '</div>'
       + '<div class="lvl"><small>LVL</small><b>' + lv(level) + '</b></div>'
       + '<div class="hp"><small>HP</small><b>' + E.fmtHp(w, level) + '</b></div>'
@@ -81,7 +90,13 @@
     { id: 'gaunt', name: 'Clear the Gauntlet', v: () => save.gClears || 0, at: [1, 3, 10, 25] }
   ];
   const nextGoal = m => { for (let i = 0; i < m.at.length; i++) if (!save.claimed[m.id + ':' + m.at[i]]) return { i, t: m.at[i] }; return null; };
-  const goalsReady = () => METRICS.filter(m => { const g = nextGoal(m); return g && m.v() >= g.t; }).length;
+  const SETS = [
+    ...['Main Event', 'Upper Midcard', 'Midcard', 'Lower Midcard', 'Opener'].map(t => ({ id: 'set:' + t, name: t + ' set', has: w => w.p === t })),
+    { id: 'set:Men', name: 'Men\'s roster', has: w => w.g === 'M' }, { id: 'set:Women', name: 'Women\'s roster', has: w => w.g === 'F' }
+  ];
+  const setProg = S => { const all = R.filter(S.has); return { got: all.filter(w => save.owned[w.n]).length, of: all.length }; };
+  const setsReady = () => SETS.filter(S => { const p = setProg(S); return p.of && p.got === p.of && !save.claimed[S.id]; }).length;
+  const goalsReady = () => setsReady() + METRICS.filter(m => { const g = nextGoal(m); return g && m.v() >= g.t; }).length;
 
   /* ---------- screens ---------- */
   function devBar() {
@@ -99,6 +114,7 @@
       + '<div class="stat-box"><b>' + lv(rung()) + '</b><small>Ladder rung</small></div><div class="stat-box"><b>' + lv(bestLevel()) + '</b><small>Best level</small></div></div>'
       + (save.bank > 0 ? '<button class="btn" style="background:var(--green);color:#04210f" onclick="UI.daily()">🎁 Free daily card' + (save.bank > 1 ? ' ×' + save.bank : '') + '</button>' : '<p class="edge" style="text-align:center">Next free card in ' + untilMidnight() + ' (they bank up to ' + BANK_MAX + ' — no rush)</p>')
       + '<p class="edge" style="text-align:center">🔥 Win streak ' + (save.streak || 0) + ' · every ' + STREAK_BONUS + 'rd win in a row = bonus card (' + (STREAK_BONUS - ((save.streak || 0) % STREAK_BONUS)) + ' to go)</p>'
+      + '<p class="edge" style="text-align:center">⭐ Featured this week: <b>' + featured().n + '</b> (shows up more in picks)</p>'
       + '<button class="btn" onclick="UI.fightSelect()">Fight</button>'
       + '<button class="btn" onclick="UI.fightSelect(\'g\')">Gauntlet · 5 fights, HP carries over</button>'
       + '<button class="btn alt" onclick="UI.goals()">🏆 Goals' + (goalsReady() ? ' (' + goalsReady() + ' ready!)' : '') + '</button>'
@@ -113,7 +129,7 @@
       + '<button class="btn" onclick="UI.starter()">Open starter pack</button>' + devBar());
   }
   function starter() {
-    save = { owned: {}, shards: {}, claimed: {}, gClears: 0, wins: 0, losses: 0, bank: 1, lastDay: today() };
+    save = { owned: {}, shards: {}, shiny: {}, claimed: {}, gClears: 0, wins: 0, losses: 0, bank: 1, lastDay: today() };
     const pool = R.slice(), got = [];
     while (got.length < 5) got.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
     got.forEach(give);
@@ -148,11 +164,19 @@
     const pool = R.filter(x => GROUPS[(r - 1) % 3].includes(x.p));
     return { w: pool[Math.floor(E.mulberry32(r * 7919 + 13)() * pool.length)], level: 1 + Math.floor((r - 1) / 3), rung: r, rank: RANK[(r - 1) % 3] };
   }
+  // Boss rungs (every 3rd) carry a special rule and pay a bonus pick.
+  const RULES = [
+    { id: 'nofin', name: 'No Finishers', text: 'Finishers are banned this match.' },
+    { id: 'sudden', name: 'Sudden Death', text: 'Both fighters start at 50% HP.' },
+    { id: 'charged', name: 'Charged Up', text: 'The boss starts with 2 finisher charges.' }
+  ];
+  const ruleFor = o => o.rank === 'Boss' ? RULES[(o.rung / 3 - 1) % RULES.length] : null;
   function preview(pi) {
     const w = R[pi], l = save.owned[w.n], o = ladderOpp(rung());
     B = { pi, opp: o };
     screen('<div class="topbar"><button onclick="UI.fightSelect()">‹ Back</button><span>Ladder · Rung ' + lv(o.rung) + ' · ' + o.rank + '</span></div>'
-      + '<div class="grid">' + cardHTML(w, l, {}) + cardHTML(o.w, o.level, {}) + '</div>'
+      + '<div class="grid">' + cardHTML(w, l, {}) + cardHTML(o.w, o.level, { noShine: true }) + '</div>'
+      + (ruleFor(o) ? '<div class="panel"><h3>Boss rule · ' + ruleFor(o).name + '</h3><p class="edge">' + ruleFor(o).text + ' Win for a bonus pick.</p></div>' : '')
       + '<p class="edge" style="text-align:center">' + (l > o.level ? 'You out-level them.' : l === o.level ? 'Evenly matched on level.' : 'They out-level you — merge duplicates to catch up.') + ' Win to climb to rung ' + lv(o.rung + 1) + '.</p>'
       + '<button class="btn" onclick="UI.start()">Start match</button>');
   }
@@ -162,6 +186,9 @@
     const w = R[B.pi], o = B.opp;
     B.m = E.createMatch(w, save.owned[w.n], o.w, o.level);
     if (B.g) B.m.a.hp = B.m.a.max * G.carry;
+    B.rule = B.g ? null : ruleFor(o);
+    if (B.rule && B.rule.id === 'sudden') { B.m.a.hp = B.m.a.max / 2; B.m.b.hp = B.m.b.max / 2; }
+    if (B.rule && B.rule.id === 'charged') B.m.b.meter = 2;
     B.phase = null; B.idx = null; B.ev = null;
     nextRound();
   }
@@ -177,6 +204,7 @@
   function chooseAction(id) {
     const m = B.m, idx = B.idx;
     B.ev = E.resolveRound(m, idx, id, E.cpuAction(m, 'b', idx));
+    if (B.rule && B.rule.id === 'nofin') { B.m.a.meter = 0; B.m.b.meter = 0; }
     B.phase = 'result';
     renderBattle();
   }
@@ -256,11 +284,12 @@
     const m = B.m, win = m.winner === 'a';
     if (win) { save.wins++; if (B.opp && B.opp.rung === rung()) save.rung = rung() + 1; save.streak = (save.streak || 0) + 1; save.bestStreak = Math.max(save.bestStreak || 0, save.streak); } else { save.losses++; save.streak = 0; }
     const bonus = win && save.streak % STREAK_BONUS === 0;
-    pending = win ? { left: bonus ? 2 : 1, total: bonus ? 2 : 1 } : null;
+    const boss = win && B.opp && B.opp.rank === 'Boss', n = (bonus ? 2 : 1) + (boss ? 1 : 0);
+    pending = win ? { left: n, total: n } : null;
     persist();
     screen('<div class="reveal"><h2 class="big-title">' + (win ? 'Victory' : 'Defeat') + '</h2>'
       + '<p class="sub">' + m.round + ' rounds · ' + (win ? 'you beat ' : 'you lost to ') + m.b.w.n + ' (LVL ' + lv(m.b.level) + ')</p>'
-      + (win ? (bonus ? '<p class="merge" style="color:var(--gold2)">🔥 ' + save.streak + ' wins in a row — BONUS CARD!</p>' : '') + '<button class="btn" onclick="UI.reward()">Open reward card' + (bonus ? 's' : '') + '</button>' : '<button class="btn" onclick="UI.home()">Back home</button><button class="btn alt" onclick="UI.preview(' + B.pi + ')">Rematch</button>') + '</div>');
+      + (win ? (bonus ? '<p class="merge" style="color:var(--gold2)">🔥 ' + save.streak + ' wins in a row — BONUS CARD!</p>' : '') + '<button class="btn" onclick="UI.reward()">Open reward card' + (n > 1 ? 's' : '') + '</button>' : '<button class="btn" onclick="UI.home()">Back home</button><button class="btn alt" onclick="UI.preview(' + B.pi + ')">Rematch</button>') + '</div>');
   }
   function daily() {
     if (!(save.bank > 0)) return home();
@@ -275,11 +304,13 @@
     const pool = R.slice(), ch = [], own = ownedList();
     if (own.length) { const o = pick(own); ch.push(o); pool.splice(pool.indexOf(o), 1); }
     while (ch.length < 3) ch.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+    const ft = featured();
+    if (!ch.includes(ft) && Math.random() < 0.4) { ch.pop(); ch.push(ft); }
     ch.sort(() => Math.random() - 0.5);
     pending.choices = ch;
     screen('<div class="reveal"><h2 class="big-title">Pick 1 card</h2><p class="sub">' + (pending.total > 1 ? 'Reward ' + (pending.total - pending.left + 1) + ' of ' + pending.total + ' · ' : '') + 'Duplicates level your card up.</p><div class="grid3">'
       + ch.map((w, i) => { const o = save.owned[w.n] || 0;
-        return '<div class="choice">' + cardHTML(w, o || 1, { cls: 'pick', click: 'UI.choose(' + i + ')' }) + '<div class="chtag ' + (o ? 'up' : 'new') + '">' + (!o ? 'NEW' : ((save.shards[w.n] || 0) + 1 >= cost(o) ? 'LEVEL UP → ' + lv(o + 1) : '+1 merge · ' + ((save.shards[w.n] || 0) + 1) + '/' + cost(o))) + '</div></div>'; }).join('')
+        return '<div class="choice">' + cardHTML(w, o || 1, { cls: 'pick', click: 'UI.choose(' + i + ')' }) + '<div class="chtag ' + (o ? 'up' : 'new') + '">' + (w === featured() ? '⭐ ' : '') + (!o ? 'NEW' : ((save.shards[w.n] || 0) + 1 >= cost(o) ? 'LEVEL UP → ' + lv(o + 1) : '+1 merge · ' + ((save.shards[w.n] || 0) + 1) + '/' + cost(o))) + '</div></div>'; }).join('')
       + '</div></div>');
   }
   function choose(i) {
@@ -288,7 +319,7 @@
     const jump = g.isNew ? '<div class="merge">NEW CARD!</div>'
       : g.to === g.from ? '<div class="merge">MERGED +1<br><small>' + g.sh + ' / ' + cost(g.to) + ' toward level ' + lv(g.to + 1) + '</small></div>'
       : '<div class="merge">LEVEL UP! LVL ' + lv(g.from) + ' → ' + lv(g.to) + '<br><small>Power ' + E.fmtStat(w.s[0], g.from) + ' → ' + E.fmtStat(w.s[0], g.to) + ' · HP ' + E.fmtHp(w, g.from) + ' → ' + E.fmtHp(w, g.to) + '</small></div>';
-    screen('<div class="reveal"><h2 class="big-title">You picked</h2>' + cardHTML(w, g.to, { cls: 'big reveal-in' }) + jump
+    screen('<div class="reveal"><h2 class="big-title">You picked</h2>' + cardHTML(w, g.to, { cls: 'big reveal-in' }) + (g.shiny ? '<div class="merge" style="color:#7fe7ff">✨ SHINY FOIL! ✨</div>' : '') + jump
       + (pending.left > 0 ? '<button class="btn" onclick="UI.reward()">Next pick (' + pending.left + ' left)</button>' : '<button class="btn" onclick="UI.fightSelect()">Fight again</button><button class="btn alt" onclick="UI.home()">Home</button>') + '</div>');
   }
 
@@ -303,7 +334,7 @@
     G.opp = { w: pick(pool), level: Math.max(1, l + G_LEVELS[k]) };
     if (k > 0) G.carry = Math.min(1, G.carry + 0.3);
     screen('<div class="topbar"><button onclick="UI.fightSelect(\'g\')">‹ Quit</button><span>Gauntlet · fight ' + (k + 1) + ' of 5</span></div>'
-      + '<div class="grid">' + cardHTML(w, l, {}) + cardHTML(G.opp.w, G.opp.level, {}) + '</div>'
+      + '<div class="grid">' + cardHTML(w, l, {}) + cardHTML(G.opp.w, G.opp.level, { noShine: true }) + '</div>'
       + '<div class="panel"><h3>Your HP</h3><div class="hpbar"><div class="hpfill ' + (G.carry > 0.6 ? '' : G.carry > 0.3 ? 'amber' : 'red') + '" style="width:' + pct(G.carry) + '%"></div></div><p class="edge">' + pct(G.carry) + '% health' + (k > 0 ? ' (includes +30% rest)' : '') + ' · win ' + (5 - k) + ' more to clear it.</p></div>'
       + '<button class="btn" onclick="UI.gGo()">Start fight</button>');
   }
@@ -333,7 +364,16 @@
         const v = m.v(), ok = v >= g.t, picks = 1 + (g.i >= 3 ? 1 : 0);
         return '<div class="panel"><h3>' + m.name + ' ' + lv(g.t) + '</h3><div class="hpbar"><div class="hpfill" style="width:' + Math.min(100, v / g.t * 100) + '%"></div></div><p class="edge">' + lv(Math.min(v, g.t)) + ' / ' + lv(g.t) + ' · reward: ' + picks + ' pick' + (picks > 1 ? 's' : '') + '</p>'
           + (ok ? '<button class="btn" onclick="UI.claim(\'' + m.id + '\')">Claim</button>' : '') + '</div>';
-      }).join(''));
+      }).join('')
+      + '<h3 style="margin:16px 0 4px;color:var(--gold)">Collection sets · 2 picks each</h3>'
+      + SETS.map(S => { const p = setProg(S), done = p.got === p.of && p.of > 0;
+        return '<div class="panel"><h3>' + S.name + '</h3><div class="hpbar"><div class="hpfill" style="width:' + (p.of ? p.got / p.of * 100 : 0) + '%"></div></div><p class="edge">' + p.got + ' / ' + p.of + (save.claimed[S.id] ? ' · claimed ✔' : '') + '</p>'
+          + (done && !save.claimed[S.id] ? '<button class="btn" onclick="UI.claimSet(\'' + S.id + '\')">Claim</button>' : '') + '</div>'; }).join(''));
+  }
+  function claimSet(id) {
+    const S = SETS.find(x => x.id === id), p = setProg(S);
+    if (!S || save.claimed[id] || p.got !== p.of) return goals();
+    save.claimed[id] = true; persist(); pending = { left: 2, total: 2 }; reward();
   }
   function claim(id) {
     const m = METRICS.find(x => x.id === id), g = nextGoal(m);
@@ -348,13 +388,13 @@
   function dev(what) {
     if (!DEV) return;
     if (what === 'reset') { save = null; try { localStorage.removeItem(SAVE_KEY); } catch (e) { } return home(); }
-    if (!save) save = { owned: {}, shards: {}, claimed: {}, gClears: 0, wins: 0, losses: 0, bank: 1, lastDay: today() };
+    if (!save) save = { owned: {}, shards: {}, shiny: {}, claimed: {}, gClears: 0, wins: 0, losses: 0, bank: 1, lastDay: today() };
     if (what === 'cards') for (let i = 0; i < 10; i++) give(pick(R));
     else R.forEach(w => { save.owned[w.n] = what; });
     persist(); home();
   }
 
-  window.UI = { home, starter, collection, detail, fightSelect: m => fightSelect(m), preview: pi => preview(pi), start, daily, choose, goals, claim, gIntro, gGo, stat: chooseStat, act: chooseAction, next: nextRound, reward, dev };
+  window.UI = { home, starter, collection, detail, fightSelect: m => fightSelect(m), preview: pi => preview(pi), start, daily, choose, goals, claim, claimSet, gIntro, gGo, stat: chooseStat, act: chooseAction, next: nextRound, reward, dev };
   save = load();
   home();
 })();

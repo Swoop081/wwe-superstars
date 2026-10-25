@@ -96,3 +96,6 @@ button{font:inherit;color:inherit;cursor:pointer}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
 .grid3 .nameplate{font-size:11px;padding-top:18px}.grid3 .lvl b{font-size:12px}.grid3 .hp{display:none}
 .chtag{margin-top:5px;font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--gold2)}.chtag.new{color:var(--green)}
+.card.shiny{border-color:#7fe7ff;box-shadow:0 0 12px #7fe7ff88}
+.card.shiny::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);background-size:250% 100%;animation:foil 3s linear infinite}
+@keyframes foil{from{background-position:150% 0}to{background-position:-100% 0}}
