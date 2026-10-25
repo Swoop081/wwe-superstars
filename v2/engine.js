@@ -25,35 +25,32 @@
   // Every number the balance depends on lives here, so the simulator can tune it.
   const TUNE = {
     m: 1.25,           // power multiplier per level
-    hp: 4,             // max HP = hp x average stat (short matches: about 5 rounds)
+    hp: 7,             // max HP = hp x average stat (short matches: about 5 rounds)
     noise: 0.3,        // +/- random swing on each stat comparison
     chipBase: 0.12,    // stat winner always deals this x their stat...
     chipMargin: 0.5,   // ...plus this x the winning margin
-    ctrlWin: 1.25,     // action power for the stat winner
-    ctrlLose: 0.8,     // action power for the stat loser
+    ctrlWin: 1.25,     // move power for the stat winner
+    ctrlLose: 0.8,     // move power for the stat loser
+    combo: 1.5,        // a move that matches the called stat is a COMBO: x this
     meterMax: 3,       // stat wins needed to charge the finisher
     finisher: 3.2,     // finisher damage x average stat (cannot be blocked or cancelled)
     maxRounds: 40,
     floor: 1e-12       // lowest relative power, avoids 0/0 for absurd level gaps
   };
 
-  // Action cards. d = damage, h = heal (fraction of max HP), b = block, r = reflect (of what is blocked),
-  // boost = bonus damage on your next damaging action, weak = opponent's next stat comparison x0.8,
-  // inc = extra damage the opponent takes on top (brawl recoil), cancel = negates opponent's action.
-  // Values with a *avg multiplier are scaled by the user's average stat.
+  // Move cards. Each is a wrestling move. Five are tied to a stat: play one when that stat was called and it is a
+  // COMBO (x1.5). d = damage (x user's average stat), h = heal (fraction of max HP), weak = opponent's next stat -20%,
+  // risk = if you lose the stat the move misses and you take this x your average, cancel/counter = negate their move and
+  // hit them back for counter x its damage, fixed = ignores who won the stat, meter = finisher charges gained.
   const ACTIONS = {
-    chair:      { name: 'Steel Chair',     icon: 'steel-chair.png',   d: 1.5 },
-    lowblow:    { name: 'Low Blow',        icon: 'low-blow.png',      d: 1.0, b: 0.8 },
-    cheap:      { name: 'Cheap Shot',      icon: 'cheap-shot.png',    d: 1.1, b: 0.6 },
-    brawl:      { name: 'Wild Brawl',      icon: 'wild-brawl.png',    d: 1.75, inc: 0.2 },
-    ref:        { name: 'Dirty Tactics',   icon: 'dirty-tactics.png', d: 0.5, cancel: true },
-    defence:    { name: 'Defence',         icon: 'defence.png',       h: 0.12, b: 1.5 },
-    crowd:      { name: 'Crowd Support',   icon: 'crowd-support.png', h: 0.30 },
-    secondwind: { name: 'Second Wind',     icon: 'second-wind.png',   h: 0.20, hLow: 0.40 },
-    adrenaline: { name: 'Adrenaline',      icon: 'adrenaline.png',    boost: 1.0 },
-    reverse:    { name: 'Reverse It',      icon: 'reverse-it.png',    b: 1.0, r: 1.0 },
-    mindgames:  { name: 'Mind Games',      icon: 'mind-games.png',    b: 1.0, weak: true },
-    fighting:   { name: 'Fighting Spirit', icon: 'fighting-spirit.png', h: 0.20, boost: 1.0 }
+    powerslam: { name: 'Powerslam',       icon: 'power.png',        kind: 'Power move',      stats: [0], d: 1.3 },
+    strike:    { name: 'Strike Flurry',   icon: 'strike.png',       kind: 'Striking move',   stats: [1], d: 1.2 },
+    suplex:    { name: 'Suplex',          icon: 'technique.png',    kind: 'Technical move',  stats: [2], d: 1.3 },
+    dive:      { name: 'Top-Rope Dive',   icon: 'agility.png',      kind: 'Aerial move',     stats: [3], d: 1.8, risk: 0.3 },
+    hold:      { name: 'Submission Hold', icon: 'submission.png',   kind: 'Submission',      stats: [4], d: 0.8, weak: true },
+    chair:     { name: 'Steel Chair',     icon: 'steel-chair.png',  kind: 'Heel move',       d: 1.4, fixed: true },
+    reversal:  { name: 'Reversal',        icon: 'reverse-it.png',   kind: 'Counter',         cancel: true, counter: 0.5 },
+    crowd:     { name: 'Crowd Pop',       icon: 'crowd-support.png', kind: 'Crowd',          stats: [5, 6], h: 0.22, meter: 1 }
   };
   const ACTION_IDS = Object.keys(ACTIONS);
   const FINISHER = { name: 'Finisher', icon: 'finisher.png' };
@@ -139,18 +136,13 @@
   }
 
   /* ---------- action numbers ---------- */
-  function actionNumbers(id, f, power) {
-    const a = ACTIONS[id], n = { d: 0, h: 0, b: 0, r: 0, inc: 0, boost: 0, weak: false, cancel: !!a.cancel };
-    if (a.d) n.d = a.d * f.avg * power;
-    if (a.h) n.h = (a.hLow && f.hp < f.max / 2 ? a.hLow : a.h) * f.max * power;
-    if (a.b) n.b = a.b * f.avg * power;
-    if (a.r) n.r = a.r * f.avg * power;
-    if (a.inc) n.inc = a.inc * f.avg * power;
-    if (a.boost) n.boost = a.boost * f.avg * power;
-    n.weak = !!a.weak;
-    return n;
+  function actionNumbers(id, f, power, statIdx) {
+    const a = ACTIONS[id], combo = !!(a.stats && a.stats.includes(statIdx));
+    const p = (a.fixed ? 1 : power) * (combo ? TUNE.combo : 1);
+    return { d: a.d ? a.d * f.avg * p : 0, h: a.h ? a.h * f.max * p : 0, b: 0, r: 0, inc: 0, boost: 0,
+      weak: !!a.weak, cancel: !!a.cancel, counter: a.counter || 0, meter: a.meter || 0, risk: a.risk || 0, combo };
   }
-  function finisherNumbers(f) { return { d: TUNE.finisher * f.avg, h: 0, b: 0, r: 0, inc: 0, boost: 0, weak: false, cancel: false, finisher: true }; }
+    function finisherNumbers(f) { return { d: TUNE.finisher * f.avg, h: 0, b: 0, r: 0, inc: 0, boost: 0, weak: false, cancel: false, finisher: true }; }
 
   /* ---------- one round ---------- */
   // statIdx: the caller's chosen stat. actA/actB: an action id, or 'finisher' (needs a full meter
@@ -177,14 +169,18 @@
       const f = s === 'a' ? A : B, id = s === 'a' ? actA : actB;
       if (id === 'finisher') {
         num[s] = meterBefore[s] >= TUNE.meterMax ? finisherNumbers(f) : { d: 0, h: 0, b: 0, r: 0, inc: 0, boost: 0, weak: false, cancel: false, fizzled: true };
-      } else num[s] = actionNumbers(id, f, s === winner ? TUNE.ctrlWin : TUNE.ctrlLose);
+      } else num[s] = actionNumbers(id, f, s === winner ? TUNE.ctrlWin : TUNE.ctrlLose, statIdx);
     }
 
-    // 3. Dirty Tactics negates the opponent's whole action (a finisher cannot be negated).
+    // 3. A Reversal negates the opponent's move and hits back for a share of its damage (a finisher cannot be reversed).
+    const origD = { a: num.a.d, b: num.b.d }, counterHit = { a: 0, b: 0 }, selfHit = { a: 0, b: 0 }, missed = { a: false, b: false };
     const negate = { a: false, b: false };
     for (const s of ['a', 'b']) if (num[s].cancel && !num[other(s)].finisher) negate[other(s)] = true;
+    for (const s of ['a', 'b']) if (num[s].cancel && negate[other(s)]) counterHit[other(s)] = num[s].counter * origD[other(s)];
     for (const s of ['a', 'b']) if (negate[s]) num[s] = { d: 0, h: 0, b: 0, r: 0, inc: 0, boost: 0, weak: false, cancel: false, negated: true };
 
+    // A risky move (the dive) misses if you lose the stat: no damage, and you take the fall.
+    for (const s of ['a', 'b']) if (num[s].risk && s !== winner) { num[s].d = 0; missed[s] = true; selfHit[s] = num[s].risk * (s === 'a' ? A : B).avg; }
     // 4. Damage each side tries to deal (action + banked boost + stat-win chip + brawl recoil).
     const gross = {}, boostUsed = { a: 0, b: 0 };
     for (const s of ['a', 'b']) {
@@ -213,13 +209,14 @@
       if (num[s].weak) o.weak = true;
       ev.fx[s] = { healed: f.hp - before, damage: dealt[s] + reflectOn[other(s)], blocked: blocked[other(s)], reflected: reflectOn[other(s)],
         chip: s === winner ? TUNE.chipBase * top + TUNE.chipMargin * margin : 0, boosted: boostUsed[s], boostGained: num[s].boost || 0,
-        negated: !!num[s].negated, fizzled: !!num[s].fizzled, finisher: !!num[s].finisher, weakened: !!num[s].weak };
+        negated: !!num[s].negated, fizzled: !!num[s].fizzled, combo: !!num[s].combo, missed: missed[s], selfHit: selfHit[s], counter: counterHit[other(s)], finisher: !!num[s].finisher, weakened: !!num[s].weak };
     }
-    A.hp = Math.max(0, A.hp - dealt.b - reflectOn.a);
-    B.hp = Math.max(0, B.hp - dealt.a - reflectOn.b);
+    A.hp = Math.max(0, A.hp - dealt.b - reflectOn.a - counterHit.a - selfHit.a);
+    B.hp = Math.max(0, B.hp - dealt.a - reflectOn.b - counterHit.b - selfHit.b);
     ev.hp = { a: A.hp, b: B.hp };
 
     // 7. Meter, card cycling.
+    for (const s of ['a', 'b']) if (num[s].meter) { const f = s === 'a' ? A : B; f.meter = Math.min(TUNE.meterMax, f.meter + num[s].meter); }
     (winner === 'a' ? A : B).meter = Math.min(TUNE.meterMax, (winner === 'a' ? A : B).meter + 1);
     for (const s of ['a', 'b']) {
       const f = s === 'a' ? A : B, id = s === 'a' ? actA : actB;
@@ -255,23 +252,23 @@
     for (const i of me.hand) { const s = me.stats[i] - op.stats[i]; if (s > bs) { bs = s; best = i; } }
     return best;
   }
-  function scoreAction(m, side, id, power) {
+  function scoreAction(m, side, id, power, statIdx) {
     const me = side === 'a' ? m.a : m.b, op = side === 'a' ? m.b : m.a;
-    const n = actionNumbers(id, me, power), incoming = op.avg * 1.3 * (power === TUNE.ctrlWin ? 0.8 : 1.25);
-    const block = Math.min(n.b, incoming);
-    let v = n.d + n.inc * -1 + block * 0.8 + Math.min(n.h, me.max - me.hp) * 1.0 + Math.min(n.r, block) * 0.7;
-    if (n.boost) v += me.boost ? 0 : n.boost * 0.9;
+    const n = actionNumbers(id, me, power, statIdx), won = power === TUNE.ctrlWin, pw = won ? 0.75 : 0.25;
+    const incoming = op.avg * 1.3 * (won ? 0.8 : 1.25);
+    let v = n.d + Math.min(n.h, me.max - me.hp) + n.meter * me.avg * 0.3;
+    if (n.risk) v = n.d * pw - n.risk * me.avg * (1 - pw);
     if (n.weak) v += op.avg * 0.25;
-    if (n.cancel) v += incoming * (me.hp / me.max < 0.3 ? 0.95 : 0.7);
+    if (n.cancel) v += incoming * 0.6 + incoming * n.counter;
     if (n.d >= op.hp) v += 1e6;
     return v;
   }
-  function cpuAction(m, side, statIdx) {
+    function cpuAction(m, side, statIdx) {
     const me = side === 'a' ? m.a : m.b, op = side === 'a' ? m.b : m.a;
     if (me.meter >= TUNE.meterMax) return 'finisher';
     const power = predictedControl(m, side, statIdx);
     let best = me.actions[0], bs = -Infinity;
-    for (const id of me.actions) { const s = scoreAction(m, side, id, power); if (s > bs) { bs = s; best = id; } }
+    for (const id of me.actions) { const s = scoreAction(m, side, id, power, statIdx); if (s > bs) { bs = s; best = id; } }
     return best;
   }
   // Play a whole match with the CPU policy on both sides (used by the simulator and QA).

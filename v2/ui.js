@@ -33,18 +33,21 @@
   const art = w => '<img class="art" src="../assets/superstars/' + w.a + '.webp" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/superstars/' + w.a + '.png\'">';
   const screen = html => { app.innerHTML = html; window.scrollTo(0, 0); };
 
+  // The card is the artwork: full-bleed art, level, HP and name. Stats never sit on the art.
   function cardHTML(w, level, o) {
     o = o || {};
-    const max = Math.max(...w.s), min = Math.min(...w.s);
-    const rows = E.STATS.map((st, i) =>
-      '<div class="row ' + (w.s[i] === max ? 'best' : w.s[i] === min ? 'worst' : '') + '"><img src="../assets/' + st.icon + '" alt=""><span>' + st.name + '</span><b>' + E.fmtStat(w.s[i], level) + '</b></div>'
-    ).join('') + '<div class="row"><img src="../assets/finisher.png" alt=""><span>' + w.f.toLowerCase() + '</span></div>';
     return '<div class="card ' + (w.p === 'Main Event' ? 'tier-main ' : '') + (o.cls || '') + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
       + '<div class="artwrap">' + art(w) + '</div>'
       + '<div class="lvl"><small>LVL</small><b>' + lv(level) + '</b></div>'
       + '<div class="hp"><small>HP</small><b>' + E.fmtHp(w, level) + '</b></div>'
-      + '<div class="nameplate">' + w.n + '</div>'
-      + '<div class="rows">' + rows + '</div></div>';
+      + '<div class="nameplate">' + w.n + '</div></div>';
+  }
+  // Stats live in their own panel under the card (bars show the card's shape; numbers are the real values).
+  function statsPanel(w, level) {
+    const max = Math.max(...w.s), min = Math.min(...w.s);
+    return '<div class="panel"><h3>Stats · Level ' + lv(level) + '</h3>' + E.STATS.map((st, i) =>
+      '<div class="srow ' + (w.s[i] === max ? 'best' : w.s[i] === min ? 'worst' : '') + '"><img src="../assets/' + st.icon + '" alt=""><span class="sn">' + st.name + '</span><span class="bar"><i style="width:' + w.s[i] + '%"></i></span><b>' + E.fmtStat(w.s[i], level) + '</b></div>'
+    ).join('') + '<div class="srow fin"><img src="../assets/finisher.png" alt=""><span class="sn">Finisher</span><b>' + w.f + '</b></div></div>';
   }
 
   /* ---------- screens ---------- */
@@ -90,7 +93,8 @@
     const w = R[i], l = save.owned[w.n];
     screen('<div class="topbar"><button onclick="UI.collection()">‹ Collection</button><span>' + w.p + '</span></div>'
       + cardHTML(w, l, { cls: 'big' })
-      + '<div class="panel"><h3>Level ' + lv(l) + '</h3><p class="edge">Next level: every stat and HP ×' + T.m + '. Power now ' + E.fmtStat(w.s[0], l) + ' → ' + E.fmtStat(w.s[0], l + 1) + '.</p></div>');
+      + statsPanel(w, l)
+      + '<div class="panel"><h3>Next level</h3><p class="edge">Every stat and HP ×' + T.m + ' — Power ' + E.fmtStat(w.s[0], l) + ' → ' + E.fmtStat(w.s[0], l + 1) + '. Win a duplicate to merge it in.</p></div>');
   }
 
   function fightSelect() {
@@ -147,13 +151,11 @@
   function describe(n, m) {
     const F = v => m.fmtVal(v), p = [];
     if (n.d) p.push('Deal ' + F(n.d));
-    if (n.b) p.push('Block ' + F(n.b));
-    if (n.r) p.push('reflect what you block');
-    if (n.h) p.push('Heal ' + F(n.h));
-    if (n.boost) p.push('next damaging action +' + F(n.boost));
+    if (n.risk) p.push('misses if you lose the stat — you take ' + pct(n.risk) + '% of your avg');
     if (n.weak) p.push('their next stat −20%');
-    if (n.cancel) p.push('negates their action');
-    if (n.inc) p.push('you take +' + F(n.inc));
+    if (n.cancel) p.push('negates their move and hits back for ' + pct(n.counter) + '% of its damage');
+    if (n.h) p.push('Heal ' + F(n.h));
+    if (n.meter) p.push('+' + n.meter + ' finisher charge');
     return p.join(' · ');
   }
   function resultHTML(m, ev) {
@@ -168,10 +170,10 @@
       if (fx.negated) parts.push('NEGATED');
       if (fx.fizzled) parts.push('fizzled (meter not full)');
       if (fx.damage > tiny) parts.push('<span class="hit">' + F(fx.damage) + ' damage</span>');
-      if (fx.blocked > tiny) parts.push('blocked ' + F(fx.blocked));
-      if (fx.reflected > tiny) parts.push('reflected ' + F(fx.reflected));
+      if (fx.counter > tiny) parts.push('<span class="hit">countered for ' + F(fx.counter) + '</span>');
+      if (fx.missed) parts.push('MISSED — takes ' + F(fx.selfHit) + ' from the fall');
+      if (fx.combo) parts.push('<span class="win">COMBO</span>');
       if (fx.healed > tiny) parts.push('<span class="heal">+' + F(fx.healed) + ' HP</span>');
-      if (fx.boostGained > tiny) parts.push('banked +' + F(fx.boostGained));
       if (fx.weakened) parts.push('opponent weakened');
       h += '<p><b>' + name + '</b> · ' + act + (parts.length ? ' → ' + parts.join(' · ') : '') + '</p>';
     }
@@ -183,7 +185,7 @@
     let body = '';
     const head = '<div class="topbar"><span>Round ' + (B.phase === 'result' ? m.round : m.round + 1) + '</span><span>' + (m.caller === 'a' ? 'You call the stat' : 'Opponent calls the stat') + '</span></div>';
     if (B.phase === 'call') {
-      body = '<div class="panel"><h3>You call the stat</h3><p class="edge">Both cards are compared on the stat you pick. Weaknesses are targets — pick where you beat them.</p><div class="statbtns">'
+      body = '<div class="panel"><h3>You call the stat</h3><p class="edge">Both cards are compared on the stat you pick. Pick where you beat them — and remember the moves in your hand: a move that matches the stat is a COMBO.</p><div class="statbtns">'
         + a.hand.map(i => {
           const mine = a.stats[i], theirs = b.stats[i], st = E.STATS[i];
           return '<button class="statbtn" onclick="UI.stat(' + i + ')"><img src="../assets/' + st.icon + '" alt=""><span class="t">' + st.name + '</span><span class="vs"><span class="' + (mine > theirs ? 'w' : 'l') + '">' + m.fmtVal(mine) + '</span> vs ' + m.fmtVal(theirs) + '</span></button>';
@@ -194,12 +196,12 @@
       body = '<div class="panel"><h3>' + (m.caller === 'a' ? 'You called' : 'Opponent called') + ' ' + st.name + '</h3>'
         + '<p class="edge ' + (youEdge ? 'you' : 'them') + '">You ' + m.fmtVal(a.stats[B.idx]) + ' vs them ' + m.fmtVal(b.stats[B.idx]) + ' — '
         + (youEdge ? 'you hold the edge: your action +' + pct(T.ctrlWin - 1) + '%, theirs −' + pct(1 - T.ctrlLose) + '%' : 'they hold the edge: their action +' + pct(T.ctrlWin - 1) + '%, yours −' + pct(1 - T.ctrlLose) + '%')
-        + '. Each roll swings ±' + swing + '%.</p><h3>Play an action card</h3><div class="statbtns">'
-        + (a.meter >= T.meterMax ? '<button class="actbtn finisher" onclick="UI.act(\'finisher\')"><img src="../assets/finisher.png" alt=""><span class="t"><b>Finisher · ' + a.w.f + '</b><em>' + describe(E.finisherNumbers(a), m) + ' · cannot be blocked or negated</em></span></button>'
+        + '. Each roll swings ±' + swing + '%.</p><h3>Choose your move</h3><div class="statbtns">'
+        + (a.meter >= T.meterMax ? '<button class="actbtn finisher" onclick="UI.act(\'finisher\')"><img src="../assets/finisher.png" alt=""><span class="t"><b>Finisher · ' + a.w.f + '</b><em>' + describe(E.finisherNumbers(a), m) + ' · cannot be reversed</em></span></button>'
           : '<p class="edge">Finisher charging ' + a.meter + '/' + T.meterMax + ' — win stat rounds to charge it.</p>')
         + a.actions.map(id => {
-          const A = E.ACTIONS[id];
-          return '<button class="actbtn" onclick="UI.act(\'' + id + '\')"><img src="../assets/' + A.icon + '" alt=""><span class="t"><b>' + A.name + '</b><em>' + describe(E.actionNumbers(id, a, p), m) + '</em></span></button>';
+          const A = E.ACTIONS[id], n = E.actionNumbers(id, a, p, B.idx);
+          return '<button class="actbtn' + (n.combo ? ' combo' : '') + '" onclick="UI.act(\'' + id + '\')"><img src="../assets/' + A.icon + '" alt=""><span class="t"><b>' + A.name + (n.combo ? '<span class="tag">COMBO ×' + T.combo + '</span>' : '') + '</b><small class="kind">' + A.kind + '</small><em>' + describe(n, m) + '</em></span></button>';
         }).join('') + '</div></div>';
     } else if (B.phase === 'result') {
       body = '<div class="panel log"><h3>Round ' + m.round + '</h3>' + resultHTML(m, B.ev) + '</div>'

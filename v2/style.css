@@ -25,22 +25,22 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* ---- trading card ---- */
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .card{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--panel);border:2px solid var(--line);aspect-ratio:3/4.35;display:flex;flex-direction:column;text-align:left;padding:0}
-.card .artwrap{position:absolute;inset:0 0 38% 0;background:radial-gradient(circle at 50% 30%,#2b2b3d,#101018)}
+.card .artwrap{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,#2b2b3d,#101018)}
 .card .art{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 .card .lvl,.card .hp{position:absolute;top:6px;background:rgba(0,0,0,.72);border:1px solid var(--gold);border-radius:8px;padding:2px 7px;text-align:center;line-height:1.1}
 .card .lvl{left:6px}.card .hp{right:6px;border-color:var(--green)}
 .card .lvl small,.card .hp small{display:block;font-size:8px;color:var(--dim);letter-spacing:.1em}
 .card .lvl b{color:var(--gold2);font-size:15px}.card .hp b{color:var(--green);font-size:13px}
-.card .nameplate{position:absolute;left:0;right:0;bottom:38%;padding:16px 6px 3px;background:linear-gradient(transparent,rgba(8,8,12,.94) 60%);font-family:Impact,"Oswald","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.04em;font-size:15px;line-height:1.05;text-align:center;text-shadow:0 1px 3px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card .rows{position:absolute;left:0;right:0;bottom:0;top:62%;background:rgba(8,8,12,.94);padding:3px 7px 5px;display:grid;grid-template-columns:1fr 1fr;gap:1px 8px;align-content:end}
-.card .row{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--dim);min-width:0}
-.card .row img{width:12px;height:12px;object-fit:contain;flex:none}
-.card .row span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card:not(.big) .row span{display:none}.card:not(.big) .row b{flex:1;text-align:right}.card:not(.big) .row:last-child b{display:none}.card:not(.big) .row:last-child span{display:block;font-size:8px;text-align:right}
-.card .row b{color:var(--text);font-size:11px;font-variant-numeric:tabular-nums}
-.card .row.best b{color:var(--gold2)}.card .row.worst b{color:var(--red)}
+.card .nameplate{position:absolute;left:0;right:0;bottom:0;padding:26px 6px 9px;background:linear-gradient(transparent,rgba(8,8,12,.88) 70%);font-family:Impact,"Oswald","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.05em;font-size:16px;line-height:1.05;text-align:center;text-shadow:0 1px 4px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+
+
+
+
+
 .card.tier-main{border-color:var(--gold)}
 .card.big{max-width:340px;margin:0 auto}
-.card.big .nameplate{font-size:22px}.card.big .row{font-size:12px}.card.big .row b{font-size:13px}.card.big .row img{width:14px;height:14px}
+.card.big .nameplate{font-size:24px;padding-top:34px}
 .card.pick{cursor:pointer}.card.sel{outline:3px solid var(--gold)}
 
 /* ---- battle ---- */
@@ -79,3 +79,16 @@ button{font:inherit;color:inherit;cursor:pointer}
 @keyframes pop{from{transform:scale(.4) rotate(-6deg);opacity:0}to{transform:none;opacity:1}}
 .dev{background:#1b0f24;border:1px dashed #8a4bd6;border-radius:10px;padding:8px;margin:10px 0;font-size:12px}
 .dev button{background:#3a1f55;border:0;border-radius:8px;padding:6px 10px;margin:3px 3px 0 0;font-size:12px}
+
+/* stats panel (under the card, never on it) */
+.srow{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px}
+.srow img{width:20px;height:20px;object-fit:contain;flex:none}
+.srow .sn{width:84px;color:var(--dim);flex:none}
+.srow .bar{flex:1;height:8px;border-radius:5px;background:#05050a;overflow:hidden}
+.srow .bar i{display:block;height:100%;background:var(--blue)}
+.srow.best .bar i{background:var(--gold)}.srow.worst .bar i{background:var(--red)}
+.srow b{min-width:64px;text-align:right;font-variant-numeric:tabular-nums}
+.srow.fin b{flex:1;text-align:right;color:var(--gold2);font-size:12px;letter-spacing:.05em}
+.actbtn .kind{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:1px 0 2px}
+.actbtn.combo{border-color:var(--gold);background:linear-gradient(90deg,#2d2408,var(--panel2))}
+.actbtn .tag{margin-left:8px}
