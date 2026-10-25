@@ -534,7 +534,7 @@ h2.big-title::after{height:3px!important;bottom:-2px!important}
 .pickov .gotbox{margin:0;max-width:none;width:min(60vw,calc((100dvh - 190px) / 1.43))}.pickov .gotbox::before{width:300px;height:300px;margin:-150px 0 0 -150px}
 .pickov .btn{width:min(100%,380px)}
 .recap{gap:8px;margin:6px 0}
-.dcard .cf.big .sb svg{display:none}.dcard .cf.big .sb span{font-size:12px}
+.dcard .cf.big .sb svg.sti{display:none!important}.dcard .cf.big .sb span{font-size:12px}
 .slots.two .sf{height:64px;aspect-ratio:auto;flex-direction:row;align-items:center}.slots.two .sf .sico{width:34px;height:34px}
 .hscr{height:calc(100dvh - 24px);min-height:0}
 .railwrap{min-height:0}.page{min-height:150px}
@@ -577,7 +577,7 @@ body:has(.board) .btn.big{margin-top:4px}
 .opp{padding:6px 10px!important;margin:4px 0!important}
 .plist{margin:4px 0;gap:3px}.pl{padding:3px 10px}
 .stages{gap:5px}.stg{padding:4px 2px}.stg b{font-size:18px}
-.gotbox .cf{width:92px}.gotbox{margin:0}
+body:not(:has(.pickov)) .gotbox .cf{width:92px}body:not(:has(.pickov)) .gotbox{margin:0 auto}
 .guesses{gap:3px}.gr span{height:34px}.keys button{padding:7px 0}
 .ladder{margin:4px 0;gap:3px}.rung{padding:6px 12px}
 .sub{margin:2px 0}.big-title{margin:2px 0}
