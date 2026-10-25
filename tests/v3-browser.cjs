@@ -13,8 +13,24 @@ const SH = process.env.SHOTS || '/tmp/shots';
   page.on('response', r => { if (r.status() >= 400 && /assets\//.test(r.url())) bad.push(r.status() + ' ' + r.url()); });
   await page.goto(BASE + '?dev=1', { waitUntil: 'load' });
   await page.evaluate(() => localStorage.clear()); await page.reload({ waitUntil: 'load' });
-  await page.click('button.btn:has-text("Start")');
+  // first run: name -> how to play (3 slides) -> starting deck -> home
+  assert((await page.textContent('body')).includes('Welcome'), 'welcome shown');
+  await page.screenshot({ path: SH + '/v3-ob0.png' });
+  await page.fill('#pname', 'Justin');
+  assert.equal(await page.textContent('#pav'), 'JU', 'avatar initials follow the name');
+  await page.click('button.btn:has-text("Continue")');
+  for (let k = 1; k <= 3; k++) { await page.screenshot({ path: SH + '/v3-ob' + k + '.png' }); await page.click('button.btn:has-text("Next")'); }
+  assert((await page.textContent('body')).includes('Your starting team'), 'starting deck step');
+  await page.screenshot({ path: SH + '/v3-ob4.png' });
+  await page.click('button.btn.alt:has-text("Go to home")');
   assert((await page.textContent('body')).includes('Cards'), 'home shown');
+  assert.equal((await page.textContent('.hud .av')).trim(), 'JU', 'hud avatar shows initials');
+  assert(await page.evaluate(() => document.querySelectorAll('.mode[style*="--art"]').length) === 12, 'all 12 mode buttons have wrestler art');
+  await page.screenshot({ path: SH + '/v3-home-art.png', fullPage: true });
+  await page.click('.hsnd.hq'); assert((await page.textContent('body')).includes('Your cards'), 'help opens'); await page.click('.topbar button');
+  await page.click('.hud .av'); await page.fill('#pname', 'Max'); await page.click('button.btn:has-text("Save")');
+  assert.equal((await page.textContent('.hud .av')).trim(), 'MA', 'rename works');
+  await page.reload({ waitUntil: 'load' }); assert((await page.textContent('.hud .av')).trim() === 'MA' && !(await page.textContent('body')).includes('Welcome'), 'save persists, no second onboarding');
   const C = s => page.locator(s);
   const home = async () => { await page.evaluate(() => UI.home()); };
 

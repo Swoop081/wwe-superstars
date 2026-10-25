@@ -147,27 +147,93 @@
     ['case', 'Crack the Case', 'puzzle', 'Daily code puzzle.']
   ];
   function home() {
-    if (!S) return welcome();
+    if (!S || !S.onb) return welcome();
     const d = getDeck();
     const spk = S.mute ? '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
-    screen('<div class="hud"><span class="av">YO</span>'
+    screen('<div class="hud"><button class="av" onclick="UI.rename()" aria-label="Change name">' + ini(S.name) + '</button>'
       + '<span class="hs"><small>Deck rank</small><b>' + rankNo() + '</b></span>'
       + '<span class="hs"><small>Cards</small><b>' + S.cards.length + '</b></span>'
       + '<span class="hs"><small>Won–Lost</small><b>' + S.stats.wins + '–' + S.stats.losses + '</b></span>'
+      + '<button class="hsnd hq" onclick="UI.help()" aria-label="How to play">?</button>'
       + '<button class="hsnd' + (S.mute ? ' off' : '') + '" onclick="UI.mute()" aria-label="Sound">' + spk + '</button></div>'
       + LOGO
+      + '<div class="deckcap"><b>' + esc(S.name) + '\'s deck</b><button onclick="UI.deckScreen()">Edit ›</button></div>'
       + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
-      + '<button class="btn big" onclick="UI.mode(\'wild\')">Play Now</button>'
-      + '<div class="modes">' + MODES.slice(1).map((m, mi) => '<button style="--h:' + ((mi * 37 + 8) % 360) + '" class="mode' + (V3.modes[m[0]] ? '' : ' soon') + '" onclick="UI.mode(\'' + m[0] + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>').join('') + '</div>'
+      + (S.stats.wins + S.stats.losses === 0 ? '<div class="tip"><b>New here?</b> These 6 are your starting team. Hit <em>Play Now</em> for a quick best-of-3, or tap <em>?</em> for a quick guide.</div>' : '')
+      + '<button class="btn big go" style="--art:url(' + tileArt('wild') + ')" onclick="UI.mode(\'wild\')"><span>Play Now</span></button>'
+      + '<div class="modes">' + MODES.slice(1).map((m, mi) => '<button style="--h:' + ((mi * 37 + 8) % 360) + ';--art:url(' + tileArt(m[0]) + ')" class="mode' + (V3.modes[m[0]] ? '' : ' soon') + '" onclick="UI.mode(\'' + m[0] + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>').join('') + '</div>'
       + '<div class="tiles"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
       + devBar());
   }
-  function welcome() {
-    screen('<div class="logo">WWE<span>SUPERSTARS</span></div><p class="sub">Collect Superstars, build a deck, win matches.</p>'
-      + '<div class="panel"><h3>Starter collection</h3><p class="edge">24 Superstars and 6 support cards to begin. No energy, no timers, no purchases — ever.</p></div>'
-      + '<button class="btn big" onclick="UI.start()">Start</button>' + devBar());
+  /* ---------- wrestler art on the mode buttons: random each visit, one card per button ---------- */
+  const TA = {};
+  function tileArt(k) {
+    if (!TA[k]) {
+      const women = k === 'rrw' || k === 'ec', used = Object.values(TA);
+      const pool = C.filter(c => (!women || c.g === 'F') && c.rar >= 1 && !used.includes('../assets/superstars-t/' + c.a + '.webp'));
+      TA[k] = '../assets/superstars-t/' + pick(pool.length ? pool : C).a + '.webp';
+    }
+    return TA[k];
   }
-  function start() { newSave(); home(); }
+
+  /* ---------- first run: name, how to play, your starting deck ---------- */
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, ch => '&#' + ch.charCodeAt(0) + ';');
+  const cleanName = t => String(t || '').replace(/[^A-Za-z0-9 .'-]/g, '').replace(/\s+/g, ' ').trim().slice(0, 12);
+  const ini = n => (String(n || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 2) || 'ME').toUpperCase();
+  function welcome(edit) {
+    const cur = S && S.name || '';
+    screen((edit ? back('UI.home()', 'Home') : '') + LOGO
+      + '<h2 class="big-title">' + (edit ? 'Your name' : 'Welcome') + '</h2>'
+      + '<p class="sub">' + (edit ? 'This shows on your profile and in matches.' : 'Collect wrestlers, build a deck and win matches. Free to play: no energy, timers or purchases, ever.') + '</p>'
+      + '<div class="panel namep"><label for="pname">What should we call you?</label><div class="nmrow"><span class="av" id="pav">' + ini(cur) + '</span>'
+      + '<input id="pname" maxlength="12" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Your name" value="' + esc(cur) + '" oninput="document.getElementById(\'pav\').textContent=UI.ini(this.value)"></div></div>'
+      + '<button class="btn big" onclick="UI.nameGo(' + (edit ? 1 : 0) + ')">' + (edit ? 'Save' : 'Continue') + '</button>' + devBar());
+  }
+  function nameGo(edit) {
+    const el = document.getElementById('pname'), nm = cleanName(el && el.value) || 'Champ';
+    if (!S) newSave();
+    S.name = nm; persist();
+    if (edit) home(); else howto(0, false);
+  }
+  const obDots = (i, n) => '<div class="obdots">' + Array.from({ length: n }, (_, k) => '<i class="' + (k === i ? 'on' : '') + '"></i>').join('') + '</div>';
+  const STAT_INFO = ['Slams, lifts and throws', 'Punches, kicks and chops', 'Mat skill and submissions', 'Speed and high flying', 'Crowd and mic work'];
+  function howto(i, help) {
+    OB = { i, help: !!help };
+    const d = getDeck(), N = 4, skip = '<div class="topbar"><button onclick="UI.obDone(0)">' + (help ? '‹ Home' : 'Skip ›') + '</button></div>';
+    let h;
+    if (i === 0) {
+      const c = d.m[0] || d.f[0];
+      h = '<h2 class="big-title">Your cards</h2><p class="sub">Every Superstar has 5 stats. Higher is better.</p>'
+        + '<div class="obrow"><div class="obcard">' + face(c, { cls: '' }) + '</div><div class="obleg">' + ST.map((s, k) => '<div><span style="--sc:' + s.col + '">' + statImg(k) + '</span><b>' + s.name + '</b><small>' + STAT_INFO[k] + '</small></div>').join('') + '</div></div>'
+        + '<div class="panel obnote"><p><b>Rarity colour</b> is the bar along the bottom. Rarer cards have bigger numbers. The <b>big number</b> top right is the card level.</p></div>';
+    } else if (i === 1) {
+      h = '<h2 class="big-title">Your deck</h2><p class="sub">3 Superstars, 3 Divas and 2 support cards.</p>'
+        + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini' })).join('') + '</div>'
+        + '<div class="obsup">' + d.s.map(s => supFace(s, {})).join('') + '</div>'
+        + '<div class="panel obnote"><p>We pick your strongest deck automatically. Open <b>Deck</b> on the home screen to swap anyone in or out. Support cards add a bonus to certain stats.</p></div>';
+    } else if (i === 2) {
+      h = '<h2 class="big-title">How a match works</h2>'
+        + '<div class="panel obsteps"><ol>'
+        + '<li><b>3 matches per game.</b> Solo uses 1 Superstar, Tag uses 2, Divas uses 1 Diva.</li>'
+        + '<li><b>Each match counts certain stats</b>, shown in <span class="gold">gold</span> on your cards. Pick the cards from your hand with the highest total.</li>'
+        + '<li><b>Every card can be used once per game</b>, so spend your best ones wisely.</li>'
+        + '<li><b>Win 2 of 3 to win the game.</b> Wins earn card picks (3 for a clean sweep). Even a loss gives you 1.</li>'
+        + '<li>Tag partners with matching symbols get <i class="g">+10%</i>.</li>'
+        + '</ol></div>';
+    } else {
+      const rest = S.cards.length - 6;
+      h = '<h2 class="big-title">Ready!</h2><p class="sub">Your starting team. ' + (rest > 0 ? 'You own ' + S.cards.length + ' cards in total.' : '') + '</p>'
+        + '<div class="obgrid">' + d.m.concat(d.f).map(c => face(c, { click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
+        + '<div class="panel obnote"><p>Find every card under <b>Cards</b>. Win matches to open card picks and grow your collection. Level cards up by feeding them duplicates.</p></div>';
+    }
+    const last = i === N - 1;
+    screen((last ? '<div class="topbar"><button onclick="UI.obStep(' + (i - 1) + ')">‹ Back</button></div>' : skip) + h + obDots(i, N)
+      + (last ? '<button class="btn big" onclick="UI.obDone(1)">Play a match</button><button class="btn alt" onclick="UI.obDone(0)">Go to home</button>'
+        : '<button class="btn big" onclick="UI.obStep(' + (i + 1) + ')">Next</button>' + (i ? '<button class="btn alt" onclick="UI.obStep(' + (i - 1) + ')">Back</button>' : '')));
+  }
+  let OB = { i: 0, help: false };
+  function obDone(play) { S.onb = 1; persist(); if (play) wild(); else home(); }
+  function start() { newSave(); S.onb = 1; persist(); home(); }
   function devBar() {
     if (!DEV) return '';
     return '<div class="dev"><b>DEV</b> <button onclick="UI.dev(\'cards\')">+20 cards</button><button onclick="UI.dev(\'max\')">best cards L100</button><button onclick="UI.dev(\'reset\')">reset</button></div>';
@@ -175,7 +241,7 @@
   function dev(w) {
     if (!DEV) return;
     if (w === 'reset') { S = null; try { localStorage.removeItem(KEY); } catch (e) { } return home(); }
-    if (!S) newSave();
+    if (!S) { newSave(); S.onb = 1; }
     if (w === 'cards') for (let i = 0; i < 20; i++) give(Math.floor(rnd() * C.length));
     if (w === 'max') { S.cards.forEach(c => { c.lvl = 100; }); for (let i = 0; i < 12; i++) give(C.map((c, k) => k).filter(k => C[k].rar >= 6)[i % 5 + (i % 2)] || 0, { lvl: 100, mt: 100 }); autoDeck(); }
     persist(); home();
@@ -340,7 +406,7 @@
       + '<div class="mnum"><span>' + (g.extra ? 'EXTRA' : 'MATCH ' + (g.results.length + 1)) + '</span><div class="mdots">' + (g.extra ? '' : g.specs.map((sp, i) => { const r = g.results[i]; return '<i class="' + (r ? (r.winner === 'a' ? 'won' : r.winner === 'b' ? 'lost' : 'tied') : i === g.results.length ? 'cur' : '') + '"></i>'; }).join('')) + '</div></div>'
       + statTags(hl)
       + '<div class="slotarea ' + (sel.length > 1 ? 'dbl' : '') + '">' + slot + '</div>'
-      + '<div class="meline">' + plate('You', sub, g.a.pts, true) + '<div class="supcol">' + supsHTML + '</div></div>'
+      + '<div class="meline">' + plate(S.name || 'You', sub, g.a.pts, true) + '<div class="supcol">' + supsHTML + '</div></div>'
       + '<div class="tray">' + hand.map((c, i) => {
         const used = g.a.used.includes(c), elig = eligible(spec, c, g);
         return face(c, { cls: 'tr ' + (used ? 'used ' : !elig ? 'dim ' : '') + (sel.includes(c) ? 'sel' : ''), hl, val: elig ? vsum(c, spec) : null, click: elig ? 'UI.selTog(' + i + ')' : '' });
@@ -424,7 +490,7 @@
   const V3 = { E, C, RAR, SUP, ST, I, get S() { return S; }, persist, give, giveSup, byU, getDeck, power, rankNo, face, supFace, art, screen, back, home, awardPicks, startGame, statImg, fmt, pick, rnd, clamp, uid, modes: {}, specOf, autoDeck };
   window.V3 = V3;
   window.UI = {
-    mute: () => { S.mute = !S.mute; persist(); home(); }, home, start, dev, collection, book, detail, feedScreen, feedTog, feedAuto, feedGo, makePro, fortify, deckScreen, deckPick, deckSet, deckAuto,
+    mute: () => { S.mute = !S.mute; persist(); home(); }, home, start, ini, nameGo, obStep: i => howto(i, OB.help), obDone, help: () => howto(0, true), rename: () => welcome(true), dev, collection, book, detail, feedScreen, feedTog, feedAuto, feedGo, makePro, fortify, deckScreen, deckPick, deckSet, deckAuto,
     pick: pickSlot, picksDone, selTog, supTog, play, afterMatch, gameDone, wild, wildGo,
     mode: k => { if (k === 'wild') return wild(); if (V3.modes[k]) return V3.modes[k](); soon(k); }
   };

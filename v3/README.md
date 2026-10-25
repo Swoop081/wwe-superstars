@@ -14,3 +14,7 @@ Play at `/v3/`. Your artwork is the card; the 4 stats sit in a slim band on the 
 - `engine.js` rules (no DOM) · `ui.js` core screens · `modes.js` modes · `icons.js` line icons · `data/cards.js` generated
 - Roster source: `v2/data/roster.json` → `node tools/v3-build-cards.cjs`
 - Checks: `node tools/v3-simulate.cjs` (balance) and `python3 -m http.server 8766` + `node tests/v3-browser.cjs` (every mode, end to end)
+
+## First run
+
+A new game starts with a welcome screen (choose a name), a short how-to (cards and stats, deck, how a match works) and your starting team. The **?** button on the home screen replays the guide; tap the avatar to rename. Mode buttons show random wrestler art (thumbnails in `assets/superstars-t/`, 300px wide).
