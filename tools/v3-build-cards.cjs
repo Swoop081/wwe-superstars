@@ -33,7 +33,7 @@ const MOVIE = [ // name, art file, gender, finisher, [STR, STK, TEC, AGI, CHA]
   ['Chun-Li', 'chun-li', 'F', 'LIGHTNING KICK', [58, 70, 66, 80, 64]], ['Guile', 'guile', 'M', 'SONIC BOOM', [72, 76, 62, 56, 64]],
   ['Zangief', 'zangief', 'M', 'SPINNING PILEDRIVER', [82, 66, 50, 50, 62]], ['Dhalsim', 'dhalsim', 'M', 'YOGA FLAME', [52, 60, 80, 66, 68]],
   ['Blanka', 'blanka', 'M', 'ELECTRIC THUNDER', [74, 68, 48, 78, 52]], ['E. Honda', 'e-honda', 'M', 'HUNDRED HAND SLAP', [80, 70, 50, 46, 66]],
-  ['Balrog', 'balrog', 'M', 'DASH PUNCH', [74, 80, 52, 60, 62]], ['Vega', 'vega', 'F', 'CLAW ROLL', [56, 68, 72, 80, 74]],
+  ['Balrog', 'balrog', 'M', 'DASH PUNCH', [74, 80, 52, 60, 62]], ['Vega', 'vega', 'M', 'CLAW ROLL', [56, 68, 72, 80, 74]],
   ['M. Bison', 'm-bison', 'M', 'PSYCHO CRUSHER', [70, 70, 74, 60, 82]], ['Cammy', 'cammy', 'F', 'SPIRAL ARROW', [60, 72, 70, 78, 62]],
   ['Akuma', 'akuma', 'M', 'RAGING DEMON', [78, 82, 66, 70, 56]], ['Joe', 'joe', 'M', 'KNOCKOUT BLOW', [66, 66, 62, 64, 64]]
 ].map(([n, a, g, f, s]) => {
