@@ -141,7 +141,7 @@
       + '<div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span><span>Cards <b>' + S.cards.length + '</b></span><span>W–L <b>' + S.stats.wins + '–' + S.stats.losses + '</b></span><span onclick="UI.mute()" style="cursor:pointer">Sound <b>' + (S.mute ? 'off' : 'on') + '</b></span></div>'
       + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
       + '<button class="btn big" onclick="UI.mode(\'wild\')">Play Wild</button>'
-      + '<div class="modes">' + MODES.slice(1).map(m => '<button class="mode' + (V3.modes[m[0]] ? '' : ' soon') + '" onclick="UI.mode(\'' + m[0] + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>').join('') + '</div>'
+      + '<div class="modes">' + MODES.slice(1).map((m, mi) => '<button style="--h:' + ((mi * 37 + 8) % 360) + '" class="mode' + (V3.modes[m[0]] ? '' : ' soon') + '" onclick="UI.mode(\'' + m[0] + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>').join('') + '</div>'
       + '<div class="tiles"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
       + devBar());
   }
