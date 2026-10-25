@@ -10,9 +10,24 @@ const TIER_BONUS = { 'Main Event': 6, 'Upper Midcard': 3, 'Midcard': 0, 'Lower M
 const raw = roster.map(r => { const [pw, st, te, ag, su, ch, sp] = r.s; return [0.85 * pw + 0.15 * st, 0.85 * st + 0.15 * pw, 0.5 * te + 0.5 * su, 0.85 * ag + 0.15 * st, 0.6 * ch + 0.4 * sp]; });
 // Re-centre every stat on the same average (so Strength/Agility aren't always weaker than Strike/Charisma) and keep weaknesses
 // gentle: nothing below 50, spread x1.15 instead of the old x1.35.
+const ARCH = require('./v3-archetypes.cjs'), LET = { S: 0, K: 1, T: 2, A: 3, C: 4 };
+// Re-shape a card's five stats to its fighting style, keeping the total: best +13, second +6, weakest -12, the other two keep their order (+1 / -6).
+function restyle(s, code) {
+  const total = s.reduce((a, b) => a + b, 0), [top2, weakL] = code.split('-'), t = LET[top2[0]], u = LET[top2[1]], w = LET[weakL];
+  const rest = [0, 1, 2, 3, 4].filter(i => i !== t && i !== u && i !== w).sort((a, b) => s[b] - s[a]);
+  const off = []; off[t] = 13; off[u] = 6; off[w] = -12; off[rest[0]] = 1; off[rest[1]] = -6;
+  let v = off.map(x => total / 5 + x), free = [0, 1, 2, 3, 4];
+  for (let k = 0; k < 8; k++) {
+    v = v.map(x => clamp(x, 38, 72)); const diff = total - v.reduce((a, b) => a + b, 0); if (Math.abs(diff) < 0.5) break;
+    const open = free.filter(i => diff > 0 ? v[i] < 72 : v[i] > 38); if (!open.length) break; open.forEach(i => { v[i] += diff / open.length; });
+  }
+  v = v.map(x => clamp(Math.round(x), 38, 72)); for (let i = 0; i < 5; i++) s[i] = v[i];
+}
 const mean = [0, 1, 2, 3, 4].map(i => raw.reduce((a, r) => a + r[i], 0) / raw.length);
 const cards = roster.map((r, k) => {
   const s = raw[k].map((v, i) => clamp(Math.round(52 + (v - mean[i]) * 0.6), 38, 72));
+  const arch = ARCH[r.n]; if (!arch) throw new Error('no archetype for ' + r.n);
+  restyle(s, arch);
   const h = hash(r.n);
   // 3-4 arrows out of 8 directions (N,NE,E,SE,S,SW,W,NW), deterministic per card
   const arrows = []; let x = h;
