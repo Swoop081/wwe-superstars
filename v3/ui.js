@@ -295,6 +295,8 @@
     const t = byU(u); FD = { u, sel: [] };
     renderFeed();
   }
+  // You always keep at least 3 men and 3 women, so you can still field a full deck.
+  const keepOk = sel => { const left = S.cards.filter(x => !sel.includes(x.u)); return left.filter(x => !E.isF(x)).length >= 3 && left.filter(E.isF).length >= 3; };
   function renderFeed() {
     const t = byU(FD.u), inDeck = x => S.deck.m.includes(x.u) || S.deck.f.includes(x.u);
     const pool = S.cards.filter(x => x.u !== t.u).sort((a, b) => (a.c === t.c ? -1 : 0) - (b.c === t.c ? -1 : 0) || E.feedValue(a) - E.feedValue(b));
@@ -302,11 +304,13 @@
     screen(back('UI.detail(' + t.u + ')', 'Back') + '<h2 class="big-title">Level up</h2><p class="sub">' + C[t.c].n + ' · level ' + t.lvl + ' → ' + Math.min(100, t.lvl + add) + '</p>'
       + '<button class="btn" ' + (FD.sel.length ? '' : 'disabled') + ' onclick="UI.feedGo()">Feed ' + FD.sel.length + ' card' + (FD.sel.length === 1 ? '' : 's') + ' (+' + add + ' levels)</button>'
       + '<button class="btn alt" onclick="UI.feedAuto()">Select all unused Commons &amp; Uncommons</button>'
-      + '<div class="grid">' + pool.map(x => face(x, { cls: 'mini ' + (FD.sel.includes(x.u) ? 'sel ' : '') + (inDeck(x) ? 'indeck' : ''), click: 'UI.feedTog(' + x.u + ')', val: E.feedValue(x) })).join('') + '</div>');
+      + '<p class="sub keepnote">You always keep at least 3 men and 3 women so you can still play.</p>'
+      + '<div class="grid">' + pool.map(x => face(x, { cls: 'mini ' + (FD.sel.includes(x.u) ? 'sel ' : '') + (!FD.sel.includes(x.u) && !keepOk(FD.sel.concat(x.u)) ? 'nofeed ' : '') + (inDeck(x) ? 'indeck' : ''), click: 'UI.feedTog(' + x.u + ')', val: E.feedValue(x) })).join('') + '</div>');
   }
-  function feedTog(u) { const i = FD.sel.indexOf(u); if (i >= 0) FD.sel.splice(i, 1); else FD.sel.push(u); renderFeed(); }
-  function feedAuto() { const inDeck = x => S.deck.m.includes(x.u) || S.deck.f.includes(x.u); FD.sel = S.cards.filter(x => x.u !== FD.u && C[x.c].rar <= 1 && !inDeck(x) && x.lvl === 0).map(x => x.u); renderFeed(); }
+  function feedTog(u) { const i = FD.sel.indexOf(u); if (i >= 0) FD.sel.splice(i, 1); else if (keepOk(FD.sel.concat(u))) FD.sel.push(u); renderFeed(); }
+  function feedAuto() { const inDeck = x => S.deck.m.includes(x.u) || S.deck.f.includes(x.u); FD.sel = []; S.cards.filter(x => x.u !== FD.u && C[x.c].rar <= 1 && !inDeck(x) && x.lvl === 0).forEach(x => { if (keepOk(FD.sel.concat(x.u))) FD.sel.push(x.u); }); renderFeed(); }
   function feedGo() {
+    if (!keepOk(FD.sel)) return;
     const t = byU(FD.u), fod = FD.sel.map(byU).filter(Boolean);
     E.feed(t, fod); S.cards = S.cards.filter(x => !FD.sel.includes(x.u)); persist(); detail(t.u);
   }
