@@ -717,3 +717,9 @@ body:has(.plist) .btn.big{margin-top:clamp(4px,1.5dvh,14px)}
 .bigopp .on .tag small{margin-top:0;font-size:12px;color:#fff}
 .bigopp::before{width:52%}
 .bigopp::before{width:46%}.bigopp .on b{font-size:23px}
+
+/* v3.24 stat band: white numbers on a darker band (the best stat keeps its gold chip) */
+.cf .sb{background:linear-gradient(color-mix(in srgb,var(--rc) 55%,#10101c),color-mix(in srgb,var(--rc) 30%,#07070d))}
+.cf .sb span{color:#fff;font-weight:800;text-shadow:0 1px 2px #000c}
+.cf .sb span.hl{color:#1a1300;text-shadow:none}
+.seg.small button.hot.on,.seg.small button.hot.sel,.seg.small button.hot.active{color:#14210f!important;text-shadow:none}
