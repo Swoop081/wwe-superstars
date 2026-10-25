@@ -38,16 +38,22 @@ const BASE = process.env.V2_URL || 'http://127.0.0.1:8766/v2/index.html';
     }
     if (await page.locator('text=Open reward card').count()) {
       wins++; await page.click('text=Open reward card');
+      assert.equal(await page.locator('.grid3 .card').count(), 3, 'reward offers 3 cards');
+      if (match === 0 || wins === 1) await page.screenshot({ path: process.env.SHOTS + '/4-pick.png' });
+      await page.locator('.grid3 .card').nth(wins % 3).click();
       if (await page.locator('.merge:has-text("MERGED")').count()) merges++;
       if (match === 0 || wins === 1) await page.screenshot({ path: process.env.SHOTS + '/4-reward.png' });
       await page.click('button.btn:has-text("Home")');
     } else { await page.click('text=Back home'); }
   }
+  assert((await page.textContent('.stats-row')).includes('Ladder rung'), 'rung shown');
   console.log('played 6 matches, rounds', rounds, 'wins', wins, 'merges', merges);
 
   // Daily free card: claimable once, then locked until tomorrow
   assert(await page.locator('text=Free daily card').count() === 1, 'daily card offered');
   await page.click('text=Free daily card');
+  assert.equal(await page.locator('.grid3 .card').count(), 3, 'daily offers 3 cards');
+  await page.locator('.grid3 .card').first().click();
   assert(await page.locator('.card.big').count() === 1, 'daily card revealed');
   await page.click('button.btn:has-text("Home")');
   assert(await page.locator('text=Free daily card').count() === 0, 'daily card cannot be claimed twice');

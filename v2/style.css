@@ -16,7 +16,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .topbar button{background:none;border:0;color:var(--gold);font-weight:700;padding:4px 0}
 .title{font-size:34px;color:var(--gold);text-align:center;margin:18px 0 4px}
 .sub{color:var(--dim);text-align:center;margin:0 0 16px}
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0}
 .stat-box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
 .stat-box b{display:block;font-size:20px;color:var(--gold2)}
 .stat-box small{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
@@ -92,3 +92,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .actbtn .kind{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin:1px 0 2px}
 .actbtn.combo{border-color:var(--gold);background:linear-gradient(90deg,#2d2408,var(--panel2))}
 .actbtn .tag{margin-left:8px}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.grid3 .nameplate{font-size:11px;padding-top:18px}.grid3 .lvl b{font-size:12px}.grid3 .hp{display:none}
+.chtag{margin-top:5px;font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--gold2)}.chtag.new{color:var(--green)}

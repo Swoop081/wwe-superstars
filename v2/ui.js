@@ -62,13 +62,13 @@
     screen('<h1 class="title">WWE Superstars</h1><p class="sub">Collect · merge · level up forever</p>'
       + '<div class="stats-row"><div class="stat-box"><b>' + Object.keys(save.owned).length + '/' + R.length + '</b><small>Cards</small></div>'
       + '<div class="stat-box"><b>' + save.wins + '–' + save.losses + '</b><small>W–L</small></div>'
-      + '<div class="stat-box"><b>' + lv(bestLevel()) + '</b><small>Best level</small></div></div>'
+      + '<div class="stat-box"><b>' + lv(rung()) + '</b><small>Ladder rung</small></div><div class="stat-box"><b>' + lv(bestLevel()) + '</b><small>Best level</small></div></div>'
       + (save.daily !== today() ? '<button class="btn" style="background:var(--green);color:#04210f" onclick="UI.daily()">🎁 Free daily card</button>' : '<p class="edge" style="text-align:center">Next free card in ' + untilMidnight() + '</p>')
       + '<p class="edge" style="text-align:center">🔥 Win streak ' + (save.streak || 0) + ' · every ' + STREAK_BONUS + 'rd win in a row = bonus card (' + (STREAK_BONUS - ((save.streak || 0) % STREAK_BONUS)) + ' to go)</p>'
       + '<button class="btn" onclick="UI.fightSelect()">Fight</button>'
       + '<button class="btn alt" onclick="UI.collection()">Collection</button>'
       + devBar()
-      + '<p class="note">Win a match to earn a random card. A duplicate merges into your card and raises its level — every stat and HP grows ×' + T.m + ' per level.</p>');
+      + '<p class="note">Climb the ladder: each win moves you up a rung and lets you pick 1 of 3 cards. A duplicate merges into your card and raises its level — every stat and HP grows ×' + T.m + ' per level.</p>');
   }
 
   function welcome() {
@@ -103,18 +103,21 @@
       + '<div class="grid">' + list.map(w => cardHTML(w, save.owned[w.n], { cls: 'pick', click: 'UI.preview(' + idxOf[w.n] + ')' })).join('') + '</div>');
   }
 
-  // Opponent: random Superstar at your level, one higher or one lower.
-  function newOpponent(pi) {
-    const pl = save.owned[R[pi].n], w = pick(R.filter((x, i) => i !== pi));
-    return { w, level: Math.max(1, pl + pick([-1, 0, 0, 1])) };
+  // Ranked ladder: rung r has a fixed opponent. Level steps up every 3 rungs; each step goes warm-up -> contender -> boss.
+  const rung = () => save.rung || 1;
+  const GROUPS = [['Opener', 'Lower Midcard'], ['Midcard', 'Upper Midcard'], ['Main Event']];
+  const RANK = ['Warm-up', 'Contender', 'Boss'];
+  function ladderOpp(r) {
+    const pool = R.filter(x => GROUPS[(r - 1) % 3].includes(x.p));
+    return { w: pool[Math.floor(E.mulberry32(r * 7919 + 13)() * pool.length)], level: 1 + Math.floor((r - 1) / 3), rung: r, rank: RANK[(r - 1) % 3] };
   }
-  function preview(pi, keep) {
-    const w = R[pi], l = save.owned[w.n];
-    if (!keep || !B || B.pi !== pi) B = { pi, opp: newOpponent(pi) };
-    const o = B.opp;
-    screen('<div class="topbar"><button onclick="UI.fightSelect()">‹ Back</button><span>Match preview</span></div>'
+  function preview(pi) {
+    const w = R[pi], l = save.owned[w.n], o = ladderOpp(rung());
+    B = { pi, opp: o };
+    screen('<div class="topbar"><button onclick="UI.fightSelect()">‹ Back</button><span>Ladder · Rung ' + lv(o.rung) + ' · ' + o.rank + '</span></div>'
       + '<div class="grid">' + cardHTML(w, l, {}) + cardHTML(o.w, o.level, {}) + '</div>'
-      + '<button class="btn" onclick="UI.start()">Start match</button><button class="btn alt" onclick="UI.preview(' + pi + ')">New opponent</button>');
+      + '<p class="edge" style="text-align:center">' + (l > o.level ? 'You out-level them.' : l === o.level ? 'Evenly matched on level.' : 'They out-level you — merge duplicates to catch up.') + ' Win to climb to rung ' + lv(o.rung + 1) + '.</p>'
+      + '<button class="btn" onclick="UI.start()">Start match</button>');
   }
 
   /* ---------- battle ---------- */
@@ -212,7 +215,7 @@
 
   function endScreen() {
     const m = B.m, win = m.winner === 'a';
-    if (win) { save.wins++; save.streak = (save.streak || 0) + 1; save.bestStreak = Math.max(save.bestStreak || 0, save.streak); } else { save.losses++; save.streak = 0; }
+    if (win) { save.wins++; if (B.opp && B.opp.rung === rung()) save.rung = rung() + 1; save.streak = (save.streak || 0) + 1; save.bestStreak = Math.max(save.bestStreak || 0, save.streak); } else { save.losses++; save.streak = 0; }
     const bonus = win && save.streak % STREAK_BONUS === 0;
     pending = win ? { left: bonus ? 2 : 1, total: bonus ? 2 : 1 } : null;
     persist();
@@ -226,16 +229,24 @@
     pending = { left: 1, total: 1 };
     reward();
   }
+  // Pick 1 of 3: three different random cards, you keep one.
   function reward() {
     if (!pending || pending.left < 1) return home();
+    const pool = R.slice(), ch = [];
+    while (ch.length < 3) ch.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+    pending.choices = ch;
+    screen('<div class="reveal"><h2 class="big-title">Pick 1 card</h2><p class="sub">' + (pending.total > 1 ? 'Reward ' + (pending.total - pending.left + 1) + ' of ' + pending.total + ' · ' : '') + 'Duplicates level your card up.</p><div class="grid3">'
+      + ch.map((w, i) => { const o = save.owned[w.n] || 0;
+        return '<div class="choice">' + cardHTML(w, o || 1, { cls: 'pick', click: 'UI.choose(' + i + ')' }) + '<div class="chtag ' + (o ? 'up' : 'new') + '">' + (o ? 'LVL ' + lv(o) + ' → ' + lv(o + 1) : 'NEW') + '</div></div>'; }).join('')
+      + '</div></div>');
+  }
+  function choose(i) {
     pending.left--;
-    const g = give(pick(R)), w = g.w;
-    const merged = !g.isNew;
-    let jump = '';
-    if (merged) jump = '<div class="merge">MERGED! LVL ' + lv(g.from) + ' → ' + lv(g.to) + '<br><small>Power ' + E.fmtStat(w.s[0], g.from) + ' → ' + E.fmtStat(w.s[0], g.to) + ' · HP ' + E.fmtHp(w, g.from) + ' → ' + E.fmtHp(w, g.to) + '</small></div>';
-    else jump = '<div class="merge">NEW CARD!</div>';
-    screen('<div class="reveal"><h2 class="big-title">Reward</h2>' + cardHTML(w, g.to, { cls: 'big reveal-in' }) + jump
-      + (pending.left > 0 ? '<button class="btn" onclick="UI.reward()">Next card (' + pending.left + ' left)</button>' : '<button class="btn" onclick="UI.fightSelect()">Fight again</button><button class="btn alt" onclick="UI.home()">Home</button>') + '</div>');
+    const g = give(pending.choices[i]), w = g.w;
+    const jump = g.isNew ? '<div class="merge">NEW CARD!</div>'
+      : '<div class="merge">MERGED! LVL ' + lv(g.from) + ' → ' + lv(g.to) + '<br><small>Power ' + E.fmtStat(w.s[0], g.from) + ' → ' + E.fmtStat(w.s[0], g.to) + ' · HP ' + E.fmtHp(w, g.from) + ' → ' + E.fmtHp(w, g.to) + '</small></div>';
+    screen('<div class="reveal"><h2 class="big-title">You picked</h2>' + cardHTML(w, g.to, { cls: 'big reveal-in' }) + jump
+      + (pending.left > 0 ? '<button class="btn" onclick="UI.reward()">Next pick (' + pending.left + ' left)</button>' : '<button class="btn" onclick="UI.fightSelect()">Fight again</button><button class="btn alt" onclick="UI.home()">Home</button>') + '</div>');
   }
 
   /* ---------- dev tools (?dev=1) ---------- */
@@ -248,7 +259,7 @@
     persist(); home();
   }
 
-  window.UI = { home, starter, collection, detail, fightSelect, preview: pi => preview(pi), start, daily, stat: chooseStat, act: chooseAction, next: nextRound, reward, dev };
+  window.UI = { home, starter, collection, detail, fightSelect, preview: pi => preview(pi), start, daily, choose, stat: chooseStat, act: chooseAction, next: nextRound, reward, dev };
   save = load();
   home();
 })();

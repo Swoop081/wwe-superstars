@@ -4,8 +4,9 @@ One card per Superstar. A card scales upward forever: every duplicate merges int
 
 ## Play loop (about a minute a match)
 1. Pick a fighter, beat an opponent in ~5 rounds.
-2. Each round the caller names a stat, both cards are compared on it, the winner gets control (+25% action power, the loser −20%). Moves deal the damage: a move that matches the called stat is a COMBO. Winning stat rounds charges the Finisher.
-3. Win → a random card (new card, or a merge that levels one up). Free daily card. Every 3rd win in a row = bonus card.
+2. Each round the caller names a stat, both cards are compared on it, the winner gets control (+25% action power, the loser −20%). Action cards deal the damage. Winning stat rounds charges the Finisher.
+3. Ladder: each rung is a fixed opponent (level steps up every 3 rungs: warm-up → contender → boss). Win to climb.
+4. Win → pick 1 of 3 cards (new card, or a merge that levels one up). Free daily card (also pick 1 of 3). Every 3rd win in a row = bonus pick.
 
 ## Files
 - `engine.js` — all rules and balance numbers (`TUNE`). No DOM, so it can be simulated.
