@@ -710,3 +710,10 @@ body:has(.plist) .btn.big{margin-top:clamp(4px,1.5dvh,14px)}
 .bigopp .on b{font-size:27px}
 .bigopp::before{width:62%;background-position:center 14%}
 .bigopp .tag{flex:none;white-space:nowrap}.bigopp .tag small{white-space:nowrap}.bigopp .on{min-width:0;flex:1}.bigopp .on b{font-size:24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}.bigopp .on small{white-space:nowrap}
+
+/* v3.23 Play Now: reward pill sits under the name, clear of the wrestler's face */
+.bigopp .on{display:flex;flex-direction:column;align-items:flex-start;gap:6px;max-width:58%}
+.bigopp .on .tag{align-self:flex-start;margin-top:4px;flex-direction:row;gap:8px;align-items:baseline;padding:5px 12px}
+.bigopp .on .tag small{margin-top:0;font-size:12px;color:#fff}
+.bigopp::before{width:52%}
+.bigopp::before{width:46%}.bigopp .on b{font-size:23px}

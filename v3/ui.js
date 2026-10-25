@@ -582,7 +582,7 @@
     const opps = E.opponents(power(), rnd, 3); WILD = opps;
     const star = o => { const all = o.deck.m.concat(o.deck.f).sort((a, b) => E.total(b) - E.total(a)); return all[0] ? thumbURL(C[all[0].c]) : ''; };
     screen('<div class="fillscr wildscr"><div class="fh">' + back('UI.home()', 'Home') + '<h2 class="big-title">Play Now</h2><p class="sub">Harder opponents pay more picks. A loss always gives 1.</p></div><div class="fillmid oppcol">'
-      + opps.map((o, i) => '<button class="opp bigopp ' + o.label.toLowerCase() + '" style="--art:url(' + (star(o) || '') + ')" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '<small>Win ' + (2 + i) + ' · Perfect ' + (3 + i) + '</small></span></button>').join('')
+      + opps.map((o, i) => '<button class="opp bigopp ' + o.label.toLowerCase() + '" style="--art:url(' + (star(o) || '') + ')" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '<small>Win ' + (2 + i) + ' · Perfect ' + (3 + i) + '</small></span></span></button>').join('')
       + '</div><div class="fillbot"><p class="edge" style="text-align:center;margin:0">Your deck rank <b>' + rankNo() + '</b></p></div></div>');
   }
   let WILD = [];
