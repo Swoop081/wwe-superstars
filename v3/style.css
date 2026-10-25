@@ -703,3 +703,10 @@ body:has(.plist) .btn.big{margin-top:clamp(4px,1.5dvh,14px)}
 .sf:not(.sm) .sart{margin:5cqw 5cqw 2cqw;align-self:stretch}
 .sf:not(.sm) .stx{padding:0 4cqw 5cqw;box-sizing:border-box}
 .sf:not(.sm) .snm{font-size:13.5cqw;letter-spacing:.03em}.sf:not(.sm) .spct{font-size:22cqw}
+
+/* v3.22 Play Now: tiles fill the whole screen (no dead space on tall phones); solid avatar fallback */
+.bigopp{max-height:none!important}
+.bigopp .av{width:64px;height:64px;font-size:23px;background-color:#c4283a!important}
+.bigopp .on b{font-size:27px}
+.bigopp::before{width:62%;background-position:center 14%}
+.bigopp .tag{flex:none;white-space:nowrap}.bigopp .tag small{white-space:nowrap}.bigopp .on{min-width:0;flex:1}.bigopp .on b{font-size:24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}.bigopp .on small{white-space:nowrap}
