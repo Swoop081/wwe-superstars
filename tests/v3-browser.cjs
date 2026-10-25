@@ -86,7 +86,7 @@ const SH = process.env.SHOTS || '/tmp/shots';
   const lvBefore = await page.evaluate(() => V3.S.cards.map(c => c.lvl).reduce((a, b) => a + b, 0));
   await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 2; UI.detail(c.u); }); await C(`.btnrow button:has-text("Level up")`).click(); assert((await page.textContent("body")).includes("Level 2"), "level up works");
   await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 80; UI.levelUp(c.u, 1); }); assert(await page.evaluate(() => V3.S.cards[0].lvl) > 80, 'levels have no cap'); await page.screenshot({ path: SH + '/v3-bigdetail.png' });
-  await home(); await C('button.tile:has-text("Book")').click(); assert((await page.textContent('body')).includes('of 239'), 'book');
+  await home(); await C('button.tile:has-text("Book")').click(); assert((await page.textContent('body')).includes('of ' + await page.evaluate(() => V3.C.length)), 'book');
   await home(); await C('button.tile:has-text("Deck")').click(); await C('button:has-text("Auto-build")').click(); await page.screenshot({ path: SH + '/v3-deck.png' });
 
   // Modes

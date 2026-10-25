@@ -245,11 +245,15 @@
   // 12 face-down slots. Finding a Rare or better refreshes the table, like the real thing.
   // Support cards unlock as your deck gets stronger; wrestlers are picked uniformly at random.
   function powerTier(p) { return Math.max(0, Math.min(6, Math.floor((p - 850) / 110))); }
-  function pickTable(power, rng) {
-    const tier = powerTier(power), slots = [];
+  // Street Fighter movie tie-in cards (CARDS[i].mv): in packs for a limited time. After movieEnd you can only pull ones you already own (as duplicates to level up).
+  const T_MOVIE_END = Date.UTC(2026, 10, 30, 13, 0); // 30 Nov 2026, Melbourne midnight-ish
+  const movieOpen = (now) => (now == null ? Date.now() : now) < T_MOVIE_END;
+  function pullable(owned, now) { const open = movieOpen(now), out = []; for (let i = 0; i < CARDS.length; i++) if (!CARDS[i].mv || open || (owned && owned.has(i))) out.push(i); return out; }
+  function pickTable(power, rng, owned, now) {
+    const tier = powerTier(power), slots = [], pool = pullable(owned, now);
     for (let i = 0; i < 12; i++) {
       if (rng() < 0.17) { const s = SUPPORTS.map((s, k) => k).filter(k => SUPPORTS[k].rar <= tier + 1); slots.push({ k: 'sup', s: pickR(s, rng), open: false }); }
-      else slots.push({ k: 'card', c: Math.floor(rng() * CARDS.length), open: false });
+      else slots.push({ k: 'card', c: pool[Math.floor(rng() * pool.length)], open: false });
     }
     return slots;
   }
@@ -357,7 +361,7 @@
     STATS, RAR, T, SUPPORTS, SUP_IDX, SYM, DIRS, CARDS, IDX, TYPE_NAME,
     mulberry32, pickR, shuffle, mk, stats, baseStats, total, sigStats, sigChance, isF, canLevel, levelUp,
     deckCards, deckPower, bestDeck, aiDeck, aiName, makeSpecs, tagMod, sideTotal, newGame, availCards, availM, availF, availS, canField, validPick,
-    aiPick, aiSupport, playMatch, playExtra, extraSpec, autoPlayGame, smartPick, perfect, opponents, picksFor, pickTable, powerTier,
+    aiPick, aiSupport, playMatch, playExtra, extraSpec, autoPlayGame, smartPick, perfect, opponents, picksFor, pickTable, powerTier, movieOpen, pullable, MOVIE_END: T_MOVIE_END,
     rdNew, rdMoves, rdPlay, rdAI, rdNeighbours, rrNew, rrStart, rrRound, rrAIStat, rrAIChallenger, rrAISacrifice, cardsNeeded,
     MITB_STEPS, survivorDeck
   };

@@ -123,7 +123,7 @@
   function giveSup(si) { const s = { u: uid(), s: si }; S.sups.push(s); persist(); return s; }
   function newSave() {
     S = { v: 3, lv2: 1, nextU: 0, cards: [], sups: [], deck: { m: [], f: [], s: [] }, stats: { wins: 0, losses: 0, perfect: 0, picks: 0 }, camp: { stars: {} }, mitb: { step: 0 }, pcc: null, surv: null, seen: {} };
-    const idx = g => C.map((c, i) => i).filter(i => C[i].g === g);
+    const idx = g => C.map((c, i) => i).filter(i => C[i].g === g && !C[i].mv);
     const take = (g, n) => E.shuffle(idx(g), rnd).slice(0, n);
     take('M', 16).concat(take('F', 8)).forEach(ci => give(ci));
     [0, 1, 2, 3, 4, 5].forEach(si => giveSup(si));
@@ -160,16 +160,16 @@
     try { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=' + f.replace(/ /g, '+') + (w ? ':wght@' + w : '') + '&text=' + FONT_TXT + '&display=swap'; document.head.appendChild(l); } catch (e) {}
   }
   function nameEl(c) {
-    const F = (globalThis.CFONTS || {})[c.n];
+    const F = c.mv ? ['Press Start 2P', '', Math.min(11, Math.floor(880 / c.n.length) / 10), 1] : (globalThis.CFONTS || {})[c.n];
     if (!F) return '<div class="nm">' + c.n + '</div>';
     ensureFont(F[0], F[1]);
-    return '<div class="nm' + (F[3] === 1 ? ' one' : '') + '" style="font-family:\'' + F[0] + '\',Impact,sans-serif;font-weight:' + (F[1] || 400) + ';font-size:' + F[2] + 'cqw">' + c.n + '</div>';
+    return '<div class="nm' + (F[3] === 1 ? ' one' : '') + (c.mv ? ' sf2' : '') + '" style="font-family:\'' + F[0] + '\',Impact,sans-serif;font-weight:' + (F[1] || 400) + ';font-size:' + F[2] + 'cqw">' + c.n + '</div>';
   }
   // Card = the artwork; a slim stat band sits on the bottom edge. o: {cls, click, hl:[stat idx], val, mini}
   function face(inst, o) {
     o = o || {};
     const c = C[inst.c], st = E.stats(inst), dup = inst.d || 0;
-    return '<div class="cf ' + (o.cls || '') + '" style="--rc:#2b3050"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
+    return '<div class="cf ' + (o.cls || '') + (c.mv ? ' mv' : '') + '" style="--rc:#2b3050"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
       + '<div class="art">' + art(c) + '</div>'
       + (dup ? '<div class="gem dup"><span class="f">+' + dup + ' DUP</span><span class="s">+' + dup + '</span></div>' : '')
       + '<div class="lv' + (inst.lvl > 999 ? ' d4' : inst.lvl > 99 ? ' d3' : '') + '">' + inst.lvl + '</div>'
@@ -182,6 +182,8 @@
     o = o || {}; const d = SUP[s.s], r = RAR[d.rar];
     return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sico">' + I[d.id] + '</div><div class="stx"><div class="snm">' + d.name + '</div><div class="spct">+' + Math.round(d.pct * 100) + '% ' + (d.stats.length === 4 ? 'ALL' : d.stats.map(i => ST[i].ab).join('+')) + '</div></div></div>';
   }
+  // thumbnails exist for the base roster; movie cards use their full artwork
+  const thumbURL = c => c.mv ? '../assets/superstars/' + c.a + '.webp' : '../assets/superstars-t/' + c.a + '.webp';
   const LOGO = '<div class="logo"><img src="../assets/wwe-superstar-logo.png" alt="WWE Superstars"></div>';
   const back = (to, label) => '<div class="topbar"><button onclick="' + to + '">‹ ' + (label || 'Back') + '</button></div>';
 
@@ -246,7 +248,7 @@
   function tileArt(k) {
     if (!TA[k]) {
       const women = k === 'rrw' || k === 'ec', used = Object.values(TA);
-      const pool = C.filter(c => (!women || c.g === 'F') && !used.includes('../assets/superstars-t/' + c.a + '.webp'));
+      const pool = C.filter(c => !c.mv && (!women || c.g === 'F') && !used.includes('../assets/superstars-t/' + c.a + '.webp'));
       TA[k] = '../assets/superstars-t/' + pick(pool.length ? pool : C).a + '.webp';
     }
     return TA[k];
@@ -399,17 +401,17 @@
   let PT = null;
   // Reward screen: n face-down picks. Every pick is a random wrestler or support card.
   function awardPicks(n, then, title) {
-    PT = { n, left: n, table: E.pickTable(power(), rnd), got: [], last: null, then: then || home, title: title || 'Card Picks' };
+    PT = { n, left: n, table: E.pickTable(power(), rnd, new Set(S.cards.map(c => c.c))), got: [], last: null, then: then || home, title: title || 'Card Picks' };
     S.stats.picks += n; persist();
     renderPicks();
   }
   function renderPicks() {
     const p = PT, sh = p.show;
     const ov = sh ? '<div class="pickov"><div class="gotbox' + (sh.inst && sh.isNew ? ' burst' : '') + '" style="--rc:#ffd34d">' + (sh.sup ? supFace(sh.sup, { cls: 'reveal-in' }) : face(sh.inst, { cls: 'reveal-in gotcard' }))
-      + '<div class="gotlbl">' + (sh.isNew ? 'NEW WRESTLER!' : sh.sup ? 'SUPPORT CARD' : 'DUPLICATE!<br><small>Spend it on this wrestler in Cards → Level up</small>') + '</div></div>'
+      + '<div class="gotlbl">' + (sh.isNew ? (sh.inst && C[sh.inst.c].mv ? 'NEW FIGHTER!' : 'NEW WRESTLER!') : sh.sup ? 'SUPPORT CARD' : 'DUPLICATE!<br><small>Spend it on this wrestler in Cards → Level up</small>') + '</div></div>'
       + '<button class="btn big" onclick="UI.pickNext()">' + (p.left > 0 ? 'Next pick (' + p.left + ' left)' : 'Continue') + '</button></div>' : '';
     const gn = p.got.length, gc = gn <= 1 ? 1 : gn <= 4 ? 2 : 3, gr = Math.ceil(gn / gc);
-    screen('<div class="fillscr pkscr"><div class="fh"><h2 class="big-title">' + p.title + '</h2><p class="sub">' + (p.left > 0 ? p.left + ' pick' + (p.left === 1 ? '' : 's') + ' left. Tap a card.' : 'All picks used') + '</p></div><div class="fillmid">'
+    screen('<div class="fillscr pkscr"><div class="fh"><h2 class="big-title">' + p.title + '</h2><p class="sub">' + (p.left > 0 ? p.left + ' pick' + (p.left === 1 ? '' : 's') + ' left. Tap a card.' + (E.movieOpen() ? '<br><span class="mvnote">Street Fighter movie fighters are in the packs until 30 Nov</span>' : '') : 'All picks used') + '</p></div><div class="fillmid">'
       + (p.left > 0 ? '<div class="pickgrid">' + p.table.map((s, i) => '<button class="pk' + (s.open ? ' open' : '') + '" ' + (s.open ? 'disabled' : '') + ' onclick="UI.pick(' + i + ')">' + (s.open ? (s.k === 'card' ? '<span style="color:#ffd34d">★</span>' : '<span>✦</span>') : '?') + '</button>').join('') + '</div>'
         : '<div class="recap" style="--gc:' + gc + ';--gr:' + gr + '">' + p.got.map(g => g.sup ? supFace(g.sup, { cls: 'mini' }) : face(g.inst, { cls: 'mini' })).join('') + '</div>')
       + '</div><div class="fillbot">' + (p.left > 0 ? '' : '<button class="btn big" onclick="UI.picksDone()">Done</button>') + '</div></div>' + ov);
@@ -533,7 +535,7 @@
     S.stats[win ? 'wins' : 'losses']++; if (perf) S.stats.perfect++; persist();
     GM.done = () => cfg.onEnd(g);
     const n = E.picksFor(g), me = S.name || 'You';
-    const thumb = c => '<img src="../assets/superstars-t/' + C[c.c].a + '.webp" alt="">';
+    const thumb = c => '<img src="' + thumbURL(C[c.c]) + '" alt="" onerror="this.onerror=null;this.src=\'../assets/superstars/' + C[c.c].a + '.png\'">';
     const rows = g.results.map((r, i) => {
       const t = r.spec && r.spec.extra ? 'Tie-break' : E.TYPE_NAME[r.spec.type], w = r.winner;
       return '<div class="vrow ' + (w === 'a' ? 'w' : w === 'b' ? 'l' : 't') + '" style="--i:' + i + '"><span class="vm"><b>' + (r.spec && r.spec.extra ? 'EX' : i + 1) + '</b><small>' + t + '</small></span>'
@@ -556,9 +558,9 @@
   /* ---------- Wild ---------- */
   function wild() {
     const opps = E.opponents(power(), rnd, 3); WILD = opps;
-    const star = o => { const all = o.deck.m.concat(o.deck.f).sort((a, b) => E.total(b) - E.total(a)); return all[0] ? C[all[0].c].a : ''; };
+    const star = o => { const all = o.deck.m.concat(o.deck.f).sort((a, b) => E.total(b) - E.total(a)); return all[0] ? thumbURL(C[all[0].c]) : ''; };
     screen('<div class="fillscr wildscr"><div class="fh">' + back('UI.home()', 'Home') + '<h2 class="big-title">Play Now</h2><p class="sub">Pick an opponent. Win 2 picks, perfect win 3, a loss still gives 1.</p></div><div class="fillmid oppcol">'
-      + opps.map((o, i) => '<button class="opp bigopp ' + o.label.toLowerCase() + '" style="--art:url(../assets/superstars-t/' + star(o) + '.webp)" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '</span></button>').join('')
+      + opps.map((o, i) => '<button class="opp bigopp ' + o.label.toLowerCase() + '" style="--art:url(' + (star(o) || '') + ')" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '</span></button>').join('')
       + '</div><div class="fillbot"><p class="edge" style="text-align:center;margin:0">Your deck rank <b>' + rankNo() + '</b></p></div></div>');
   }
   let WILD = [];
