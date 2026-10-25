@@ -472,3 +472,24 @@ svg.sti{display:block;flex:none;width:1em;height:1em}
 .cf .lv.d3{font-size:max(13px,17cqw)}.cf .lv.d4{font-size:max(11px,12.5cqw)}.cf.big .lv.d3{font-size:46px}.cf.big .lv.d4{font-size:34px}
 .vrow{grid-template-columns:62px 1fr 28px 1fr}.vm small{font-size:10px;letter-spacing:.03em;white-space:nowrap}
 .vrec{position:relative;display:flex;gap:8px;width:100%;max-width:440px}.vrec span{flex:1;text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9aa0b8;font-family:var(--disp2);padding:6px 4px;background:#ffffff0d;border-radius:6px}.vrec b{display:block;font-weight:400;font-size:24px;letter-spacing:.04em;color:var(--gold2);line-height:1.1}
+
+/* ---- v3.12: one-screen home: header, deck, Play Now, a swipeable rail of mode tiles in different sizes, bottom menu ---- */
+.hscr{display:flex;flex-direction:column;min-height:calc(100dvh - 40px)}
+.hscr .logo img{width:min(46%,190px)}
+.hscr .deckrow{margin:4px 0 8px}
+.railwrap{flex:1 1 auto;min-height:250px;display:flex;flex-direction:column;margin-top:10px}
+.railhead{display:flex;justify-content:space-between;align-items:center;margin:0 3px 6px}
+.railhead b{font-family:var(--disp2);font-weight:400;font-size:15px;letter-spacing:.14em;color:#c9cde0;text-transform:uppercase}
+.pdots{display:flex;gap:7px}.pdots i{width:22px;height:5px;border-radius:3px;background:#ffffff30;transition:.2s;cursor:pointer}.pdots i.on{background:var(--gold);box-shadow:0 0 8px var(--gold);width:34px}
+.pager{flex:1;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -14px;padding:0 14px;scroll-padding-left:14px;overscroll-behavior-x:contain}
+.pager::-webkit-scrollbar{display:none}
+.page{flex:0 0 91%;scroll-snap-align:start;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:1fr 1fr;gap:8px;min-height:230px}
+.pager .mode{min-height:0;height:100%;width:100%;padding:10px!important;justify-content:flex-start}
+.pager .mode b{margin-top:auto;font-size:21px}.pager .mode small{font-size:12px}
+.pager .mode.szL b{font-size:33px;line-height:.95}.pager .mode.szL small{font-size:14px}.pager .mode.szL .ic{width:40px;height:40px}
+.pager .mode.szM b{font-size:25px}
+.pager .mode.szS b{font-size:19px;line-height:1}.pager .mode.szS small{display:none}.pager .mode.szS .ic{width:26px;height:26px}
+.hnav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;padding:8px;border-radius:16px;background:linear-gradient(#171a2cf2,#0b0c16f2);box-shadow:inset 0 0 0 2px #ffffff1a,0 -6px 16px #0008}
+.hnav .tile{flex-direction:row;justify-content:center;gap:8px;padding:9px 4px!important;background:#ffffff0f!important;box-shadow:none!important;border-radius:10px!important}
+.hnav .tile .ic{width:24px;height:24px}.hnav .tile b{font-size:19px}
+.hscr{min-height:calc(100dvh - 46px)}.pager .mode.szS b{font-size:17px}

@@ -159,11 +159,24 @@
     ['war', 'War', 'fight', 'Ranked ladder season.'],
     ['case', 'Crack the Case', 'puzzle', 'Daily code puzzle.']
   ];
+  // Mode pages: [mode, columns, rows] on a 6 x 2 grid, swiped sideways. Tile sizes differ per page.
+  const PAGES = [
+    [['campaign', 4, 2], ['mitb', 2, 1], ['rd', 2, 1]],
+    [['rr', 3, 2], ['rrw', 3, 1], ['surv', 3, 1]],
+    [['pcc', 2, 1], ['rtg', 4, 1], ['ec', 4, 1], ['kotr', 2, 1]],
+    [['war', 3, 2], ['case', 3, 2]]
+  ];
+  let HP = 0;
   function home() {
     if (!S || !S.onb) return welcome();
     const d = getDeck();
     const spk = S.mute ? '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
-    screen('<div class="hud"><button class="av" onclick="UI.rename()" aria-label="Change name">' + ini(S.name) + '</button>'
+    const modeBtn = (key, c, r, hi) => {
+      const m = MODES.find(x => x[0] === key), area = c * r;
+      return '<button style="grid-column:span ' + c + ';grid-row:span ' + r + ';--h:' + ((hi * 37 + 8) % 360) + ';--art:url(' + tileArt(key) + ')" class="mode sz' + (area >= 6 ? 'L' : area >= 3 ? 'M' : 'S') + (V3.modes[key] ? '' : ' soon') + '" onclick="UI.mode(\'' + key + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>';
+    };
+    let hi = 0;
+    screen('<div class="hscr"><div class="hud"><button class="av" onclick="UI.rename()" aria-label="Change name">' + ini(S.name) + '</button>'
       + '<span class="hs"><small>Deck rank</small><b>' + rankNo() + '</b></span>'
       + '<span class="hs"><small>Cards</small><b>' + S.cards.length + '</b></span>'
       + '<span class="hs"><small>Won–Lost</small><b>' + S.stats.wins + '–' + S.stats.losses + '</b></span>'
@@ -174,9 +187,17 @@
       + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
       + (S.stats.wins + S.stats.losses === 0 ? '<div class="tip"><b>New here?</b> These 6 are your starting team. Hit <em>Play Now</em> for a quick best-of-3, or tap <em>?</em> for a quick guide.</div>' : '')
       + '<button class="btn big go" style="--art:url(' + tileArt('wild') + ')" onclick="UI.mode(\'wild\')"><span>Play Now</span></button>'
-      + '<div class="modes">' + MODES.slice(1).map((m, mi) => '<button style="--h:' + ((mi * 37 + 8) % 360) + ';--art:url(' + tileArt(m[0]) + ')" class="mode' + (V3.modes[m[0]] ? '' : ' soon') + '" onclick="UI.mode(\'' + m[0] + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>').join('') + '</div>'
-      + '<div class="tiles"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
-      + devBar());
+      + '<div class="railwrap"><div class="railhead"><b>Game modes</b><span class="pdots">' + PAGES.map((p, k) => '<i class="' + (k === HP ? 'on' : '') + '"></i>').join('') + '</span></div>'
+      + '<div class="pager">' + PAGES.map(pg => '<div class="page">' + pg.map(([k, c, r]) => modeBtn(k, c, r, hi++)).join('') + '</div>').join('') + '</div></div>'
+      + '<div class="hnav"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
+      + devBar() + '</div>');
+    const pg = document.querySelector('.pager');
+    if (pg) {
+      const dots = [...document.querySelectorAll('.pdots i')], step = () => pg.children[1].offsetLeft - pg.children[0].offsetLeft;
+      pg.scrollLeft = HP * step();
+      pg.addEventListener('scroll', () => { const i = pg.scrollLeft + pg.clientWidth >= pg.scrollWidth - 4 ? PAGES.length - 1 : Math.round(pg.scrollLeft / step()); HP = i; dots.forEach((x, k) => x.classList.toggle('on', k === i)); }, { passive: true });
+      dots.forEach((x, k) => { x.onclick = () => pg.scrollTo({ left: k * step(), behavior: 'smooth' }); });
+    }
   }
   /* ---------- wrestler art on the mode buttons: random each visit, one card per button ---------- */
   const TA = {};
