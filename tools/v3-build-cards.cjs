@@ -12,14 +12,14 @@ const raw = roster.map(r => { const [pw, st, te, ag, su, ch, sp] = r.s; return [
 // gentle: nothing below 50, spread x1.15 instead of the old x1.35.
 const mean = [0, 1, 2, 3, 4].map(i => raw.reduce((a, r) => a + r[i], 0) / raw.length);
 const cards = roster.map((r, k) => {
-  const s = raw[k].map((v, i) => clamp(Math.round(72 + (v - mean[i]) * 1.15), 50, 100));
+  const s = raw[k].map((v, i) => clamp(Math.round(52 + (v - mean[i]) * 0.6), 38, 72));
   const h = hash(r.n);
   // 3-4 arrows out of 8 directions (N,NE,E,SE,S,SW,W,NW), deterministic per card
   const arrows = []; let x = h;
   while (arrows.length < 3 + (h % 2)) { x = Math.imul(x ^ (x >>> 13), 1274126177) >>> 0; const d = x % 8; if (!arrows.includes(d)) arrows.push(d); }
   return { n: r.n, a: r.a, g: r.g, f: r.f, s, sym: ['BL', 'BR', 'YU', 'YD'][h % 4], ar: arrows.sort(), score: s.reduce((p, c) => p + c, 0) / 5 + TIER_BONUS[r.p] };
 });
-// Rarity by overall rating percentile (Common .. WrestleMania).
+// No rarities in the game. `rar` is kept only as a hidden star-power rank (used to pick bosses, prizes and weak loaner cards).
 const cuts = [0.18, 0.18, 0.18, 0.14, 0.12, 0.09, 0.06, 0.03, 0.02];
 const order = cards.map((c, i) => i).sort((a, b) => cards[a].score - cards[b].score);
 let at = 0;

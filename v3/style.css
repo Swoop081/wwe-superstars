@@ -436,3 +436,8 @@ svg.sti{display:block;flex:none;width:1em;height:1em}
 .obgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:4px 0}
 .btn.big.go{font-family:var(--disp2);font-style:italic;font-size:40px;letter-spacing:.14em;background:linear-gradient(#ff8a3d,#e0480f);color:#fff;box-shadow:0 5px 0 #8a2a05,0 10px 22px #000a;padding:12px 12px 12px 20px;margin-top:4px}
 .cf.nofeed{opacity:.35;filter:grayscale(.8);pointer-events:none}.keepnote{margin:6px 0 8px;font-size:13px}
+
+/* ---- v3.10: no rarities. Card band is one colour; duplicates show as a small green tag where the rarity text used to be ---- */
+.cf .gem:empty{display:none}
+.cf .gem.dup{color:#5df29a!important}
+.dupline{margin:6px 0 4px}.dupline b{color:#5df29a}

@@ -31,11 +31,21 @@
   }
 
   /* ---------- save ---------- */
+  // v3.10: no rarities. Duplicates of a wrestler stack on one card (d = spare copies) and are spent to level it up.
+  function migrate(s) {
+    if (s.lv2) return;
+    const keep = {}, remap = {};
+    (s.cards || []).slice().sort((a, b) => (b.lvl || 0) - (a.lvl || 0)).forEach(c => { const k = keep[c.c]; if (k) { k.d++; remap[c.u] = k.u; } else { keep[c.c] = c; c.d = 0; } });
+    s.cards = (s.cards || []).filter(c => keep[c.c] === c);
+    s.cards.forEach(c => { c.lvl = Math.max(1, Math.min(40, c.lvl || 1)); delete c.pro; delete c.fort; });
+    if (s.deck) ['m', 'f'].forEach(k => { const seen = []; s.deck[k] = (s.deck[k] || []).map(u => remap[u] || u).filter(u => seen.includes(u) ? false : (seen.push(u), true)); });
+    s.lv2 = 1;
+  }
   function persist() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
   function load() {
     try {
       const s = JSON.parse(localStorage.getItem(KEY));
-      if (s && s.v === 3) { s.camp = s.camp || { stars: {} }; s.mitb = s.mitb || { step: 0 }; s.pcc = s.pcc || null; s.stats = s.stats || { wins: 0, losses: 0, perfect: 0, picks: 0 }; s.seen = s.seen || {}; s.surv = s.surv || null; return s; }
+      if (s && s.v === 3) { migrate(s); s.camp = s.camp || { stars: {} }; s.mitb = s.mitb || { step: 0 }; s.pcc = s.pcc || null; s.stats = s.stats || { wins: 0, losses: 0, perfect: 0, picks: 0 }; s.seen = s.seen || {}; s.surv = s.surv || null; return s; }
     } catch (e) { }
     return null;
   }
@@ -62,19 +72,23 @@
   const statImg = i => '<svg class="sti" viewBox="0 0 24 24" aria-label="' + ST[i].name + '"><circle cx="12" cy="12" r="11.2" fill="' + ST[i].col + '" stroke="#000" stroke-opacity=".55" stroke-width="1"/><path fill="#fff" fill-rule="evenodd" stroke="#0007" stroke-width=".6" transform="translate(12 12) scale(.72) translate(-12 -12)" d="' + GLYPH[i] + '"/></svg>';
 
   function give(ci, extra) {
-    const first = !S.cards.some(c => c.c === ci);
+    const have = S.cards.find(c => c.c === ci);
+    if (have) { have.d = (have.d || 0) + 1; persist(); return { inst: have, isNew: false }; }
     const inst = E.mk(ci, Object.assign({ u: uid() }, extra || {}));
     S.cards.push(inst); S.seen[C[ci].n] = 1; persist();
-    return { inst, isNew: first };
+    return { inst, isNew: true };
   }
   function giveSup(si) { const s = { u: uid(), s: si }; S.sups.push(s); persist(); return s; }
   function newSave() {
-    S = { v: 3, nextU: 0, cards: [], sups: [], deck: { m: [], f: [], s: [] }, stats: { wins: 0, losses: 0, perfect: 0, picks: 0 }, camp: { stars: {} }, mitb: { step: 0 }, pcc: null, surv: null, seen: {} };
+    S = { v: 3, lv2: 1, nextU: 0, cards: [], sups: [], deck: { m: [], f: [], s: [] }, stats: { wins: 0, losses: 0, perfect: 0, picks: 0 }, camp: { stars: {} }, mitb: { step: 0 }, pcc: null, surv: null, seen: {} };
     const idx = g => C.map((c, i) => i).filter(i => C[i].g === g);
-    const take = (g, spec) => { const out = []; spec.forEach(([rar, n]) => { const pool = E.shuffle(idx(g).filter(i => C[i].rar === rar && !out.includes(i)), rnd); out.push(...pool.slice(0, n)); }); return out; };
-    take('M', [[0, 8], [1, 6], [2, 2]]).concat(take('F', [[0, 4], [1, 3], [2, 1]])).forEach(ci => give(ci));
+    const take = (g, n) => E.shuffle(idx(g), rnd).slice(0, n);
+    take('M', 16).concat(take('F', 8)).forEach(ci => give(ci));
     [0, 1, 2, 3, 4, 5].forEach(si => giveSup(si));
-    autoDeck(); persist();
+    autoDeck();
+    // a spare copy of your best man and best woman, so you can try levelling straight away
+    const b = E.bestDeck(S.cards, S.sups, 1, 1, 0); b.m.concat(b.f).forEach(c => { c.d = 1; });
+    persist();
   }
   function autoDeck() {
     const d = E.bestDeck(S.cards, S.sups);
@@ -95,7 +109,6 @@
   const rankNo = () => Math.round(power() / 10);
 
   /* ---------- card faces ---------- */
-  const RSHORT = ['COM', 'UNC', 'RARE', 'SR', 'UR', 'EPIC', 'LEG', 'SURV', 'WM'];
   const SYMCH = { BL: '◀', BR: '▶', YU: '▲', YD: '▼' };
   // Each wrestler has their own Google Font (data/fonts.js). We load only the capital letters of that font, on first use.
   const FONT_TXT = encodeURIComponent("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .'()-&\u00c1\u00c9\u00cd\u00d3\u00da");
@@ -113,11 +126,11 @@
   // Card = the artwork; a slim stat band sits on the bottom edge. o: {cls, click, hl:[stat idx], val, mini}
   function face(inst, o) {
     o = o || {};
-    const c = C[inst.c], r = RAR[c.rar], st = E.stats(inst);
-    return '<div class="cf r' + c.rar + ' ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
+    const c = C[inst.c], st = E.stats(inst), dup = inst.d || 0;
+    return '<div class="cf ' + (o.cls || '') + '" style="--rc:#2b3050"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
       + '<div class="art">' + art(c) + '</div>'
-      + '<div class="gem">' + (inst.pro ? '<b>PRO</b> ' : '') + '<span class="f">' + r.n + '</span><span class="s">' + RSHORT[c.rar] + '</span></div>'
-      + '<div class="lv">' + (inst.pro ? 'P' : '') + inst.lvl + '</div>'
+      + (dup ? '<div class="gem dup"><span class="f">+' + dup + ' DUPLICATE' + (dup > 1 ? 'S' : '') + '</span><span class="s">+' + dup + '</span></div>' : '')
+      + '<div class="lv">' + inst.lvl + '</div>'
       + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
       + (o.val != null ? '<div class="val">' + fmt(o.val) + '</div>' : '')
       + nameEl(c)
@@ -170,7 +183,7 @@
   function tileArt(k) {
     if (!TA[k]) {
       const women = k === 'rrw' || k === 'ec', used = Object.values(TA);
-      const pool = C.filter(c => (!women || c.g === 'F') && c.rar >= 1 && !used.includes('../assets/superstars-t/' + c.a + '.webp'));
+      const pool = C.filter(c => (!women || c.g === 'F') && !used.includes('../assets/superstars-t/' + c.a + '.webp'));
       TA[k] = '../assets/superstars-t/' + pick(pool.length ? pool : C).a + '.webp';
     }
     return TA[k];
@@ -205,7 +218,7 @@
       const c = d.m[0] || d.f[0];
       h = '<h2 class="big-title">Your cards</h2><p class="sub">Every Superstar has 5 stats. Higher is better.</p>'
         + '<div class="obrow"><div class="obcard">' + face(c, { cls: '' }) + '</div><div class="obleg">' + ST.map((s, k) => '<div><span style="--sc:' + s.col + '">' + statImg(k) + '</span><b>' + s.name + '</b><small>' + STAT_INFO[k] + '</small></div>').join('') + '</div></div>'
-        + '<div class="panel obnote"><p><b>Rarity colour</b> is the bar along the bottom. Rarer cards have bigger numbers. The <b>big number</b> top right is the card level.</p></div>';
+        + '<div class="panel obnote"><p>The <b>big number</b> top right is the card&rsquo;s level. Everyone starts at level 1, and every level adds <b>+1.25%</b> to all five stats.</p></div>';
     } else if (i === 1) {
       h = '<h2 class="big-title">Your deck</h2><p class="sub">3 men, 3 women and 2 support cards.</p>'
         + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini' })).join('') + '</div>'
@@ -224,7 +237,7 @@
       const rest = S.cards.length - 6;
       h = '<h2 class="big-title">Ready!</h2><p class="sub">Your starting team. ' + (rest > 0 ? 'You own ' + S.cards.length + ' cards in total.' : '') + '</p>'
         + '<div class="obgrid">' + d.m.concat(d.f).map(c => face(c, { click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
-        + '<div class="panel obnote"><p>Find every card under <b>Cards</b>. Win matches to open card picks and grow your collection. Level cards up by feeding them duplicates.</p></div>';
+        + '<div class="panel obnote"><p>Find every card under <b>Cards</b>. Win matches to open card picks and grow your collection. You start with one spare copy of your best man and woman, so try levelling them up. If you pull a duplicate of someone you own, spend it to level that wrestler up. You can only level a wrestler with their own duplicates.</p></div>';
     }
     const last = i === N - 1;
     screen((last ? '<div class="topbar"><button onclick="UI.obStep(' + (i - 1) + ')">‹ Back</button></div>' : skip) + h + obDots(i, N)
@@ -243,7 +256,7 @@
     if (w === 'reset') { S = null; try { localStorage.removeItem(KEY); } catch (e) { } return home(); }
     if (!S) { newSave(); S.onb = 1; }
     if (w === 'cards') for (let i = 0; i < 20; i++) give(Math.floor(rnd() * C.length));
-    if (w === 'max') { S.cards.forEach(c => { c.lvl = 100; }); for (let i = 0; i < 12; i++) give(C.map((c, k) => k).filter(k => C[k].rar >= 6)[i % 5 + (i % 2)] || 0, { lvl: 100, mt: 100 }); autoDeck(); }
+    if (w === 'max') { S.cards.forEach(c => { c.lvl = 40; c.d = 0; }); autoDeck(); }
     persist(); home();
   }
 
@@ -256,11 +269,11 @@
     if (COL.tab === 's') list = S.sups.slice().sort((a, b) => SUP[b.s].pct - SUP[a.s].pct);
     else {
       list = S.cards.filter(c => COL.tab === 'all' || (COL.tab === 'f') === E.isF(c));
-      list.sort(COL.sort === 'power' ? (a, b) => E.total(b) - E.total(a) : COL.sort === 'rar' ? (a, b) => C[b.c].rar - C[a.c].rar || E.total(b) - E.total(a) : (a, b) => C[a.c].n.localeCompare(C[b.c].n));
+      list.sort(COL.sort === 'power' ? (a, b) => E.total(b) - E.total(a) : COL.sort === 'lvl' ? (a, b) => b.lvl - a.lvl || (b.d || 0) - (a.d || 0) || E.total(b) - E.total(a) : (a, b) => C[a.c].n.localeCompare(C[b.c].n));
     }
     const inDeck = u => S.deck.m.includes(u) || S.deck.f.includes(u) || S.deck.s.includes(u);
     screen(back('UI.home()', 'Home') + '<div class="seg">' + tabs.map(t => '<button class="' + (COL.tab === t[0] ? 'on' : '') + '" onclick="UI.collection(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
-      + (COL.tab === 's' ? '' : '<div class="seg small">' + [['power', 'Overall'], ['rar', 'Rarity'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
+      + (COL.tab === 's' ? '' : '<div class="seg small">' + [['power', 'Overall'], ['lvl', 'Level'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
       + '<div class="grid">' + (COL.tab === 's' ? list.map(s => supFace(s, { cls: inDeck(s.u) ? 'indeck' : '' })).join('')
         : list.map(c => face(c, { cls: inDeck(c.u) ? 'indeck' : '', click: 'UI.detail(' + c.u + ')' })).join('')) + '</div>');
   }
@@ -269,53 +282,26 @@
     const have = new Set(S.cards.map(c => c.c)), total = C.length;
     screen(back('UI.home()', 'Home') + '<h2 class="big-title">Collection Book</h2><p class="sub">' + have.size + ' of ' + total + ' Superstars found</p>'
       + '<div class="bar"><i style="width:' + have.size / total * 100 + '%"></i></div>'
-      + '<div class="bookgrid">' + C.map((c, i) => '<div class="bk r' + c.rar + (have.has(i) ? '' : ' miss') + '" style="--rc:' + RAR[c.rar].col + '">' + art(c) + '<span>' + c.n + '</span></div>').join('') + '</div>');
+      + '<div class="bookgrid">' + C.map((c, i) => '<div class="bk' + (have.has(i) ? '' : ' miss') + '" style="--rc:#2b3050">' + art(c) + '<span>' + c.n + '</span></div>').join('') + '</div>');
   }
   function detail(u) {
     const inst = byU(u); if (!inst) return collection();
     const c = C[inst.c], st = E.stats(inst), ss = E.sigStats(inst);
-    const copies = S.cards.filter(x => x.c === inst.c && x.u !== inst.u);
-    const pro = copies.find(x => !x.pro);
     const arrows = Array.from({ length: 9 }, (_, i) => i === 4 ? '<i class="ctr"></i>' : '<i></i>');
     const ar = { 0: 1, 1: 2, 2: 5, 3: 8, 4: 7, 5: 6, 6: 3, 7: 0 }; // dir -> cell in a 3x3 around the centre
     c.ar.forEach(d => { arrows[ar[d]] = '<i class="on">' + '↑↗→↘↓↙←↖'[d] + '</i>'; });
     screen(back('UI.collection()', 'Cards') + face(inst, { cls: 'big' })
-      + '<div class="panel"><h3>' + RAR[c.rar].n + ' · ' + (E.isF(inst) ? 'Women' : 'Men') + (inst.pro ? ' · PRO' + (inst.fort ? ' +' + inst.fort : '') : '') + '</h3>'
-      + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.min(100, v / (8.6 * 100) * 100 * 2.2) + '%"></i></span><b>' + v + '</b></div>').join('')
-      + '</div><div class="panel"><h3>Signature move</h3><p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance(inst) * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '%.</p></div>'
-      + '<div class="panel"><h3>Progress</h3><p class="edge">Level ' + inst.lvl + ' / 100 (+' + Math.round(inst.lvl * E.T.levelBoost * 100 / E.T.levelMax) + '% stats) · Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
-      + '<div class="bar"><i style="width:' + inst.lvl + '%"></i></div>'
-      + '<button class="btn" onclick="UI.feedScreen(' + inst.u + ')">Level up</button>'
-      + (!inst.pro ? '<button class="btn alt" ' + (pro ? '' : 'disabled') + ' onclick="UI.makePro(' + inst.u + ')">Combine two copies → Pro' + (pro ? '' : ' (need a duplicate)') + '</button>'
-        : '<button class="btn alt" ' + (inst.fort < 3 && copies.some(x => !x.pro) ? '' : 'disabled') + ' onclick="UI.fortify(' + inst.u + ')">Fortify (' + inst.fort + '/3) with a copy</button>') + '</div>'
+      + '<div class="panel"><h3>' + (E.isF(inst) ? 'Women' : 'Men') + ' · Level ' + inst.lvl + '</h3>'
+      + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.min(100, v / 110 * 100) + '%"></i></span><b>' + v + '</b></div>').join('')
+      + '</div><div class="panel"><h3>Signature move</h3><p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance() * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '%.</p></div>'
+      + '<div class="panel"><h3>Level up</h3><p class="edge">Level <b>' + inst.lvl + '</b> / ' + E.T.levelMax + ' · +' + (Math.round((inst.lvl - 1) * E.T.levelStep * 1000) / 10) + '% stats. Each level adds +' + (E.T.levelStep * 100) + '%. Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
+      + '<div class="bar"><i style="width:' + (inst.lvl - 1) / (E.T.levelMax - 1) * 100 + '%"></i></div>'
+      + '<p class="edge dupline">' + (inst.d ? 'You have <b>' + inst.d + '</b> spare duplicate' + (inst.d > 1 ? 's' : '') + ' of ' + c.n + '.' : 'Get a duplicate of ' + c.n + ' from a card pick to level this card up.') + '</p>'
+      + (inst.lvl >= E.T.levelMax ? '<button class="btn alt" disabled>Max level</button>'
+        : '<button class="btn" ' + (inst.d ? '' : 'disabled') + ' onclick="UI.levelUp(' + inst.u + ')">Level up (uses 1 duplicate)</button>' + (inst.d > 1 ? '<button class="btn alt" onclick="UI.levelUp(' + inst.u + ',1)">Use all ' + inst.d + ' duplicates</button>' : '')) + '</div>'
       + '<div class="panel"><h3>Tag &amp; ring</h3><p class="edge">Tag symbol <b class="sym ' + c.sym + '" style="position:static;background:none">' + SYMCH[c.sym] + '</b> — opposite arrows of the same colour make a diamond (+10% team stats); mixed colours −5%.</p><div class="arrows">' + arrows.join('') + '</div><p class="edge">Ring Domination arrows: where this card can challenge.</p></div>');
   }
-  let FD = null;
-  function feedScreen(u) {
-    const t = byU(u); FD = { u, sel: [] };
-    renderFeed();
-  }
-  // You always keep at least 3 men and 3 women, so you can still field a full deck.
-  const keepOk = sel => { const left = S.cards.filter(x => !sel.includes(x.u)); return left.filter(x => !E.isF(x)).length >= 3 && left.filter(E.isF).length >= 3; };
-  function renderFeed() {
-    const t = byU(FD.u), inDeck = x => S.deck.m.includes(x.u) || S.deck.f.includes(x.u);
-    const pool = S.cards.filter(x => x.u !== t.u).sort((a, b) => (a.c === t.c ? -1 : 0) - (b.c === t.c ? -1 : 0) || E.feedValue(a) - E.feedValue(b));
-    const add = FD.sel.reduce((a, x) => a + E.feedValue(byU(x)), 0);
-    screen(back('UI.detail(' + t.u + ')', 'Back') + '<h2 class="big-title">Level up</h2><p class="sub">' + C[t.c].n + ' · level ' + t.lvl + ' → ' + Math.min(100, t.lvl + add) + '</p>'
-      + '<button class="btn" ' + (FD.sel.length ? '' : 'disabled') + ' onclick="UI.feedGo()">Feed ' + FD.sel.length + ' card' + (FD.sel.length === 1 ? '' : 's') + ' (+' + add + ' levels)</button>'
-      + '<button class="btn alt" onclick="UI.feedAuto()">Select all unused Commons &amp; Uncommons</button>'
-      + '<p class="sub keepnote">You always keep at least 3 men and 3 women so you can still play.</p>'
-      + '<div class="grid">' + pool.map(x => face(x, { cls: 'mini ' + (FD.sel.includes(x.u) ? 'sel ' : '') + (!FD.sel.includes(x.u) && !keepOk(FD.sel.concat(x.u)) ? 'nofeed ' : '') + (inDeck(x) ? 'indeck' : ''), click: 'UI.feedTog(' + x.u + ')', val: E.feedValue(x) })).join('') + '</div>');
-  }
-  function feedTog(u) { const i = FD.sel.indexOf(u); if (i >= 0) FD.sel.splice(i, 1); else if (keepOk(FD.sel.concat(u))) FD.sel.push(u); renderFeed(); }
-  function feedAuto() { const inDeck = x => S.deck.m.includes(x.u) || S.deck.f.includes(x.u); FD.sel = []; S.cards.filter(x => x.u !== FD.u && C[x.c].rar <= 1 && !inDeck(x) && x.lvl === 0).forEach(x => { if (keepOk(FD.sel.concat(x.u))) FD.sel.push(x.u); }); renderFeed(); }
-  function feedGo() {
-    if (!keepOk(FD.sel)) return;
-    const t = byU(FD.u), fod = FD.sel.map(byU).filter(Boolean);
-    E.feed(t, fod); S.cards = S.cards.filter(x => !FD.sel.includes(x.u)); persist(); detail(t.u);
-  }
-  function makePro(u) { const a = byU(u), b = S.cards.find(x => x.c === a.c && x.u !== a.u && !x.pro); if (!b) return; E.makePro(a); S.cards = S.cards.filter(x => x.u !== b.u); persist(); detail(u); }
-  function fortify(u) { const a = byU(u), b = S.cards.find(x => E.canFort(a, x)); if (!b) return; a.fort++; S.cards = S.cards.filter(x => x.u !== b.u); persist(); detail(u); }
+  function levelUp(u, all) { const t = byU(u); if (!t) return; if (E.levelUp(t, all)) { sfx('win'); persist(); } detail(u); }
 
   /* ---------- deck builder ---------- */
   let DP = null;
@@ -342,26 +328,26 @@
 
   /* ---------- card picks ---------- */
   let PT = null;
-  // Reward screen: n face-down picks. Finding a Rare or better refreshes the table.
+  // Reward screen: n face-down picks. Every pick is a random wrestler or support card.
   function awardPicks(n, then, title) {
-    PT = { n, left: n, table: E.pickTable(power(), rnd), got: [], last: null, then: then || home, title: title || 'Card Picks', refreshed: false };
+    PT = { n, left: n, table: E.pickTable(power(), rnd), got: [], last: null, then: then || home, title: title || 'Card Picks' };
     S.stats.picks += n; persist();
     renderPicks();
   }
   function renderPicks() {
     const p = PT;
-    const lastHTML = p.last ? '<div class="gotbox' + (p.last.inst && C[p.last.inst.c].rar >= 3 ? ' burst' : '') + '" style="--rc:' + (p.last.inst ? RAR[C[p.last.inst.c].rar].col : '#ffd34d') + '">' + (p.last.sup ? supFace(p.last.sup, { cls: 'reveal-in' }) : face(p.last.inst, { cls: 'reveal-in gotcard' })) + '<div class="gotlbl">' + (p.last.isNew ? 'NEW SUPERSTAR!' : p.last.sup ? 'SUPPORT CARD' : 'DUPLICATE · use it to level up or go Pro') + (p.refreshed ? '<br><small>Rare or better! The table has been refreshed.</small>' : '') + '</div></div>' : '';
+    const lastHTML = p.last ? '<div class="gotbox' + (p.last.inst && p.last.isNew ? ' burst' : '') + '" style="--rc:' + '#ffd34d' + '">' + (p.last.sup ? supFace(p.last.sup, { cls: 'reveal-in' }) : face(p.last.inst, { cls: 'reveal-in gotcard' })) + '<div class="gotlbl">' + (p.last.isNew ? 'NEW WRESTLER!' : p.last.sup ? 'SUPPORT CARD' : 'DUPLICATE!<br><small>Use it to level this wrestler up (Cards → tap the card)</small>') + '</div></div>' : '';
     screen('<h2 class="big-title">' + p.title + '</h2><p class="sub">' + (p.left > 0 ? p.left + ' pick' + (p.left === 1 ? '' : 's') + ' left — tap a card' : 'All picks used') + '</p>' + lastHTML
-      + (p.left > 0 ? '<div class="pickgrid">' + p.table.map((s, i) => '<button class="pk' + (s.open ? ' open' : '') + '" ' + (s.open ? 'disabled' : '') + ' onclick="UI.pick(' + i + ')">' + (s.open ? (s.k === 'card' ? '<span style="color:' + RAR[C[s.c].rar].col + '">★</span>' : '<span>✦</span>') : '?') + '</button>').join('') + '</div>'
+      + (p.left > 0 ? '<div class="pickgrid">' + p.table.map((s, i) => '<button class="pk' + (s.open ? ' open' : '') + '" ' + (s.open ? 'disabled' : '') + ' onclick="UI.pick(' + i + ')">' + (s.open ? (s.k === 'card' ? '<span style="color:#ffd34d">★</span>' : '<span>✦</span>') : '?') + '</button>').join('') + '</div>'
         : '<div class="recap">' + p.got.map(g => g.sup ? supFace(g.sup, { cls: 'mini' }) : face(g.inst, { cls: 'mini' })).join('') + '</div><button class="btn big" onclick="UI.picksDone()">Done</button>'));
   }
   function pickSlot(i) {
     const p = PT, s = p.table[i]; if (!s || s.open || p.left < 1) return;
     s.open = true; p.left--;
-    if (s.k === 'sup') { const o = giveSup(s.s); p.last = { sup: o }; p.got.push(p.last); p.refreshed = false; }
-    else { const r = give(s.c); p.last = r; p.got.push(r); p.refreshed = false; if (E.isRarePlus(s)) { p.table = E.pickTable(power(), rnd); p.refreshed = true; } }
+    if (s.k === 'sup') { const o = giveSup(s.s); p.last = { sup: o }; p.got.push(p.last); }
+    else { const r = give(s.c); p.last = r; p.got.push(r); }
     persist(); renderPicks();
-    const rr = p.last && p.last.inst ? C[p.last.inst.c].rar : 0; sfx(rr >= 3 ? 'rare' : 'flip');
+    sfx(p.last && p.last.isNew ? 'rare' : 'flip');
   }
   function picksDone() { const t = PT.then; PT = null; t(); }
 
@@ -494,7 +480,7 @@
   const V3 = { E, C, RAR, SUP, ST, I, get S() { return S; }, persist, give, giveSup, byU, getDeck, power, rankNo, face, supFace, art, screen, back, home, awardPicks, startGame, statImg, fmt, pick, rnd, clamp, uid, modes: {}, specOf, autoDeck };
   window.V3 = V3;
   window.UI = {
-    mute: () => { S.mute = !S.mute; persist(); home(); }, home, start, ini, nameGo, obStep: i => howto(i, OB.help), obDone, help: () => howto(0, true), rename: () => welcome(true), dev, collection, book, detail, feedScreen, feedTog, feedAuto, feedGo, makePro, fortify, deckScreen, deckPick, deckSet, deckAuto,
+    mute: () => { S.mute = !S.mute; persist(); home(); }, home, start, ini, nameGo, obStep: i => howto(i, OB.help), obDone, help: () => howto(0, true), rename: () => welcome(true), dev, collection, book, detail, levelUp, deckScreen, deckPick, deckSet, deckAuto,
     pick: pickSlot, picksDone, selTog, supTog, play, afterMatch, gameDone, wild, wildGo,
     mode: k => { if (k === 'wild') return wild(); if (V3.modes[k]) return V3.modes[k](); soon(k); }
   };

@@ -1,6 +1,6 @@
 /* WWE Superstars v3 - rules engine (no DOM). UMD: window.Eng / module.exports.
    A card-battle game in the style of WWE SuperCard: 5 stats (Strength, Strike, Technical, Agility, Charisma),
-   rarity tiers, signature moves, tag-team alignment, support cards, and several game modes.
+   signature moves, tag-team alignment, support cards, and several game modes.
    Everything plays against computer-built decks, instantly, with no timers, energy or purchases. */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory(require('./data/cards.js'));
@@ -14,6 +14,7 @@
     { k: 'agi', name: 'Agility', ab: 'AGI', col: '#38bdf8' },
     { k: 'cha', name: 'Charisma', ab: 'CHA', col: '#ffd23f' }
   ];
+  // Support-card tiers (colour only). Wrestler cards have no rarity: everyone starts at level 1.
   const RAR = [
     { n: 'Common', mult: 2.0, sig: 0, col: '#9aa3b2' }, { n: 'Uncommon', mult: 2.4, sig: 0.15, col: '#5fd38a' },
     { n: 'Rare', mult: 2.9, sig: 0.175, col: '#4da3ff' }, { n: 'Super Rare', mult: 3.5, sig: 0.2, col: '#a56cff' },
@@ -21,7 +22,7 @@
     { n: 'Legendary', mult: 6.0, sig: 0.33, col: '#ffd34d' }, { n: 'Survivor', mult: 7.2, sig: 0.36, col: '#ff4d5e' },
     { n: 'WrestleMania', mult: 8.6, sig: 0.4, col: '#7fe7ff' }
   ];
-  const T = { levelMax: 100, levelBoost: 1.00, matchBoost: 0.10, matchMax: 100, proBoost: 0.30, fortBoost: 0.05, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
+  const T = { levelMax: 40, levelStep: 0.0125, power: 4.2, sigChance: 0.2, matchBoost: 0.10, matchMax: 100, sigBoost: 0.30, diamond: 1.10, mismatch: 0.95, tieExtra: true };
   // Support cards: one-use boosts per game. pct is applied to the listed stats for the match they are played in.
   const SUPPORTS = [
     { id: 'chair', name: 'Steel Chair', stats: [0], pct: 0.25, rar: 0 }, { id: 'table', name: 'Table', stats: [2], pct: 0.25, rar: 0 },
@@ -43,26 +44,22 @@
   const isF = inst => CARDS[inst.c].g === 'F';
 
   /* ---------- cards ---------- */
-  // inst = {u, c:index into CARDS, lvl 0..100, mt matches played, pro 0|1, fort 0..3}
-  function mk(c, o) { return Object.assign({ u: 0, c, lvl: 0, mt: 0, pro: 0, fort: 0 }, o || {}); }
+  // inst = {u, c:index into CARDS, lvl 1..40, d spare duplicates, mt matches played}
+  function mk(c, o) { return Object.assign({ u: 0, c, lvl: 1, d: 0, mt: 0 }, o || {}); }
+  // Every level adds +1.25% to all five stats. Playing matches adds up to +10% on top.
   function cardMult(inst) {
-    return RAR[CARDS[inst.c].rar].mult * (1 + T.levelBoost * inst.lvl / T.levelMax) * (1 + T.matchBoost * Math.min(inst.mt, T.matchMax) / T.matchMax)
-      * (inst.pro ? 1 + T.proBoost : 1) * (1 + T.fortBoost * (inst.fort || 0)) * (inst.fat == null ? 1 : inst.fat);
+    return (1 + T.levelStep * (Math.max(1, inst.lvl) - 1)) * (1 + T.matchBoost * Math.min(inst.mt, T.matchMax) / T.matchMax) * (inst.fat == null ? 1 : inst.fat);
   }
   function stats(inst) { const m = cardMult(inst); return CARDS[inst.c].s.map(v => Math.round(v * m)); }
-  // Card strength on the same scale as the old 4-stat game (5 stats x 0.8) so AI targets and ranks stay balanced.
-  const total = inst => stats(inst).reduce((a, b) => a + b, 0) * 0.8;
+  // Card strength (used for AI targets and deck rank): 5 stats x 0.8, scaled so ranks stay on the familiar scale.
+  const total = inst => stats(inst).reduce((a, b) => a + b, 0) * 0.8 * T.power;
   // Signature move boosts the card's two best stats.
   function sigStats(inst) { const s = CARDS[inst.c].s; return [0, 1, 2, 3, 4].sort((a, b) => s[b] - s[a]).slice(0, 2); }
-  const sigChance = inst => RAR[CARDS[inst.c].rar].sig;
+  const sigChance = () => T.sigChance;
   const supPct = s => s.pct;
-  // level-up xp: feeding a card gives rarity-based levels
-  const feedValue = inst => Math.round((1 + CARDS[inst.c].rar * 2.2) * (1 + inst.lvl / 40) * (inst.pro ? 3 : 1));
-  function feed(target, fodder) { const add = fodder.reduce((a, f) => a + feedValue(f), 0); target.lvl = Math.min(T.levelMax, target.lvl + add); return add; }
-  // Pro: combine two copies of the same wrestler. Fortify: add up to 3 more copies.
-  const canPro = (a, b) => a.u !== b.u && a.c === b.c && !a.pro && !b.pro;
-  function makePro(a) { a.pro = 1; a.lvl = Math.min(T.levelMax, a.lvl); return a; }
-  const canFort = (a, b) => a.pro && a.fort < 3 && b.c === a.c && !b.pro && a.u !== b.u;
+  // Levelling: spend one spare duplicate of the same wrestler to gain one level.
+  const canLevel = inst => inst.d > 0 && inst.lvl < T.levelMax;
+  function levelUp(inst, all) { let n = 0; while (canLevel(inst)) { inst.d--; inst.lvl++; n++; if (!all) break; } return n; }
 
   /* ---------- decks ---------- */
   // Deck = {m:[3 male], f:[3 female], s:[2 support]} of instances / support objects.
@@ -83,7 +80,7 @@
     const pool = g => CARDS.map((c, i) => i).filter(i => CARDS[i].g === g);
     const make = (idxs, n) => {
       const out = [];
-      const cand = idxs.map(i => { const inst = mk(i, { lvl: Math.floor(rng() * 70), mt: Math.floor(rng() * 80) }); return { inst, t: total(inst) }; });
+      const cand = idxs.map(i => { const inst = mk(i, { lvl: 1 + Math.floor(rng() * 40), mt: Math.floor(rng() * 80) }); return { inst, t: total(inst) }; });
       while (out.length < n && cand.length) {
         const want = target * (0.88 + rng() * 0.24);
         let best = 0, bd = 1e9;
@@ -240,21 +237,16 @@
 
   /* ---------- pick table (card picks) ---------- */
   // 12 face-down slots. Finding a Rare or better refreshes the table, like the real thing.
-  // Which rarity does a deck strength (average card total) correspond to?
-  function powerTier(p) { let b = 0, d = 1e9; RAR.forEach((r, i) => { const x = Math.abs(280 * r.mult * 1.15 - p); if (x < d) { d = x; b = i; } }); return b; }
+  // Support cards unlock as your deck gets stronger; wrestlers are picked uniformly at random.
+  function powerTier(p) { return Math.max(0, Math.min(6, Math.floor((p - 850) / 110))); }
   function pickTable(power, rng) {
-    const tier = powerTier(power);
-    const w = [];
-    for (let r = 0; r <= 8; r++) w.push(r > tier + 1 ? 0 : r === tier + 1 ? (tier <= 2 ? 0.09 : 0.04) : r === tier ? 0.12 : r >= tier - 1 ? 0.28 : r >= tier - 2 ? 0.2 : 0.08);
-    const roll = () => { let tot = w.reduce((a, b) => a + b, 0), x = rng() * tot; for (let r = 0; r <= 8; r++) { x -= w[r]; if (x <= 0) return r; } return 0; };
-    const slots = [];
+    const tier = powerTier(power), slots = [];
     for (let i = 0; i < 12; i++) {
       if (rng() < 0.17) { const s = SUPPORTS.map((s, k) => k).filter(k => SUPPORTS[k].rar <= tier + 1); slots.push({ k: 'sup', s: pickR(s, rng), open: false }); }
-      else { const r = roll(); const pool = CARDS.map((c, k) => k).filter(k => CARDS[k].rar === r); slots.push({ k: 'card', c: pickR(pool, rng), open: false, reset: r >= Math.max(2, tier) }); }
+      else slots.push({ k: 'card', c: Math.floor(rng() * CARDS.length), open: false });
     }
     return slots;
   }
-  const isRarePlus = slot => slot.k === 'card' && (slot.reset != null ? slot.reset : CARDS[slot.c].rar >= 2);
 
   /* ---------- Ring Domination (3x3 board) ---------- */
   function rdNew(deckA, deckB, rng) {
@@ -356,9 +348,9 @@
 
   return {
     STATS, RAR, T, SUPPORTS, SUP_IDX, SYM, DIRS, CARDS, IDX, TYPE_NAME,
-    mulberry32, pickR, shuffle, mk, stats, total, cardMult, sigStats, sigChance, isF, feed, feedValue, canPro, makePro, canFort,
+    mulberry32, pickR, shuffle, mk, stats, total, cardMult, sigStats, sigChance, isF, canLevel, levelUp,
     deckCards, deckPower, bestDeck, aiDeck, aiName, makeSpecs, tagMod, sideTotal, newGame, availCards, availM, availF, availS, canField, validPick,
-    aiPick, aiSupport, playMatch, playExtra, extraSpec, autoPlayGame, smartPick, perfect, opponents, picksFor, pickTable, powerTier, isRarePlus,
+    aiPick, aiSupport, playMatch, playExtra, extraSpec, autoPlayGame, smartPick, perfect, opponents, picksFor, pickTable, powerTier,
     rdNew, rdMoves, rdPlay, rdAI, rdNeighbours, rrNew, rrStart, rrRound, rrAIStat, rrAIChallenger, rrAISacrifice, cardsNeeded,
     MITB_STEPS, survivorDeck
   };

@@ -6,7 +6,7 @@ const rng = E.mulberry32(7);
 function run(pickFn, diff, n) {
   let w = 0, perfect = 0, tie = 0;
   for (let i = 0; i < n; i++) {
-    const power = 700 + rng() * 1500;
+    const power = 880 + rng() * 520;
     const da = E.aiDeck(power, rng), db = E.aiDeck(power * diff, rng);
     const g = E.newGame(da, db, rng); E.autoPlayGame(g, rng, pickFn);
     if (g.winner === 'a') w++; if (E.perfect(g)) perfect++;
@@ -25,9 +25,9 @@ console.log('smart  vs easier ', run(E.aiPick, 0.86, N));
 let bad = 0;
 for (let i = 0; i < N; i++) { const g = E.newGame(E.aiDeck(1100, rng), E.aiDeck(1100, rng), rng); E.autoPlayGame(g, rng, E.aiPick); if (g.results.length > 4 || !g.over) bad++; if (g.results.some(r => r.a.cards.length === 0 || r.b.cards.length === 0)) bad++; }
 console.log('invalid games', bad);
-// 3) Rarity ladder: same-deck-strength upgrade beats lower tier (rarity matters) -> higher rarity should win most.
+// 3) Level ladder: higher-level decks should win most.
 let hi = 0, tot = 0;
-for (let i = 0; i < 400; i++) { const lo = E.aiDeck(900, rng), up = E.aiDeck(1500, rng); const g = E.newGame(up, lo, rng); E.autoPlayGame(g, rng, E.aiPick); hi += g.winner === 'a'; tot++; }
+for (let i = 0; i < 400; i++) { const lo = E.aiDeck(900, rng), up = E.aiDeck(1300, rng); const g = E.newGame(up, lo, rng); E.autoPlayGame(g, rng, E.aiPick); hi += g.winner === 'a'; tot++; }
 console.log('stronger deck (+67%) wins', (hi / tot * 100).toFixed(1) + '%');
 // 4) Ring Domination + Royal Rumble complete.
 let rdOk = 0, rrOk = 0;

@@ -18,3 +18,7 @@ Play at `/v3/`. Your artwork is the card; the 4 stats sit in a slim band on the 
 ## First run
 
 A new game starts with a welcome screen (choose a name), a short how-to (cards and stats, deck, how a match works) and your starting team. The **?** button on the home screen replays the guide; tap the avatar to rename. Mode buttons show random wrestler art (thumbnails in `assets/superstars-t/`, 300px wide).
+
+## No rarities (v3.10)
+
+Wrestler cards have no rarity tiers. Every card starts at **level 1** with base stats around 38-70 (average 52). Each level adds **+1.25%** to all five stats (max level 40, +48.75%). You can only level a wrestler up by spending **a duplicate of that same wrestler**: duplicates stack on the card (the green "+N DUP" tag) and each one is worth one level. Pro/Fortify and feeding other cards are gone. Colour is just the stat band; the hidden `rar` value in `data/cards.js` is only a star-power rank used to choose bosses, prizes and weak loaner cards.

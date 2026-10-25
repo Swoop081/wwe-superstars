@@ -66,17 +66,16 @@ const SH = process.env.SHOTS || '/tmp/shots';
   await playGame();
   assert(await C('.pickgrid').count(), 'pick table shown');
   await page.screenshot({ path: SH + '/v3-picks.png' });
-  const before = await page.evaluate(() => V3.S.cards.length + V3.S.sups.length);
+  const before = await page.evaluate(() => V3.S.cards.length + V3.S.sups.length + V3.S.cards.reduce((a, c) => a + (c.d || 0), 0));
   await takePicks();
-  assert((await page.evaluate(() => V3.S.cards.length + V3.S.sups.length)) >= before + 1, 'picks add cards');
+  assert((await page.evaluate(() => V3.S.cards.length + V3.S.sups.length + V3.S.cards.reduce((a, c) => a + (c.d || 0), 0))) >= before + 1, 'picks add cards');
 
   await home();
   // Collection / book / detail / level up / deck
   await C('button.tile:has-text("Cards")').click(); await page.screenshot({ path: SH + '/v3-collection.png' });
   await C('.grid .cf').first().click(); await page.screenshot({ path: SH + '/v3-detail.png' });
   const lvBefore = await page.evaluate(() => V3.S.cards.map(c => c.lvl).reduce((a, b) => a + b, 0));
-  await C('button:has-text("Level up")').click(); await C('button:has-text("Select all unused")').click();
-  if (await C('button:has-text("Feed")').isEnabled()) { await C('button:has-text("Feed")').click(); }
+  await page.evaluate(() => { const c = V3.S.cards[0]; c.d = 2; UI.detail(c.u); }); await C(`button:has-text("Level up (uses 1 duplicate)")`).click(); assert((await page.textContent("body")).includes("Level 2"), "level up works"); await C(`button:has-text("Use all 1 duplicates"), button:has-text("Level up (uses 1 duplicate)")`).first().click();
   await home(); await C('button.tile:has-text("Book")').click(); assert((await page.textContent('body')).includes('of 239'), 'book');
   await home(); await C('button.tile:has-text("Deck")').click(); await C('button:has-text("Auto-build")').click(); await page.screenshot({ path: SH + '/v3-deck.png' });
 
