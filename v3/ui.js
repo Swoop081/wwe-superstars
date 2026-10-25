@@ -137,7 +137,7 @@
     ['mitb', 'Money in the Bank', 'bank', 'Climb 5 rungs, win the briefcase.'],
     ['rd', 'Ring Domination', 'ring', 'Claim squares on the 3×3 board.'],
     ['rr', 'Royal Rumble', 'rumble', '15 cards. Hold the ring.'],
-    ['rrw', "Women's Rumble", 'rumble', '15 Divas. Hold the ring.'],
+    ['rrw', "Women's Rumble", 'rumble', '15 women. Hold the ring.'],
     ['surv', 'Survivor', 'survivor', '10 players, 3rd loss is out.'],
     ['pcc', "People's Champion", 'crown', 'Back a Superstar, score points.'],
     ['rtg', 'Road to Glory', 'star', '4 rounds, random hands.'],
@@ -207,14 +207,14 @@
         + '<div class="obrow"><div class="obcard">' + face(c, { cls: '' }) + '</div><div class="obleg">' + ST.map((s, k) => '<div><span style="--sc:' + s.col + '">' + statImg(k) + '</span><b>' + s.name + '</b><small>' + STAT_INFO[k] + '</small></div>').join('') + '</div></div>'
         + '<div class="panel obnote"><p><b>Rarity colour</b> is the bar along the bottom. Rarer cards have bigger numbers. The <b>big number</b> top right is the card level.</p></div>';
     } else if (i === 1) {
-      h = '<h2 class="big-title">Your deck</h2><p class="sub">3 Superstars, 3 Divas and 2 support cards.</p>'
+      h = '<h2 class="big-title">Your deck</h2><p class="sub">3 men, 3 women and 2 support cards.</p>'
         + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini' })).join('') + '</div>'
         + '<div class="obsup">' + d.s.map(s => supFace(s, {})).join('') + '</div>'
         + '<div class="panel obnote"><p>We pick your strongest deck automatically. Open <b>Deck</b> on the home screen to swap anyone in or out. Support cards add a bonus to certain stats.</p></div>';
     } else if (i === 2) {
       h = '<h2 class="big-title">How a match works</h2>'
         + '<div class="panel obsteps"><ol>'
-        + '<li><b>3 matches per game.</b> Solo uses 1 Superstar, Tag uses 2, Divas uses 1 Diva.</li>'
+        + '<li><b>3 matches per game.</b> Solo uses 1 man, Tag uses 2 men, Women&rsquo;s uses 1 woman.</li>'
         + '<li><b>Each match counts certain stats</b>, shown in <span class="gold">gold</span> on your cards. Pick the cards from your hand with the highest total.</li>'
         + '<li><b>Every card can be used once per game</b>, so spend your best ones wisely.</li>'
         + '<li><b>Win 2 of 3 to win the game.</b> Wins earn card picks (3 for a clean sweep). Even a loss gives you 1.</li>'
@@ -280,7 +280,7 @@
     const ar = { 0: 1, 1: 2, 2: 5, 3: 8, 4: 7, 5: 6, 6: 3, 7: 0 }; // dir -> cell in a 3x3 around the centre
     c.ar.forEach(d => { arrows[ar[d]] = '<i class="on">' + '↑↗→↘↓↙←↖'[d] + '</i>'; });
     screen(back('UI.collection()', 'Cards') + face(inst, { cls: 'big' })
-      + '<div class="panel"><h3>' + RAR[c.rar].n + ' · ' + (E.isF(inst) ? 'Divas' : 'Superstar') + (inst.pro ? ' · PRO' + (inst.fort ? ' +' + inst.fort : '') : '') + '</h3>'
+      + '<div class="panel"><h3>' + RAR[c.rar].n + ' · ' + (E.isF(inst) ? 'Women' : 'Men') + (inst.pro ? ' · PRO' + (inst.fort ? ' +' + inst.fort : '') : '') + '</h3>'
       + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar" style="--sc:' + ST[i].col + '"><i style="width:' + Math.min(100, v / (8.6 * 100) * 100 * 2.2) + '%"></i></span><b>' + v + '</b></div>').join('')
       + '</div><div class="panel"><h3>Signature move</h3><p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance(inst) * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '%.</p></div>'
       + '<div class="panel"><h3>Progress</h3><p class="edge">Level ' + inst.lvl + ' / 100 (+' + Math.round(inst.lvl * 0.3) + '% stats) · Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
@@ -319,8 +319,8 @@
     const d = getDeck();
     const slot = (kind, i, inst) => inst ? (kind === 's' ? supFace(inst, { cls: 'slotc', click: "UI.deckPick('s'," + i + ')' }) : face(inst, { cls: 'slotc', click: 'UI.deckPick(\'' + kind + '\',' + i + ')' })) : '<div class="empty" onclick="UI.deckPick(\'' + kind + '\',' + i + ')">+</div>';
     screen(back('UI.home()', 'Home') + '<h2 class="big-title">Your Deck</h2><div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span></div>'
-      + '<h3 class="sect">Superstars (3)</h3><div class="slots">' + d.m.map((c, i) => slot('m', i, c)).join('') + '</div>'
-      + '<h3 class="sect">Divas (3)</h3><div class="slots">' + d.f.map((c, i) => slot('f', i, c)).join('') + '</div>'
+      + '<h3 class="sect">Men (3)</h3><div class="slots">' + d.m.map((c, i) => slot('m', i, c)).join('') + '</div>'
+      + '<h3 class="sect">Women (3)</h3><div class="slots">' + d.f.map((c, i) => slot('f', i, c)).join('') + '</div>'
       + '<h3 class="sect">Support (2)</h3><div class="slots two">' + d.s.map((c, i) => slot('s', i, c)).join('') + '</div>'
       + '<button class="btn" onclick="UI.deckAuto()">Auto-build best deck</button>');
   }
@@ -413,7 +413,7 @@
       }).join('') + '</div>'
       + '<button class="btn big play sticky" ' + (ok ? '' : 'disabled') + ' onclick="UI.play()">PLAY</button></div>');
   }
-  // Solo/Tag matches show your Superstars, Divas matches your Divas, a tie-break any unused card.
+  // Solo/Tag matches show your men, Women's matches your women, a tie-break any unused card.
   const handFor = (spec, d, g) => spec.extra ? d.m.concat(d.f).filter(c => !g.a.used.includes(c)) : spec.type === 'divas' ? d.f : d.m;
   const vsum = (c, spec) => spec.stats.reduce((a, i) => a + E.stats(c)[i], 0);
   function selTog(i) {

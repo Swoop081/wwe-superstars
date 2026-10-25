@@ -277,7 +277,7 @@
       + (res ? ecRes(res) : '')
       + '<div class="matchbanner"><span class="ic">' + I.divas + '</span><div><b>' + ST[stI].name + ' bout</b><small>Highest ' + ST[stI].name + ' wins. Each stat comes up in turn — plan ahead.</small></div></div>'
       + '<div class="specs4">' + e.order.map((s, k) => '<span class="' + (k < e.i ? 'done' : k === e.i ? 'cur' : '') + '">' + stat(s) + '</span>').join('') + '</div>'
-      + '<h3 class="sect">Choose your Diva</h3><div class="grid">' + avail.map((c, i) => face(c, { cls: 'mini', hl: [stI], val: E.stats(c)[stI], click: 'UI.ecPlay(' + e.mine.indexOf(c) + ')' })).join('') + '</div>');
+      + '<h3 class="sect">Choose your wrestler</h3><div class="grid">' + avail.map((c, i) => face(c, { cls: 'mini', hl: [stI], val: E.stats(c)[stI], click: 'UI.ecPlay(' + e.mine.indexOf(c) + ')' })).join('') + '</div>');
   }
   function ecRes(r) {
     return '<div class="duel2"><div class="dline">' + face(r.a, { cls: 'mini', hl: [r.stat], val: r.av }) + '<b>VS</b>' + face(r.b, { cls: 'mini', hl: [r.stat], val: r.bv }) + '</div><div class="banner ' + (r.w === 'a' ? 'w' : r.w === 'b' ? 'l' : 't') + '">' + (r.w === 'a' ? 'BOUT WON' : r.w === 'b' ? 'BOUT LOST' : 'DRAW') + '</div></div>';
@@ -302,7 +302,7 @@
   };
   const FAT = s => 0.6 + 0.4 * s / 100;
   function krLineup() {
-    // auto-manage: use the freshest 3 Superstars + 3 Divas, 2 best-fit supports
+    // auto-manage: use the freshest 3 men + 3 women, 2 best-fit supports
     const ms = KR.m.slice().sort((a, b) => KR.stam[b.u] * E.total(b) - KR.stam[a.u] * E.total(a)).slice(0, 3), fs = KR.f.slice().sort((a, b) => KR.stam[b.u] - KR.stam[a.u]);
     return { act: ms.concat(fs.slice(0, 3)), ms, fs: fs.slice(0, 3) };
   }

@@ -2,7 +2,7 @@
 
 Play at `/v3/`. Your artwork is the card; the 4 stats sit in a slim band on the bottom edge.
 
-**Core rules (modelled on WWE SuperCard):** 4 stats (Strength, Technical, Agility, Charisma). A game is 3 matches (Solo / Tag / Divas), each comparing one or two stats; best of 3, a tie adds an extra match. Deck = 3 Superstars + 3 Divas + 2 Support cards. Each card plays once per game. Signature moves trigger by rarity and boost the card's two best stats. Tag symbols: opposite arrows of one colour = diamond (+10%), mixed colours −5%. Win = 2 card picks, perfect win = 3, loss = 1. Picks come from a 12-slot table that refreshes when you find a Rare or better.
+**Core rules (modelled on WWE SuperCard):** 4 stats (Strength, Technical, Agility, Charisma). A game is 3 matches (Solo / Tag / Women's), each comparing one or two stats; best of 3, a tie adds an extra match. Deck = 3 Superstars + 3 Divas + 2 Support cards. Each card plays once per game. Signature moves trigger by rarity and boost the card's two best stats. Tag symbols: opposite arrows of one colour = diamond (+10%), mixed colours −5%. Win = 2 card picks, perfect win = 3, loss = 1. Picks come from a 12-slot table that refreshes when you find a Rare or better.
 
 **Cards:** 9 rarities (Common → WrestleMania), level 0–100 (feed spare cards), +matches played, Pro (combine two copies) and Fortify (up to 3 more copies).
 

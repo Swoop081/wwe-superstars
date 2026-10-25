@@ -99,7 +99,7 @@
 
   /* ---------- match resolution ---------- */
   const SOLO = 'solo', TAG = 'tag', DIVAS = 'divas';
-  const TYPE_NAME = { solo: 'Solo', tag: 'Tag Team', divas: 'Divas' };
+  const TYPE_NAME = { solo: 'Solo', tag: 'Tag Team', divas: "Women's" };
   function cardsNeeded(t) { return t === TAG ? { m: 2, f: 0 } : t === DIVAS ? { m: 0, f: 1 } : { m: 1, f: 0 }; }
   function makeSpecs(rng) {
     const opts = [];
