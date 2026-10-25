@@ -534,7 +534,7 @@
     const win = g.winner === 'a', perf = E.perfect(g);
     S.stats[win ? 'wins' : 'losses']++; if (perf) S.stats.perfect++; persist();
     GM.done = () => cfg.onEnd(g);
-    const n = E.picksFor(g), me = S.name || 'You';
+    const n = E.picksFor(g) + (win ? (cfg.bonus || 0) : 0), me = S.name || 'You';
     const thumb = c => '<img src="' + thumbURL(C[c.c]) + '" alt="" onerror="this.onerror=null;this.src=\'../assets/superstars/' + C[c.c].a + '.png\'">';
     const rows = g.results.map((r, i) => {
       const t = r.spec && r.spec.extra ? 'Tie-break' : E.TYPE_NAME[r.spec.type], w = r.winner;
@@ -559,14 +559,14 @@
   function wild() {
     const opps = E.opponents(power(), rnd, 3); WILD = opps;
     const star = o => { const all = o.deck.m.concat(o.deck.f).sort((a, b) => E.total(b) - E.total(a)); return all[0] ? thumbURL(C[all[0].c]) : ''; };
-    screen('<div class="fillscr wildscr"><div class="fh">' + back('UI.home()', 'Home') + '<h2 class="big-title">Play Now</h2><p class="sub">Pick an opponent. Win 2 picks, perfect win 3, a loss still gives 1.</p></div><div class="fillmid oppcol">'
-      + opps.map((o, i) => '<button class="opp bigopp ' + o.label.toLowerCase() + '" style="--art:url(' + (star(o) || '') + ')" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '</span></button>').join('')
+    screen('<div class="fillscr wildscr"><div class="fh">' + back('UI.home()', 'Home') + '<h2 class="big-title">Play Now</h2><p class="sub">Harder opponents pay more picks. A loss always gives 1.</p></div><div class="fillmid oppcol">'
+      + opps.map((o, i) => '<button class="opp bigopp ' + o.label.toLowerCase() + '" style="--art:url(' + (star(o) || '') + ')" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '<small>Win ' + (2 + i) + ' · Perfect ' + (3 + i) + '</small></span></button>').join('')
       + '</div><div class="fillbot"><p class="edge" style="text-align:center;margin:0">Your deck rank <b>' + rankNo() + '</b></p></div></div>');
   }
   let WILD = [];
   function wildGo(i) {
     const o = WILD[i];
-    startGame({ title: 'Play Now', deckA: getDeck(), deckB: o.deck, oppName: o.name, oppRec: o.record, onEnd: g => awardPicks(E.picksFor(g), wild, 'Match rewards') });
+    startGame({ title: 'Play Now', deckA: getDeck(), deckB: o.deck, oppName: o.name, oppRec: o.record, bonus: i, onEnd: g => awardPicks(E.picksFor(g) + (g.winner === 'a' ? i : 0), wild, 'Match rewards') });
   }
 
   /* ---------- exports ---------- */
