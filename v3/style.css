@@ -351,3 +351,14 @@ svg.sti{display:block;flex:none;width:1em;height:1em}
 .mpk .stags span{font-size:14px;padding:0 6px 0 3px}.mpk .stags span svg.sti{width:16px;height:16px}
 .tiles4 .stile:last-child:nth-child(odd){grid-column:1/-1}
 .arena-bg .ringfloor{opacity:.3;filter:brightness(.4)}
+
+/* ---- v3.6: rarity + level as plain printed text (no pills, no borders) ---- */
+.cf .gem,.cf .lv{background:none!important;border:0!important;padding:0!important;border-radius:0;font-family:"Rajdhani",system-ui,sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-shadow:0 1px 2px #000,0 0 6px #000,0 0 3px #000;line-height:1}
+.cf .gem{top:6px;left:7px;color:var(--rc);font-size:max(9px,5.4cqw)}
+.cf .gem b{color:#fff}
+.cf .lv{top:6px;right:7px;color:#fff;font-size:max(9px,5.4cqw);opacity:.95}
+.cf .sym{top:calc(max(9px,5.4cqw) + 11px);right:7px}
+.cf.big .gem,.cf.big .lv{font-size:15px}.cf.big .sym{top:28px}
+.deckrow .cf .lv{font-size:9px;padding:0;right:4px;top:4px}
+.cf .gem .s{display:none}.cf .gem .f{display:inline}
+@container (max-width:169px){.cf .gem .f{display:none}.cf .gem .s{display:inline}}

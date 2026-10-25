@@ -95,7 +95,7 @@
   const rankNo = () => Math.round(power() / 10);
 
   /* ---------- card faces ---------- */
-  const RSHORT = ['C', 'U', 'R', 'SR', 'UR', 'E', 'L', 'SV', 'WM'];
+  const RSHORT = ['COM', 'UNC', 'RARE', 'SR', 'UR', 'EPIC', 'LEG', 'SURV', 'WM'];
   const SYMCH = { BL: '◀', BR: '▶', YU: '▲', YD: '▼' };
   // Each wrestler has their own Google Font (data/fonts.js). We load only the capital letters of that font, on first use.
   const FONT_TXT = encodeURIComponent("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .'()-&\u00c1\u00c9\u00cd\u00d3\u00da");
@@ -117,7 +117,7 @@
     return '<div class="cf r' + c.rar + ' ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
       + '<div class="art">' + art(c) + '</div>'
       + '<div class="gem">' + (inst.pro ? '<b>PRO</b> ' : '') + '<span class="f">' + r.n + '</span><span class="s">' + RSHORT[c.rar] + '</span></div>'
-      + '<div class="lv">' + (inst.pro ? 'P' : 'L') + inst.lvl + '</div>'
+      + '<div class="lv">' + (inst.pro ? 'P' : 'LV ') + inst.lvl + '</div>'
       + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
       + (o.val != null ? '<div class="val">' + fmt(o.val) + '</div>' : '')
       + nameEl(c)
