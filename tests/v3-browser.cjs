@@ -44,7 +44,7 @@ const SH = process.env.SHOTS || '/tmp/shots';
   }
 
   // Wild
-  await C('button:has-text("Play Wild")').click();
+  await C('button:has-text("Play Now")').click();
   assert.equal(await C('.opp').count(), 3, 'three opponents');
   await C('.opp').nth(1).click();
   await playGame();

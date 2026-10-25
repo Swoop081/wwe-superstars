@@ -366,3 +366,18 @@ svg.sti{display:block;flex:none;width:1em;height:1em}
 /* logo from the main game */
 .logo{margin:0 0 4px;font-size:0}.logo img{display:block;width:min(78%,300px);margin:0 auto;filter:drop-shadow(0 6px 10px #000c) drop-shadow(0 0 18px #ff475755)}
 .pk:not(.open)::after{content:"";background:url(../assets/wwe-superstar-logo.png) center/78% no-repeat;filter:drop-shadow(0 2px 3px #000)}
+
+/* ---- v3.7: home header rail, tiny deck cards ---- */
+.hud{display:flex;align-items:center;gap:0;background:linear-gradient(90deg,#0b0b12f2,#151526dd);border-radius:40px 14px 14px 40px;box-shadow:inset 0 0 0 2px #ffffff22,0 6px 14px #0009;padding:4px 6px 4px 4px;margin:0 0 6px}
+.hud .av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;flex:none;font-family:var(--disp2);font-size:20px;background:radial-gradient(#5fd0ff,#1a5fb4);border:3px solid #fff;box-shadow:0 0 14px #4da3ff99;margin-right:6px}
+.hud .hs{flex:1;display:flex;flex-direction:column;align-items:center;line-height:1;padding:2px 4px;border-left:2px solid #ffffff1c}
+.hud .hs small{font-family:var(--disp2);font-size:12px;letter-spacing:.12em;color:#9aa0b8;text-transform:uppercase}
+.hud .hs b{font-family:var(--disp2);font-weight:400;font-size:25px;letter-spacing:.04em;color:var(--gold2);margin-top:2px}
+.hud .hsnd{flex:none;width:38px;height:38px;border-radius:50%;margin-left:4px;padding:8px;border:0;color:#fff;background:#ffffff14;box-shadow:inset 0 0 0 2px #ffffff22}.hud .hsnd svg{width:100%;height:100%;fill:currentColor}.hud .hsnd.off{color:#7d8197}
+.logo{margin-top:2px}.logo img{width:min(62%,240px)}
+.deckrow{gap:5px}
+.deckrow .cf{border-radius:7px}
+.deckrow .cf .nm{display:block!important;font-size:8.5px!important;line-height:1!important;padding:12px 2px 2px!important;bottom:5px!important;white-space:normal!important;letter-spacing:.02em;-webkit-text-stroke:1.2px #000;text-wrap:balance}
+.deckrow .cf .sb{display:block!important;height:5px!important;background:var(--rc)!important}.deckrow .cf .sb *{display:none!important}
+.deckrow .cf .lv{display:block!important;font-size:9px!important;top:4px!important;right:4px!important}
+.deckrow .cf .gem{display:none!important}

@@ -6,7 +6,7 @@ Play at `/v3/`. Your artwork is the card; the 4 stats sit in a slim band on the 
 
 **Cards:** 9 rarities (Common → WrestleMania), level 0–100 (feed spare cards), +matches played, Pro (combine two copies) and Fortify (up to 3 more copies).
 
-**Modes:** Wild, Campaign (84 stages, 12 bosses, 3 stars, all open), Money in the Bank, Ring Domination, Royal Rumble (men's and women's), Survivor, People's Champion, Road to Glory, Elimination Chamber, King of the Ring, War (leagues), Crack the Case.
+**Modes:** Play Now, Campaign (84 stages, 12 bosses, 3 stars, all open), Money in the Bank, Ring Domination, Royal Rumble (men's and women's), Survivor, People's Champion, Road to Glory, Elimination Chamber, King of the Ring, War (leagues), Crack the Case.
 
 **Fair-play rules:** no purchases, no energy, no cooldowns, no timers, nothing locked behind progression. Opponents are computer decks matched to your deck; shortfalls in any deck are filled with loaner cards.
 

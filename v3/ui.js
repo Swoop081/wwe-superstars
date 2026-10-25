@@ -132,7 +132,7 @@
 
   /* ---------- home ---------- */
   const MODES = [
-    ['wild', 'Wild', 'ring', 'Best of 3 matches. 2 picks for a win.'],
+    ['wild', 'Play Now', 'ring', 'Best of 3 matches. 2 picks for a win.'],
     ['campaign', 'Campaign', 'campaign', '84 stages, 12 bosses, up to 3 stars.'],
     ['mitb', 'Money in the Bank', 'bank', 'Climb 5 rungs, win the briefcase.'],
     ['rd', 'Ring Domination', 'ring', 'Claim squares on the 3×3 board.'],
@@ -149,10 +149,15 @@
   function home() {
     if (!S) return welcome();
     const d = getDeck();
-    screen(LOGO
-      + '<div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span><span>Cards <b>' + S.cards.length + '</b></span><span>W–L <b>' + S.stats.wins + '–' + S.stats.losses + '</b></span><span onclick="UI.mute()" style="cursor:pointer">Sound <b>' + (S.mute ? 'off' : 'on') + '</b></span></div>'
+    const spk = S.mute ? '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9l5 6M21 9l-5 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>' : '<svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>';
+    screen('<div class="hud"><span class="av">YO</span>'
+      + '<span class="hs"><small>Deck rank</small><b>' + rankNo() + '</b></span>'
+      + '<span class="hs"><small>Cards</small><b>' + S.cards.length + '</b></span>'
+      + '<span class="hs"><small>Won–Lost</small><b>' + S.stats.wins + '–' + S.stats.losses + '</b></span>'
+      + '<button class="hsnd' + (S.mute ? ' off' : '') + '" onclick="UI.mute()" aria-label="Sound">' + spk + '</button></div>'
+      + LOGO
       + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
-      + '<button class="btn big" onclick="UI.mode(\'wild\')">Play Wild</button>'
+      + '<button class="btn big" onclick="UI.mode(\'wild\')">Play Now</button>'
       + '<div class="modes">' + MODES.slice(1).map((m, mi) => '<button style="--h:' + ((mi * 37 + 8) % 360) + '" class="mode' + (V3.modes[m[0]] ? '' : ' soon') + '" onclick="UI.mode(\'' + m[0] + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>').join('') + '</div>'
       + '<div class="tiles"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
       + devBar());
@@ -401,14 +406,14 @@
   /* ---------- Wild ---------- */
   function wild() {
     const opps = E.opponents(power(), rnd, 3); WILD = opps;
-    screen(back('UI.home()', 'Home') + '<h2 class="big-title">Wild</h2><p class="sub">Pick an opponent · win 2 cards · perfect win 3 · loss still gives 1</p>'
+    screen(back('UI.home()', 'Home') + '<h2 class="big-title">Play Now</h2><p class="sub">Pick an opponent · win 2 cards · perfect win 3 · loss still gives 1</p>'
       + opps.map((o, i) => '<button class="opp" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '</span></button>').join('')
       + '<p class="edge" style="text-align:center">Your deck rank: <b>' + rankNo() + '</b></p>');
   }
   let WILD = [];
   function wildGo(i) {
     const o = WILD[i];
-    startGame({ title: 'Wild', deckA: getDeck(), deckB: o.deck, oppName: o.name, oppRec: o.record, onEnd: g => awardPicks(E.picksFor(g), wild, 'Wild rewards') });
+    startGame({ title: 'Play Now', deckA: getDeck(), deckB: o.deck, oppName: o.name, oppRec: o.record, onEnd: g => awardPicks(E.picksFor(g), wild, 'Match rewards') });
   }
 
   /* ---------- exports ---------- */
