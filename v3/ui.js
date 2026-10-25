@@ -1,0 +1,369 @@
+/* WWE Superstars v3 - core UI: save, cards, collection, deck, card picks and the 3-match game screen.
+   Modes (Ring Domination, Royal Rumble, Campaign...) live in modes.js and use window.V3. */
+(function () {
+  'use strict';
+  const E = window.Eng, C = E.CARDS, RAR = E.RAR, SUP = E.SUPPORTS, I = window.I3, ST = E.STATS;
+  const KEY = 'wweSuperstarsV3';
+  const DEV = new URLSearchParams(location.search).has('dev');
+  const app = document.getElementById('app');
+  const rnd = Math.random;
+  let S = null;
+
+  /* ---------- save ---------- */
+  function persist() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
+  function load() {
+    try {
+      const s = JSON.parse(localStorage.getItem(KEY));
+      if (s && s.v === 3) { s.camp = s.camp || { stars: {} }; s.mitb = s.mitb || { step: 0 }; s.pcc = s.pcc || null; s.stats = s.stats || { wins: 0, losses: 0, perfect: 0, picks: 0 }; s.seen = s.seen || {}; s.surv = s.surv || null; return s; }
+    } catch (e) { }
+    return null;
+  }
+  const uid = () => ++S.nextU;
+  const byU = u => S.cards.find(c => c.u === u) || null;
+  const supByU = u => S.sups.find(s => s.u === u) || null;
+  const owned = () => S.cards;
+  const fmt = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const pick = a => a[Math.floor(rnd() * a.length)];
+  const art = c => '<img class="artimg" src="../assets/superstars/' + c.a + '.webp" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/superstars/' + c.a + '.png\'">';
+  const screen = (html, keepScroll) => { app.innerHTML = html; if (!keepScroll) window.scrollTo(0, 0); };
+  const statImg = i => '<img src="../assets/' + ST[i].icon + '" alt="' + ST[i].name + '">';
+
+  function give(ci, extra) {
+    const first = !S.cards.some(c => c.c === ci);
+    const inst = E.mk(ci, Object.assign({ u: uid() }, extra || {}));
+    S.cards.push(inst); S.seen[C[ci].n] = 1; persist();
+    return { inst, isNew: first };
+  }
+  function giveSup(si) { const s = { u: uid(), s: si }; S.sups.push(s); persist(); return s; }
+  function newSave() {
+    S = { v: 3, nextU: 0, cards: [], sups: [], deck: { m: [], f: [], s: [] }, stats: { wins: 0, losses: 0, perfect: 0, picks: 0 }, camp: { stars: {} }, mitb: { step: 0 }, pcc: null, surv: null, seen: {} };
+    const idx = g => C.map((c, i) => i).filter(i => C[i].g === g);
+    const take = (g, spec) => { const out = []; spec.forEach(([rar, n]) => { const pool = E.shuffle(idx(g).filter(i => C[i].rar === rar && !out.includes(i)), rnd); out.push(...pool.slice(0, n)); }); return out; };
+    take('M', [[0, 8], [1, 6], [2, 2]]).concat(take('F', [[0, 4], [1, 3], [2, 1]])).forEach(ci => give(ci));
+    [0, 1, 2, 3, 4, 5].forEach(si => giveSup(si));
+    autoDeck(); persist();
+  }
+  function autoDeck() {
+    const d = E.bestDeck(S.cards, S.sups);
+    S.deck = { m: d.m.map(c => c.u), f: d.f.map(c => c.u), s: d.s.map(s => s.u) };
+  }
+  // The current deck as instances; any empty slot is filled from the collection.
+  function getDeck() {
+    const clean = (arr, n, pool) => { const out = arr.filter(u => pool.some(x => x.u === u)); return out.slice(0, n); };
+    const males = S.cards.filter(c => !E.isF(c)), females = S.cards.filter(E.isF);
+    S.deck.m = clean(S.deck.m, 4, males); S.deck.f = clean(S.deck.f, 2, females); S.deck.s = clean(S.deck.s, 2, S.sups);
+    const best = E.bestDeck(S.cards, S.sups);
+    best.m.forEach(c => { if (S.deck.m.length < 4 && !S.deck.m.includes(c.u)) S.deck.m.push(c.u); });
+    best.f.forEach(c => { if (S.deck.f.length < 2 && !S.deck.f.includes(c.u)) S.deck.f.push(c.u); });
+    best.s.forEach(c => { if (S.deck.s.length < 2 && !S.deck.s.includes(c.u)) S.deck.s.push(c.u); });
+    return { m: S.deck.m.map(byU), f: S.deck.f.map(byU), s: S.deck.s.map(supByU) };
+  }
+  const power = () => Math.round(E.deckPower(getDeck()));
+  const rankNo = () => Math.round(power() / 10);
+
+  /* ---------- card faces ---------- */
+  const RSHORT = ['C', 'U', 'R', 'SR', 'UR', 'E', 'L', 'SV', 'WM'];
+  const SYMCH = { BL: '◀', BR: '▶', YU: '▲', YD: '▼' };
+  // Card = the artwork; a slim stat band sits on the bottom edge. o: {cls, click, hl:[stat idx], val, mini}
+  function face(inst, o) {
+    o = o || {};
+    const c = C[inst.c], r = RAR[c.rar], st = E.stats(inst);
+    return '<div class="cf r' + c.rar + ' ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '>'
+      + '<div class="art">' + art(c) + '</div>'
+      + '<div class="gem">' + (inst.pro ? '<b>PRO</b> ' : '') + '<span class="f">' + r.n + '</span><span class="s">' + RSHORT[c.rar] + '</span></div>'
+      + '<div class="lv">' + (inst.pro ? 'P' : 'L') + inst.lvl + '</div>'
+      + '<div class="sym ' + c.sym + '">' + SYMCH[c.sym] + '</div>'
+      + (o.val != null ? '<div class="val">' + fmt(o.val) + '</div>' : '')
+      + '<div class="nm">' + c.n + '</div>'
+      + '<div class="sb">' + st.map((v, i) => '<span class="' + (o.hl && o.hl.includes(i) ? 'hl' : '') + '">' + statImg(i) + '<em>' + 'PTSC'[i] + '</em><b>' + v + '</b></span>').join('') + '</div></div>';
+  }
+  function supFace(s, o) {
+    o = o || {}; const d = SUP[s.s], r = RAR[d.rar];
+    return '<div class="sf ' + (o.cls || '') + '" style="--rc:' + r.col + '"' + (o.click ? ' onclick="' + o.click + '"' : '') + '><div class="sico">' + I[d.id] + '</div><div class="stx"><div class="snm">' + d.name + '</div><div class="spct">+' + Math.round(d.pct * 100) + '% ' + (d.stats.length === 4 ? 'ALL' : d.stats.map(i => ST[i].name.slice(0, 3).toUpperCase()).join('+')) + '</div></div></div>';
+  }
+  const back = (to, label) => '<div class="topbar"><button onclick="' + to + '">‹ ' + (label || 'Back') + '</button></div>';
+
+  /* ---------- home ---------- */
+  const MODES = [
+    ['wild', 'Wild', 'ring', 'Best of 3 matches. 2 picks for a win.'],
+    ['campaign', 'Campaign', 'campaign', '84 stages, 12 bosses, up to 3 stars.'],
+    ['mitb', 'Money in the Bank', 'bank', 'Climb 5 rungs, win the briefcase.'],
+    ['rd', 'Ring Domination', 'ring', 'Claim squares on the 3×3 board.'],
+    ['rr', 'Royal Rumble', 'rumble', '15 cards. Hold the ring.'],
+    ['rrw', "Women's Rumble", 'rumble', '15 Divas. Hold the ring.'],
+    ['surv', 'Survivor', 'survivor', '10 players, 3rd loss is out.'],
+    ['pcc', "People's Champion", 'crown', 'Back a Superstar, score points.'],
+    ['rtg', 'Road to Glory', 'star', '4 rounds, random hands.'],
+    ['ec', 'Elimination Chamber', 'lock', 'Women\'s decks, 10 bouts.'],
+    ['kotr', 'King of the Ring', 'crown', 'Tournament with stamina.'],
+    ['war', 'War', 'fight', 'Ranked ladder season.'],
+    ['case', 'Crack the Case', 'puzzle', 'Daily code puzzle.']
+  ];
+  function home() {
+    if (!S) return welcome();
+    const d = getDeck();
+    screen('<div class="logo">WWE<span>SUPERSTARS</span></div>'
+      + '<div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span><span>Cards <b>' + S.cards.length + '</b></span><span>W–L <b>' + S.stats.wins + '–' + S.stats.losses + '</b></span></div>'
+      + '<div class="deckrow">' + d.m.concat(d.f).map(c => face(c, { cls: 'mini', click: 'UI.detail(' + c.u + ')' })).join('') + '</div>'
+      + '<button class="btn big" onclick="UI.mode(\'wild\')">Play Wild</button>'
+      + '<div class="modes">' + MODES.slice(1).map(m => '<button class="mode' + (V3.modes[m[0]] ? '' : ' soon') + '" onclick="UI.mode(\'' + m[0] + '\')"><span class="ic">' + I[m[2]] + '</span><b>' + m[1] + '</b><small>' + m[3] + '</small></button>').join('') + '</div>'
+      + '<div class="tiles"><button class="tile" onclick="UI.deckScreen()"><span class="ic">' + I.deck + '</span><b>Deck</b></button><button class="tile" onclick="UI.collection()"><span class="ic">' + I.cards + '</span><b>Cards</b></button><button class="tile" onclick="UI.book()"><span class="ic">' + I.star + '</span><b>Book</b></button></div>'
+      + devBar());
+  }
+  function welcome() {
+    screen('<div class="logo">WWE<span>SUPERSTARS</span></div><p class="sub">Collect Superstars, build a deck, win matches.</p>'
+      + '<div class="panel"><h3>Starter collection</h3><p class="edge">24 Superstars and 6 support cards to begin. No energy, no timers, no purchases — ever.</p></div>'
+      + '<button class="btn big" onclick="UI.start()">Start</button>' + devBar());
+  }
+  function start() { newSave(); home(); }
+  function devBar() {
+    if (!DEV) return '';
+    return '<div class="dev"><b>DEV</b> <button onclick="UI.dev(\'cards\')">+20 cards</button><button onclick="UI.dev(\'max\')">best cards L100</button><button onclick="UI.dev(\'reset\')">reset</button></div>';
+  }
+  function dev(w) {
+    if (!DEV) return;
+    if (w === 'reset') { S = null; try { localStorage.removeItem(KEY); } catch (e) { } return home(); }
+    if (!S) newSave();
+    if (w === 'cards') for (let i = 0; i < 20; i++) give(Math.floor(rnd() * C.length));
+    if (w === 'max') { S.cards.forEach(c => { c.lvl = 100; }); for (let i = 0; i < 12; i++) give(C.map((c, k) => k).filter(k => C[k].rar >= 6)[i % 5 + (i % 2)] || 0, { lvl: 100, mt: 100 }); autoDeck(); }
+    persist(); home();
+  }
+
+  /* ---------- collection / book / detail ---------- */
+  let COL = { tab: 'all', sort: 'power' };
+  function collection(tab) {
+    if (tab) COL.tab = tab;
+    const tabs = [['all', 'All'], ['m', 'Men'], ['f', 'Women'], ['s', 'Support']];
+    let list;
+    if (COL.tab === 's') list = S.sups.slice().sort((a, b) => SUP[b.s].pct - SUP[a.s].pct);
+    else {
+      list = S.cards.filter(c => COL.tab === 'all' || (COL.tab === 'f') === E.isF(c));
+      list.sort(COL.sort === 'power' ? (a, b) => E.total(b) - E.total(a) : COL.sort === 'rar' ? (a, b) => C[b.c].rar - C[a.c].rar || E.total(b) - E.total(a) : (a, b) => C[a.c].n.localeCompare(C[b.c].n));
+    }
+    const inDeck = u => S.deck.m.includes(u) || S.deck.f.includes(u) || S.deck.s.includes(u);
+    screen(back('UI.home()', 'Home') + '<div class="seg">' + tabs.map(t => '<button class="' + (COL.tab === t[0] ? 'on' : '') + '" onclick="UI.collection(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>'
+      + (COL.tab === 's' ? '' : '<div class="seg small">' + [['power', 'Power'], ['rar', 'Rarity'], ['name', 'A–Z']].map(t => '<button class="' + (COL.sort === t[0] ? 'on' : '') + '" onclick="COL_SORT(\'' + t[0] + '\')">' + t[1] + '</button>').join('') + '</div>')
+      + '<div class="grid">' + (COL.tab === 's' ? list.map(s => supFace(s, { cls: inDeck(s.u) ? 'indeck' : '' })).join('')
+        : list.map(c => face(c, { cls: inDeck(c.u) ? 'indeck' : '', click: 'UI.detail(' + c.u + ')' })).join('')) + '</div>');
+  }
+  window.COL_SORT = k => { COL.sort = k; collection(); };
+  function book() {
+    const have = new Set(S.cards.map(c => c.c)), total = C.length;
+    screen(back('UI.home()', 'Home') + '<h2 class="big-title">Collection Book</h2><p class="sub">' + have.size + ' of ' + total + ' Superstars found</p>'
+      + '<div class="bar"><i style="width:' + have.size / total * 100 + '%"></i></div>'
+      + '<div class="bookgrid">' + C.map((c, i) => '<div class="bk r' + c.rar + (have.has(i) ? '' : ' miss') + '" style="--rc:' + RAR[c.rar].col + '">' + art(c) + '<span>' + c.n + '</span></div>').join('') + '</div>');
+  }
+  function detail(u) {
+    const inst = byU(u); if (!inst) return collection();
+    const c = C[inst.c], st = E.stats(inst), ss = E.sigStats(inst);
+    const copies = S.cards.filter(x => x.c === inst.c && x.u !== inst.u);
+    const pro = copies.find(x => !x.pro);
+    const arrows = Array.from({ length: 9 }, (_, i) => i === 4 ? '<i class="ctr"></i>' : '<i></i>');
+    const ar = { 0: 1, 1: 2, 2: 5, 3: 8, 4: 7, 5: 6, 6: 3, 7: 0 }; // dir -> cell in a 3x3 around the centre
+    c.ar.forEach(d => { arrows[ar[d]] = '<i class="on">' + '↑↗→↘↓↙←↖'[d] + '</i>'; });
+    screen(back('UI.collection()', 'Cards') + face(inst, { cls: 'big' })
+      + '<div class="panel"><h3>' + RAR[c.rar].n + ' · ' + (E.isF(inst) ? 'Divas' : 'Superstar') + (inst.pro ? ' · PRO' + (inst.fort ? ' +' + inst.fort : '') : '') + '</h3>'
+      + st.map((v, i) => '<div class="srow">' + statImg(i) + '<span class="sn">' + ST[i].name + '</span><span class="bar"><i style="width:' + Math.min(100, v / (8.6 * 100) * 100 * 2.2) + '%"></i></span><b>' + v + '</b></div>').join('')
+      + '</div><div class="panel"><h3>Signature move</h3><p class="edge"><b style="color:var(--gold2)">' + c.f + '</b> — ' + Math.round(E.sigChance(inst) * 100) + '% chance each match to boost <b>' + ST[ss[0]].name + '</b> and <b>' + ST[ss[1]].name + '</b> by ' + Math.round(E.T.sigBoost * 100) + '%.</p></div>'
+      + '<div class="panel"><h3>Progress</h3><p class="edge">Level ' + inst.lvl + ' / 100 (+' + Math.round(inst.lvl * 0.3) + '% stats) · Matches ' + Math.min(100, inst.mt) + ' / 100 (+' + Math.round(Math.min(100, inst.mt) * 0.1) + '%)</p>'
+      + '<div class="bar"><i style="width:' + inst.lvl + '%"></i></div>'
+      + '<button class="btn" onclick="UI.feedScreen(' + inst.u + ')">Level up</button>'
+      + (!inst.pro ? '<button class="btn alt" ' + (pro ? '' : 'disabled') + ' onclick="UI.makePro(' + inst.u + ')">Combine two copies → Pro' + (pro ? '' : ' (need a duplicate)') + '</button>'
+        : '<button class="btn alt" ' + (inst.fort < 3 && copies.some(x => !x.pro) ? '' : 'disabled') + ' onclick="UI.fortify(' + inst.u + ')">Fortify (' + inst.fort + '/3) with a copy</button>') + '</div>'
+      + '<div class="panel"><h3>Tag &amp; ring</h3><p class="edge">Tag symbol <b class="sym ' + c.sym + '" style="position:static;background:none">' + SYMCH[c.sym] + '</b> — opposite arrows of the same colour make a diamond (+10% team stats); mixed colours −5%.</p><div class="arrows">' + arrows.join('') + '</div><p class="edge">Ring Domination arrows: where this card can challenge.</p></div>');
+  }
+  let FD = null;
+  function feedScreen(u) {
+    const t = byU(u); FD = { u, sel: [] };
+    renderFeed();
+  }
+  function renderFeed() {
+    const t = byU(FD.u), inDeck = x => S.deck.m.includes(x.u) || S.deck.f.includes(x.u);
+    const pool = S.cards.filter(x => x.u !== t.u).sort((a, b) => (a.c === t.c ? -1 : 0) - (b.c === t.c ? -1 : 0) || E.feedValue(a) - E.feedValue(b));
+    const add = FD.sel.reduce((a, x) => a + E.feedValue(byU(x)), 0);
+    screen(back('UI.detail(' + t.u + ')', 'Back') + '<h2 class="big-title">Level up</h2><p class="sub">' + C[t.c].n + ' · level ' + t.lvl + ' → ' + Math.min(100, t.lvl + add) + '</p>'
+      + '<button class="btn" ' + (FD.sel.length ? '' : 'disabled') + ' onclick="UI.feedGo()">Feed ' + FD.sel.length + ' card' + (FD.sel.length === 1 ? '' : 's') + ' (+' + add + ' levels)</button>'
+      + '<button class="btn alt" onclick="UI.feedAuto()">Select all unused Commons &amp; Uncommons</button>'
+      + '<div class="grid">' + pool.map(x => face(x, { cls: 'mini ' + (FD.sel.includes(x.u) ? 'sel ' : '') + (inDeck(x) ? 'indeck' : ''), click: 'UI.feedTog(' + x.u + ')', val: E.feedValue(x) })).join('') + '</div>');
+  }
+  function feedTog(u) { const i = FD.sel.indexOf(u); if (i >= 0) FD.sel.splice(i, 1); else FD.sel.push(u); renderFeed(); }
+  function feedAuto() { const inDeck = x => S.deck.m.includes(x.u) || S.deck.f.includes(x.u); FD.sel = S.cards.filter(x => x.u !== FD.u && C[x.c].rar <= 1 && !inDeck(x) && x.lvl === 0).map(x => x.u); renderFeed(); }
+  function feedGo() {
+    const t = byU(FD.u), fod = FD.sel.map(byU).filter(Boolean);
+    E.feed(t, fod); S.cards = S.cards.filter(x => !FD.sel.includes(x.u)); persist(); detail(t.u);
+  }
+  function makePro(u) { const a = byU(u), b = S.cards.find(x => x.c === a.c && x.u !== a.u && !x.pro); if (!b) return; E.makePro(a); S.cards = S.cards.filter(x => x.u !== b.u); persist(); detail(u); }
+  function fortify(u) { const a = byU(u), b = S.cards.find(x => E.canFort(a, x)); if (!b) return; a.fort++; S.cards = S.cards.filter(x => x.u !== b.u); persist(); detail(u); }
+
+  /* ---------- deck builder ---------- */
+  let DP = null;
+  function deckScreen() {
+    const d = getDeck();
+    const slot = (kind, i, inst) => inst ? (kind === 's' ? supFace(inst, { cls: 'slotc', click: "UI.deckPick('s'," + i + ')' }) : face(inst, { cls: 'slotc', click: 'UI.deckPick(\'' + kind + '\',' + i + ')' })) : '<div class="empty" onclick="UI.deckPick(\'' + kind + '\',' + i + ')">+</div>';
+    screen(back('UI.home()', 'Home') + '<h2 class="big-title">Your Deck</h2><div class="pills"><span>Deck rank <b>' + rankNo() + '</b></span></div>'
+      + '<h3 class="sect">Superstars (4)</h3><div class="slots">' + d.m.map((c, i) => slot('m', i, c)).join('') + '</div>'
+      + '<h3 class="sect">Divas (2)</h3><div class="slots two">' + d.f.map((c, i) => slot('f', i, c)).join('') + '</div>'
+      + '<h3 class="sect">Support (2)</h3><div class="slots two">' + d.s.map((c, i) => slot('s', i, c)).join('') + '</div>'
+      + '<button class="btn" onclick="UI.deckAuto()">Auto-build best deck</button>');
+  }
+  function deckPick(kind, i) {
+    DP = { kind, i };
+    const cur = S.deck[kind];
+    let list;
+    if (kind === 's') list = S.sups.filter(s => !cur.includes(s.u) || cur[i] === s.u).sort((a, b) => SUP[b.s].pct * SUP[b.s].stats.length - SUP[a.s].pct * SUP[a.s].stats.length);
+    else list = S.cards.filter(c => (kind === 'f') === E.isF(c) && (!cur.includes(c.u) || cur[i] === c.u)).sort((a, b) => E.total(b) - E.total(a));
+    screen(back('UI.deckScreen()', 'Deck') + '<h2 class="big-title">Choose</h2><div class="grid">'
+      + list.map(x => kind === 's' ? supFace(x, { click: 'UI.deckSet(' + x.u + ')' }) : face(x, { cls: 'mini', click: 'UI.deckSet(' + x.u + ')' })).join('') + '</div>');
+  }
+  function deckSet(u) { S.deck[DP.kind][DP.i] = u; persist(); deckScreen(); }
+  function deckAuto() { autoDeck(); persist(); deckScreen(); }
+
+  /* ---------- card picks ---------- */
+  let PT = null;
+  // Reward screen: n face-down picks. Finding a Rare or better refreshes the table.
+  function awardPicks(n, then, title) {
+    PT = { n, left: n, table: E.pickTable(power(), rnd), got: [], last: null, then: then || home, title: title || 'Card Picks', refreshed: false };
+    S.stats.picks += n; persist();
+    renderPicks();
+  }
+  function renderPicks() {
+    const p = PT;
+    const lastHTML = p.last ? '<div class="gotbox">' + (p.last.sup ? supFace(p.last.sup, { cls: 'reveal-in' }) : face(p.last.inst, { cls: 'reveal-in gotcard' })) + '<div class="gotlbl">' + (p.last.isNew ? 'NEW SUPERSTAR!' : p.last.sup ? 'SUPPORT CARD' : 'DUPLICATE · use it to level up or go Pro') + (p.refreshed ? '<br><small>Rare or better! The table has been refreshed.</small>' : '') + '</div></div>' : '';
+    screen('<h2 class="big-title">' + p.title + '</h2><p class="sub">' + (p.left > 0 ? p.left + ' pick' + (p.left === 1 ? '' : 's') + ' left — tap a card' : 'All picks used') + '</p>' + lastHTML
+      + (p.left > 0 ? '<div class="pickgrid">' + p.table.map((s, i) => '<button class="pk' + (s.open ? ' open' : '') + '" ' + (s.open ? 'disabled' : '') + ' onclick="UI.pick(' + i + ')">' + (s.open ? (s.k === 'card' ? '<span style="color:' + RAR[C[s.c].rar].col + '">★</span>' : '<span>✦</span>') : '?') + '</button>').join('') + '</div>'
+        : '<div class="recap">' + p.got.map(g => g.sup ? supFace(g.sup, { cls: 'mini' }) : face(g.inst, { cls: 'mini' })).join('') + '</div><button class="btn big" onclick="UI.picksDone()">Done</button>'));
+  }
+  function pickSlot(i) {
+    const p = PT, s = p.table[i]; if (!s || s.open || p.left < 1) return;
+    s.open = true; p.left--;
+    if (s.k === 'sup') { const o = giveSup(s.s); p.last = { sup: o }; p.got.push(p.last); p.refreshed = false; }
+    else { const r = give(s.c); p.last = r; p.got.push(r); p.refreshed = false; if (E.isRarePlus(s)) { p.table = E.pickTable(power(), rnd); p.refreshed = true; } }
+    persist(); renderPicks();
+  }
+  function picksDone() { const t = PT.then; PT = null; t(); }
+
+  /* ---------- the 3-match game ---------- */
+  let GM = null;
+  // cfg: {title, deckA, deckB, oppName, oppRec, onEnd(g), specs?, back?}
+  function startGame(cfg) {
+    const rng = rnd;
+    GM = { cfg, g: E.newGame(cfg.deckA, cfg.deckB, rng, { specs: cfg.specs }), sel: [], sup: null, last: null };
+    pickPhase();
+  }
+  const specOf = g => g.extra ? E.extraSpec() : g.specs[g.results.length];
+  function eligible(spec, inst, g) {
+    if (!E.availCards(g.a).includes(inst)) return false;
+    if (spec.extra) return true;
+    const n = E.cardsNeeded(spec.type);
+    return E.isF(inst) ? n.f > 0 : n.m > 0;
+  }
+  function needCount(spec) { const n = E.cardsNeeded(spec.type); return spec.extra ? 1 : n.m + n.f; }
+  function specLine(sp, i, g) {
+    const r = g.results[i], cls = r ? (r.winner === 'a' ? 'won' : r.winner === 'b' ? 'lost' : 'tied') : (i === g.results.length ? 'cur' : '');
+    return '<div class="spec ' + cls + '"><span class="ic">' + I[sp.type] + '</span><small>' + E.TYPE_NAME[sp.type] + '</small><span class="sp">' + sp.stats.map(statImg).join('') + '</span></div>';
+  }
+  function pickPhase() {
+    const { g, cfg } = GM, spec = specOf(g), d = g.a.deck;
+    const need = needCount(spec);
+    const sel = GM.sel;
+    const hl = spec.stats;
+    const hand = d.m.concat(d.f);
+    const ok = sel.length === need;
+    let tagTxt = '';
+    if (sel.length === 2 && spec.type === 'tag') { const m = E.tagMod(sel[0], sel[1]); tagTxt = m > 1 ? '<span class="chip gold">DIAMOND +10%</span>' : m < 1 ? '<span class="chip red">MISMATCH −5%</span>' : '<span class="chip dim">NO TAG BONUS</span>'; }
+    const supsHTML = d.s.map((s, i) => {
+      const used = g.a.supUsed.includes(s), helps = hl.some(x => SUP[s.s].stats.includes(x));
+      return supFace(s, { cls: 'sm ' + (used ? 'used ' : '') + (GM.sup === s ? 'on ' : '') + (helps && !used ? 'helps' : ''), click: used ? '' : 'UI.supTog(' + i + ')' });
+    }).join('');
+    const foeCards = cfg.deckB.m.concat(cfg.deckB.f);
+    screen('<div class="hud"><span class="rnd">' + (g.extra ? 'EXTRA MATCH' : 'MATCH ' + (g.results.length + 1) + ' / 3') + '</span><span class="who">' + cfg.title + '</span></div>'
+      + '<div class="foe"><div><b>' + cfg.oppName + '</b><small>' + (cfg.oppRec || '') + '</small></div><div class="score"><b>' + g.a.pts + '</b> – <b>' + g.b.pts + '</b></div><div class="foecards">' + foeCards.map((c, i) => '<i class="' + (g.b.used.includes(c) ? 'used' : '') + '"></i>').join('') + '</div></div>'
+      + '<div class="specs">' + (g.extra ? '' : g.specs.map((sp, i) => specLine(sp, i, g)).join('')) + '</div>'
+      + '<div class="matchbanner"><span class="ic">' + I[spec.type] + '</span><div><b>' + (spec.extra ? 'Tie-break' : E.TYPE_NAME[spec.type]) + '</b><small>Pick ' + need + (spec.type === 'divas' ? ' Diva' : spec.extra ? ' card (all stats)' : ' Superstar' + (need > 1 ? 's' : '')) + ' · highest ' + spec.stats.map(i => ST[i].name).join(' + ') + ' wins</small></div></div>'
+      + '<div class="pickrow">' + (sel.length ? sel.map(c => face(c, { cls: 'mini selc', hl, val: vsum(c, spec), click: 'UI.selTog(' + hand.indexOf(c) + ')' })).join('') : '<div class="hint">Choose from your hand below</div>') + tagTxt + '</div>'
+      + '<h3 class="sect">Support <small>(one use each per game)</small></h3><div class="supsrow">' + supsHTML + '</div>'
+      + '<h3 class="sect">Your hand</h3><div class="hand">' + hand.map((c, i) => {
+        const used = g.a.used.includes(c), elig = eligible(spec, c, g);
+        return face(c, { cls: 'mini ' + (used ? 'used ' : !elig ? 'dim ' : '') + (sel.includes(c) ? 'sel' : ''), hl, val: elig ? vsum(c, spec) : null, click: elig ? 'UI.selTog(' + i + ')' : '' });
+      }).join('') + '</div>'
+      + '<button class="btn big sticky" ' + (ok ? '' : 'disabled') + ' onclick="UI.play()">Play match</button>');
+  }
+  const vsum = (c, spec) => spec.stats.reduce((a, i) => a + E.stats(c)[i], 0);
+  function selTog(i) {
+    const { g } = GM, spec = specOf(g), d = g.a.deck, hand = d.m.concat(d.f), c = hand[i], need = needCount(spec);
+    const k = GM.sel.indexOf(c);
+    if (k >= 0) GM.sel.splice(k, 1);
+    else {
+      if (!eligible(spec, c, g)) return;
+      if (GM.sel.length >= need) GM.sel.shift();
+      GM.sel.push(c);
+    }
+    pickPhase();
+  }
+  function supTog(i) { const s = GM.g.a.deck.s[i]; GM.sup = GM.sup === s ? null : s; pickPhase(); }
+  function play() {
+    const { g, cfg } = GM, spec = specOf(g), need = needCount(spec);
+    if (GM.sel.length !== need) return;
+    const mine = GM.sel.slice(), sup = GM.sup;
+    mine.forEach(c => { c.mt = (c.mt || 0) + 1; });
+    const res = g.extra ? E.playExtra(g, { cards: mine, sup }) : E.playMatch(g, { cards: mine, sup });
+    GM.sel = []; GM.sup = null; GM.last = res; persist();
+    reveal(res);
+  }
+  function sideBlock(side, res, spec) {
+    const r = res[side], win = res.winner === side;
+    return '<div class="rside ' + side + (win ? ' win' : res.winner ? ' lose' : '') + '"><div class="rcards">' + r.cards.map((c, k) => face(c, { cls: 'mini flip', hl: spec.stats, val: r.parts[k].value | 0 })).join('') + '</div>'
+      + '<div class="rtotal" data-t="' + r.total + '">' + 0 + '</div><div class="rchips">'
+      + r.parts.map((p, k) => p.sig ? '<span class="chip gold">SIGNATURE · ' + C[r.cards[k].c].f + '</span>' : '').join('')
+      + (r.tag > 1 ? '<span class="chip gold">DIAMOND +10%</span>' : r.tag < 1 ? '<span class="chip red">MISMATCH −5%</span>' : '')
+      + (r.sup ? '<span class="chip cyan">' + SUP[r.sup.s].name + (r.boost ? ' +' + Math.round(r.boost * 100) + '%' : ' (no effect)') + '</span>' : '') + '</div></div>';
+  }
+  function reveal(res) {
+    const { g } = GM, spec = res.spec.extra ? E.extraSpec() : res.spec;
+    const w = res.winner;
+    screen('<div class="hud"><span class="rnd">' + (spec.extra ? 'EXTRA MATCH' : 'MATCH ' + (res.idx + 1)) + '</span><span class="who">' + E.TYPE_NAME[spec.type] + ' · ' + spec.stats.map(i => ST[i].name).join(' + ') + '</span></div>'
+      + '<div class="banner ' + (w === 'a' ? 'w' : w === 'b' ? 'l' : 't') + '">' + (w === 'a' ? 'YOU WIN THE MATCH' : w === 'b' ? 'THEY WIN THE MATCH' : 'DRAW — BOTH SCORE') + '</div>'
+      + '<div class="rv"><div class="who2">YOU</div>' + sideBlock('a', res, spec) + '<div class="vsb2">VS</div><div class="who2">' + GM.cfg.oppName + '</div>' + sideBlock('b', res, spec) + '</div>'
+      + '<div class="pills"><span>Score <b>' + g.a.pts + ' – ' + g.b.pts + '</b></span></div>'
+      + '<button class="btn big sticky" onclick="UI.afterMatch()">' + (g.over ? 'Finish' : 'Next match') + '</button>');
+    document.querySelectorAll('.rtotal').forEach(el => { const t = +el.dataset.t, t0 = performance.now(); (function tick(now) { const k = Math.min(1, (now - t0) / 700); el.textContent = fmt(Math.round(t * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); })(t0); });
+  }
+  function afterMatch() {
+    const { g, cfg } = GM;
+    if (!g.over) return pickPhase();
+    const win = g.winner === 'a';
+    S.stats[win ? 'wins' : 'losses']++; if (E.perfect(g)) S.stats.perfect++; persist();
+    const done = () => cfg.onEnd(g);
+    screen('<div class="reveal"><h2 class="big-title">' + (win ? (E.perfect(g) ? 'Perfect Win!' : 'Victory') : 'Defeat') + '</h2><p class="sub">' + g.a.pts + ' – ' + g.b.pts + ' vs ' + cfg.oppName + '</p>'
+      + '<div class="pills">' + g.results.map(r => '<span>' + (r.winner === 'a' ? '✔' : r.winner === 'b' ? '✘' : '=') + '</span>').join('') + '</div>'
+      + '<button class="btn big" onclick="UI.gameDone()">Continue</button></div>');
+    GM.done = done;
+  }
+  function gameDone() { const d = GM.done; d(); }
+
+  /* ---------- Wild ---------- */
+  function wild() {
+    const opps = E.opponents(power(), rnd, 3); WILD = opps;
+    screen(back('UI.home()', 'Home') + '<h2 class="big-title">Wild</h2><p class="sub">Pick an opponent · win 2 cards · perfect win 3 · loss still gives 1</p>'
+      + opps.map((o, i) => '<button class="opp" onclick="UI.wildGo(' + i + ')"><span class="av">' + o.name.slice(0, 2).toUpperCase() + '</span><span class="on"><b>' + o.name + '</b><small>' + o.record + ' · deck rank ' + Math.round(E.deckPower(o.deck) / 10) + '</small></span><span class="tag ' + o.label.toLowerCase() + '">' + o.label + '</span></button>').join('')
+      + '<p class="edge" style="text-align:center">Your deck rank: <b>' + rankNo() + '</b></p>');
+  }
+  let WILD = [];
+  function wildGo(i) {
+    const o = WILD[i];
+    startGame({ title: 'Wild', deckA: getDeck(), deckB: o.deck, oppName: o.name, oppRec: o.record, onEnd: g => awardPicks(E.picksFor(g), wild, 'Wild rewards') });
+  }
+
+  /* ---------- exports ---------- */
+  const V3 = { E, C, RAR, SUP, ST, I, get S() { return S; }, persist, give, giveSup, byU, getDeck, power, rankNo, face, supFace, art, screen, back, home, awardPicks, startGame, statImg, fmt, pick, rnd, clamp, uid, modes: {}, specOf, autoDeck };
+  window.V3 = V3;
+  window.UI = {
+    home, start, dev, collection, book, detail, feedScreen, feedTog, feedAuto, feedGo, makePro, fortify, deckScreen, deckPick, deckSet, deckAuto,
+    pick: pickSlot, picksDone, selTog, supTog, play, afterMatch, gameDone, wild, wildGo,
+    mode: k => { if (k === 'wild') return wild(); if (V3.modes[k]) return V3.modes[k](); soon(k); }
+  };
+  function soon(k) { const m = MODES.find(x => x[0] === k); screen(back('UI.home()', 'Home') + '<h2 class="big-title">' + m[1] + '</h2><div class="panel"><p class="edge">Coming next.</p></div>'); }
+  S = load();
+  window.V3.boot = () => home();
+})();
